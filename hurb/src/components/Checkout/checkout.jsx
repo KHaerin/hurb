@@ -95,14 +95,28 @@ export default function checkout(){
     };
 
     const [addressData, setAddressData] = useState({});
-    const [addressPlacementSuccessful, setAddressPlacementSuccessful] = useState(false); // New state for address placement success
+    const{
+        rec_name,
+        phone_num,
+        address,
+        region,
+        street,
+        zipcode
+    } = addressData;
+    const allFieldsFilled = Object.keys(addressData).length > 0 && Object.values(addressData).every(value => value.trim() !== '');
 
-    const handlePlaceAddress = (addressData) => {
-        // Handle the address data here
-        // Update the state with address details, latitude, and longitude
-        // For example:
-        setAddressData(addressData);
-        setAddressPlacementSuccessful(true);
+    const handleUpdateAddress = (newAddressData) => {
+        setAddressData(newAddressData);
+        console.log(newAddressData, 'NEW');
+      };
+
+      const handlePlaceAddress = () => {
+        if (!allFieldsFilled) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+    
+        alert('Address placement successful!');
     };
 
     return(
@@ -123,17 +137,17 @@ export default function checkout(){
                             <div className="col p-4">
                                 <div className="contain">
                                     <span>
-                                        John Pogi Bakit
+                                        {rec_name === '' ? 'Name' : 'wew'}
                                     </span>
                                 </div>
                                 <div className="contain">
                                     <span>
-                                        09123969691
+                                        {phone_num}
                                     </span>
                                 </div>
                                 <div className="contain">
                                     <span>
-                                        Sabang, Danao Cebu, Philippines 6069
+                                        {zipcode} 
                                     </span>
                                 </div>
                             </div>
@@ -314,7 +328,7 @@ export default function checkout(){
                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                    <EditAddress onPlaceAddress={handlePlaceAddress}></EditAddress>
+                    <EditAddress onUpdateAddress={handleUpdateAddress}></EditAddress>
                 </div>
                 <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -322,7 +336,7 @@ export default function checkout(){
                         type="button" 
                         className="btn btn-primary" 
                         onClick={handlePlaceAddress} 
-                        { ...(addressPlacementSuccessful && { 'data-bs-dismiss': 'modal' }) }
+                        data-bs-dismiss={allFieldsFilled ? 'modal' : ''}
                     >Place Address</button>
                 </div>
                 </div>

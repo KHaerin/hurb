@@ -95,4 +95,21 @@
   }
 
 }
+
+#address-table{
+    width: 15rem;
+}
+
+#recipient-table{
+    width: 15rem;
+}
  
+
+#address-container{
+    max-width: 1205px;
+    width: 100%;
+}
+
+#addAddress-container{
+    background-color: #F9F9F9;
+}

@@ -20,6 +20,9 @@ import Admin from './components/admin/admin';
 import Application from './components/admin/admin-menu/applications';
 import Home from './components/Home/Home';
 import Checkout from './components/Checkout/checkout';
+import Profile from './components/Account/AccountMenu/Profile';
+import AddressBook from './components/Account/AccountMenu/AddressBook';
+import AddAddress from './components/Account/AccountMenu/AddAddress';
 import "./App.css";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -62,6 +65,9 @@ function App() {
             <Route path="/top" element={<Top />} />
             <Route path="/bottom" element={<Bottom />} />
             <Route path="/account" element={<Account/>}/>
+            <Route path="/account/profile" element={<Profile/>}  />
+            <Route path="/account/addressBook" element={<AddressBook/>}  />
+            <Route path="/account/addressBook/addAddress" element={<AddAddress/>}  />
             <Route path="/seller" element={<Seller/>} />
             <Route path="/seller/products" element={<Products />} />
             <Route path="/seller/products/addproducts" element={<AddProduct/>} />
