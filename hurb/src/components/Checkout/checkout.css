@@ -1,0 +1,72 @@
+#ship-address-container{
+    border: 2px solid black;
+}
+
+#AddressBtn{
+    width: 137px;
+    height: 41px;
+}
+
+#checkout-product-img{
+    width: 144px;
+    height: 179px;
+    object-fit: contain;
+}
+
+#checkout-labels{
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#price-text{
+    color: rgb(199, 36, 30);
+}
+
+#shipping-icon{
+    width: 30px;
+    height: 30px;
+}
+
+#payment-icons{
+    width: 50px;
+    height: 30px;
+}
+
+#payment-text{
+    font-size: 18px;
+}
+
+#voucherInput{
+    width: 448px;
+    height: 51px;
+}
+
+#checkout-label-2{
+    font-size: 16px;
+    color: rgb(155, 154, 154);
+}
+
+#checkout-labels-1{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#totalHr{
+    width: 800px;
+}
+
+#running-bar{
+    background: linear-gradient(to left, #1F5A37, #3AC172);
+}
+
+#placeorder-text{
+    color: #000000;
+    font-size: 24px;
+}
+
+#modalBody{
+    width: 100%;
+}
+
+
+

@@ -1,0 +1,51 @@
+{
+  "name": "hurb",
+  "private": true,
+  "version": "1.0.0",
+  "Project Manager": "Cole Uyan <coleuyan55@gmail.com>",
+  "FullStack Dev": "Angelu Banogbanog <angelubanogbanog@gmail.com>",
+  "UI/UX": "John Roli Yakit <ilovebold69420@gmail.com>",
+  "UI/UX 2": "Kerry Ecuasion <kerryecuasion@gmail.com>",
+  "BackEnd Dev": "Herjhun Gerundio <herjhung@gmail.com>",
+  "Documentation": "Leonardo Cabondocan <leonardocabondocanIII@gmail.com>",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mapbox/mapbox-gl-geocoder": "^5.0.2",
+    "@mapbox/mapbox-sdk": "^0.15.5",
+    "@popperjs/core": "^2.11.8",
+    "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
+    "fontawesome": "^5.6.3",
+    "jquery": "^3.7.1",
+    "mapbox": "^1.0.0-beta10",
+    "mapbox-gl": "^3.3.0",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.9.0-beta.1",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-router-dom": "^6.22.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "vite": "^5.2.0"
+  },
+  "browsersList": [
+    "defaults",
+    "not ie 11"
+  ]
+}

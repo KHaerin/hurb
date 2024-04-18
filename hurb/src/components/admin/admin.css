@@ -1,0 +1,90 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.admin-body {
+    background-color: #34412B;
+    color: #ffffff;
+}
+
+#menu-dashboard {
+    background-color: #000000;
+    border-end-end-radius: 30px;
+    height: 100vh;
+}
+
+.dashboard-menu {
+    transition: width 0.5s ease;
+}
+
+.dashboard-menu.closed {
+    width: 5rem;
+}
+
+.dashboard-menu.open {
+    width: 100%;
+    max-width: 12.5rem;
+}
+
+#dashbruh-container {
+    background-color: #000000;
+}
+
+.dashboard-icons {
+    color: white;
+    width: 1.563rem;
+    height: 1.438rem;
+    object-fit: contain;
+}
+
+#hurb-title {
+    color: #ffffff;
+    font-size: 24px;
+}
+
+#openDashboard-btn {
+    width: 100%;
+    height: 25px;
+    cursor: pointer;
+}
+
+#sellerLinks {
+    color: #ffffff;
+    padding: 10px 10px;
+    transition: all 0.5s ease;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    font-size: 18px;
+    overflow: hidden;
+}
+
+#sellerLinks-closed {
+    padding: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.navbar .navbar-nav {
+    white-space: nowrap;
+}
+
+.navbar .navbar-nav #sellerLinks.active {
+    background-color: #0930B8;
+    width: 14rem;
+
+}
+
+.navbar .navbar-nav #sellerLinks-closed.active {
+    background-color: #0930B8;
+    padding-left: 10px;
+}
+
+.navbar .navbar-nav #sellerLinks:hover {
+    color: #ffffff;
+}
+
+.navbar .navbar-nav #sellerLinks:hover.active {
+    background-color: #0930B8;
+    padding-left: 5px;
+}

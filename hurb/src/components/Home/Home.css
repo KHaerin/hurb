@@ -1,0 +1,119 @@
+#home-page{
+    background-color: #829389;
+}
+
+#text-home{
+    padding-left: 2%;
+    margin-bottom: 130px;
+}
+
+#spice-txt{
+    font-size: clamp(3.4375rem, 1.9672rem + 3.3607vw, 6rem);
+    max-width: 636px;
+    width: 100%;
+    font-weight: 500;
+    color: #000000;
+}
+
+#spice-details{
+    width: 100%;
+    max-width: 605px;
+    font-size: 22px;
+    display: flex;
+    color: #ffffff;
+    text-align: justify;
+}
+
+#exploreBtn{
+    width: 194px;
+    height: 49px;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+#home-img-container{
+    padding-top: 5%;
+}
+
+
+#home-first-img{
+    width: 100%;
+    max-width: 1024px;
+    height: 100%;
+    max-height: 728px;
+    object-fit: cover;
+    border: 2px solid black;
+
+}
+
+#menCollect{
+    width: 100%;
+    max-width: 54.688rem;
+    height: 800px;
+    background-image: url('../icons/model men.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#lateTrends{
+    width: 100%;
+    max-width: 50.438rem;
+    height: 35.688rem;
+    background-image: url('../icons/clothes.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#collection-text-late{
+    font-size: 96px;
+    color: #ffffff;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 500;
+}
+
+#collection-text{
+    font-size: 48px;
+    color: #000000;
+    font-weight: 400;
+}
+
+#collectionW-text{
+    font-size: 48px;
+    color: #ffffff;
+    font-weight: 400;
+}
+
+#mens-text{
+    font-weight: 600;
+    color: #ffffff;
+}
+
+#womens-text{
+    font-weight: 600;
+}
+
+#shop_now-btn{
+    width: 195px;
+    height: 47px;
+    background-color: #000000;
+    border-radius: 0px;
+}
+
+#womenCollect{
+    width: 100%;
+    max-width: 50.438rem;
+    height: 664px;
+    background-image: url('../icons/model women.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#labor{
+    object-fit: cover;
+    width: 875px;
+    height: 380px;
+}
+
+#top-products-container{
+    background-color: #829389;
+}

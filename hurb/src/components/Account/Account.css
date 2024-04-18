@@ -1,0 +1,98 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+#account-container{
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+#profile-picture{
+    border-radius: 50px;
+    width: 100%;
+    max-width: 6.25rem;
+    height: 6.25rem;
+    object-fit: cover;
+    background-color: rgb(0, 0, 0);
+}
+
+#dashboard-container{
+    margin-left: 5%;
+}
+
+#hr{
+    width: 100%;
+    max-width: 12.5rem;
+}
+
+#hr2{
+    width: 100%;
+    max-width: 47.063rem;
+}
+
+.titleText{
+    margin-left: 5%;
+}
+
+#dashboardBox{
+    border-radius: 5px;
+    max-width: 82.875rem;
+    height: 41.25rem;
+}
+
+.profile-field-container{
+    margin-left: 10%;
+}
+
+#floatingName, #floatingEmail, #floatingUsername, #floatingPhone, #floatingInput{
+    width: 100%;
+    max-width: 23.063rem;
+}
+
+#profileFileInput{
+    width: 100%;
+    max-width: 23.063rem;
+}
+
+#profile-container-img{
+    width: 100%;
+    max-width: 25.938rem;
+    height: 33.125rem;
+    border-radius: 5px;
+}
+
+#advertise{
+    position: relative;
+    color: #ffffff;
+    background: linear-gradient(to right, #ff0000 0, rgb(231, 27, 27) 10%, #ff0000 20%, #0c0c0c 30%);
+    background-position: 0;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s infinite linear;
+    animation-fill-mode: forwards;
+    -webkit-text-size-adjust: none;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+
+@keyframes shine{
+    0%{
+     background-position: 0;
+    }
+    
+  60%{
+    background-position: 125px;
+  }
+    
+  100%{
+    background-position: 210px;
+
+  }
+
+}
+ 

@@ -1,0 +1,91 @@
+*{
+    font-family: "Poppins", sans-serif;
+}
+
+.text{
+    font-size: 9.375rem;
+    font-weight: 600;
+}
+
+.img{
+    background-color: grey;
+    width: 108rem;
+    height: 47.313rem;
+}
+
+.about-text{
+    font-size: 4rem;
+    font-weight: 600;
+}
+
+.aboutText{
+    margin-bottom: 100px;
+}
+
+
+.img2{
+    background-color: grey;
+    width: 27.188rem;
+    height: 26.75rem;
+}
+
+#img-down{
+    margin-top: 5%;
+}
+
+.span2{
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 10%;
+    margin-top: 5%;
+    text-align: justify;
+    width: 59.75rem;
+}
+
+#teamtxt{
+    margin-left: 5%;
+    margin-bottom: 5%;
+    font-size: 128px;
+    font-weight: 600;
+}
+
+#cardTeam{
+    width: 25rem;
+    height: 20rem;
+    padding: 5% 2% 2% 5%;
+}
+
+#cardImg-about{
+    border-radius: 50%;
+    background-color: grey;
+    object-fit: cover;
+    width: 115px;
+    height: 107px;
+}
+
+#teamSection{
+    margin-bottom: 10%;
+}
+
+.goalsText{
+    font-size: 40px;
+    font-weight: 600;
+    width: 960px;
+    margin-left: 5%;
+    margin-bottom: 10%;
+    text-align: justify;
+}
+
+#spanGoal{
+    font-size: 40px;
+    font-weight: 600;
+}
+
+#cardGoal{
+    width: 18rem;
+}
+
+#goalContainer{
+    margin-bottom: 15%;
+}
+

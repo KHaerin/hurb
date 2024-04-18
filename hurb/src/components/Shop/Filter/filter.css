@@ -1,0 +1,20 @@
+.filter-section {
+  width: 175px; 
+  background-color: #fff;
+  transition: margin-left 0.5s ease;
+  margin-left: 0; 
+}
+
+.hidden {
+  margin-left: -500px; 
+}
+
+
+.hidden ~ .col {
+  margin-left: 0;
+}
+
+@keyframes slideOut {
+  from { margin-left: 0; } 
+  to { margin-left: -175px; } 
+}

@@ -1,0 +1,60 @@
+*{
+  font-family: 'Times New Roman', Times, serif;
+}
+
+body{
+  background-color: white;
+}
+
+#headerLinks{
+    color: black;
+    font-size: clamp(1rem, 0.8566rem + 0.3279vw, 1.25rem);
+}
+
+#headerLinks:hover{
+    text-decoration: underline;
+}   
+
+.dropdown-menu-hover {
+  display: none; 
+
+}
+
+.dropdown:hover .dropdown-menu-hover {
+  display: block; 
+}
+
+#cartIcon, #accIcon{
+  color: black;
+  width: 2.813rem;
+  height: 2.813rem;
+}
+
+#accIcon-logged{
+  width: 2.813rem;
+  height: 2.813rem;
+  border-radius: 100px;
+  object-fit: cover;
+}
+
+#logout, #adminDrop{
+  cursor: pointer;
+}
+
+#hurb-logo{
+  width: 100%;
+  max-width: 10.25rem;
+  height: 9.25rem;
+  object-fit: cover;
+}
+
+#closeBtnCanvas{
+  color: black;
+}
+
+
+
+
+
+
+
