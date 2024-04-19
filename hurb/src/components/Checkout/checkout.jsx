@@ -4,7 +4,6 @@ import './checkout.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruck, faCreditCard, faWallet, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import EditAddress from './EditAdd';
-import Tree from '../Tree/Tree';
 
 export default function checkout(){
 
