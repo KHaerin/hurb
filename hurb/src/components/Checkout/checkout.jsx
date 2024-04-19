@@ -4,6 +4,7 @@ import './checkout.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruck, faCreditCard, faWallet, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import EditAddress from './EditAdd';
+
 export default function checkout(){
 
     const[tracks, setTrack] = useState([]);
@@ -94,29 +95,29 @@ export default function checkout(){
         }
     };
 
-    const [addressData, setAddressData] = useState({});
-    const{
-        rec_name,
-        phone_num,
-        address,
-        region,
-        street,
-        zipcode
-    } = addressData;
-    const allFieldsFilled = Object.keys(addressData).length > 0 && Object.values(addressData).every(value => value.trim() !== '');
+    const[addressBook, setAddressBook] = useState([]);
 
-    const handleUpdateAddress = (newAddressData) => {
-        setAddressData(newAddressData);
-        console.log(newAddressData, 'NEW');
-      };
+    useEffect(() => {
+        const getAddressBook = async () => {
+            try{
+                const userID = localStorage.getItem('userId');
+                const url = await axios.get(`http://localhost/hurb/AddressBook/getAddress.php?user_id=${userID}`);
+                if (Array.isArray(url.data) && url.data.length > 0) {
+                    setAddressBook([url.data[0]]);
+                } else {
+                    setAddressBook([]);
+                }
+            }catch(error){
+                console.error(error);
 
-      const handlePlaceAddress = () => {
-        if (!allFieldsFilled) {
-            alert('Please fill in all required fields.');
-            return;
+            }
         }
-    
-        alert('Address placement successful!');
+        getAddressBook();
+    }, [])
+
+      const handlePlaceAddress =  () => {
+        localStorage.removeItem('addBook_id');
+        alert('place address');
     };
 
     return(
@@ -134,23 +135,25 @@ export default function checkout(){
                 <div className="col-lg-8 mb-5">
                     <div className="container" id="ship-address-container">
                         <div className="row">
-                            <div className="col p-4">
-                                <div className="contain">
-                                    <span>
-                                        {rec_name === '' ? 'Name' : 'wew'}
-                                    </span>
+                            {addressBook.map((Book, index) => (
+                                <div className="col p-4" key={Book.addBook_id}>                
+                                    <div className="contain">
+                                        <span>
+                                            {Book.recipient_name}
+                                        </span>
+                                    </div>
+                                    <div className="contain">
+                                        <span>
+                                            {Book.mobile_number}
+                                        </span>
+                                    </div>
+                                    <div className="contain">
+                                        <span>
+                                            {Book.address}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="contain">
-                                    <span>
-                                        {phone_num}
-                                    </span>
-                                </div>
-                                <div className="contain">
-                                    <span>
-                                        {zipcode} 
-                                    </span>
-                                </div>
-                            </div>
+                            ))}             
                             <div className="col d-flex justify-content-end align-items-center">
                                 <button className="btn btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="AddressBtn">Edit Address</button>
                             </div>
@@ -321,14 +324,14 @@ export default function checkout(){
         </div>
 
         <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div className="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable modal-lg">
                 <div className="modal-content">
                 <div className="modal-header">
                     <h1 className="modal-title fs-5" id="staticBackdropLabel">Address</h1>
                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                    <EditAddress onUpdateAddress={handleUpdateAddress}></EditAddress>
+                    <EditAddress></EditAddress>
                 </div>
                 <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -336,7 +339,7 @@ export default function checkout(){
                         type="button" 
                         className="btn btn-primary" 
                         onClick={handlePlaceAddress} 
-                        data-bs-dismiss={allFieldsFilled ? 'modal' : ''}
+                        // data-bs-dismiss={isClicked? 'modal' : ''}
                     >Place Address</button>
                 </div>
                 </div>

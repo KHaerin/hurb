@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
+import axios from 'axios';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import MapboxSearch from '@mapbox/mapbox-sdk/services/geocoding';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -7,8 +8,7 @@ import './checkout';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiaHVyYmtvbCIsImEiOiJjbHVlc24yb2owMndqMm5xdXk4eGE3YmhuIn0.Yr-o2EfRyg75G9NmpD0aYw';
 
-export default function EditAdd({onUpdateAddress}){
-
+export default function EditAdd(){
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
   const [address, setAddress] = useState('');
@@ -16,64 +16,38 @@ export default function EditAdd({onUpdateAddress}){
   const mapContainer = useRef(null);
   const map = useRef(null);
 
-    const[addressDetails, setAddressDetails] = useState([]);
-
-    useEffect(() => {
-        const getAddressBook = async () => {
-            try{
-                const user_id = localStorage.getItem('userId');
-                const url = await axios.get(`http://localhost/hurb/AddressBook/getAddress.php?user_id=${user_id}`);
-                const addressDetails = url.data;
-                setAddressDetails(addressDetails);
-            }catch(error){
-                console.error(error);
-            }
-        };
-        getAddressBook();
-    }, [])
-
-  const handleChange = () => {
-    const addressData = {
-      map_lat: document.getElementById('static1').value,
-      map_lng: document.getElementById('static2').value,
-      rec_name: document.getElementById('floatingInput1').value,
-      phone_num: document.getElementById('floatingInput2').value,
-      address: document.getElementById('floatingInput3').value,
-      region: document.getElementById('floatingInput4').value,
-      street: document.getElementById('floatingInput5').value,
-      zipcode: document.getElementById('floatingInput6').value
-    };
-
-    onUpdateAddress(addressData);
-  };
+    function handleMarkerClick(lng, lat) {
+        // Update latitude and longitude
+        setLat(lat);
+        setLng(lng);
+    
+        // Fetch address data for the clicked location
+        reverseGeocode(lng, lat)
+            .then(response => {
+                const formattedAddress = formatAddress(response);
+                setAddress(formattedAddress);
+            })
+            .catch(error => {
+                console.error('Error fetching address:', error);
+            });
+    }
+    
     
     function handleClick(e) {
-      const { lng, lat } = e.lngLat;
-
-      // Set latitude and longitude only when user clicks on the map
-      setLat(lat);
-      setLng(lng);
-
-      // Place a marker at the clicked location
-      if (!markerRef.current) {
-          markerRef.current = new mapboxgl.Marker()
-              .setLngLat([lng, lat])
-              .addTo(map.current);
-      } else {
-          markerRef.current.setLngLat([lng, lat]);
-      }
-
-      // Fetch address data for the clicked location
-      reverseGeocode(lng, lat)
-          .then(response => {
-              const formattedAddress = formatAddress(response);
-              setAddress(formattedAddress);
-              handleChange(); // Update address data
-          })
-          .catch(error => {
-              console.error('Error fetching address:', error);
-          });
-  }
+        const { lng, lat } = e.lngLat;
+    
+        // Place a marker at the clicked location
+        if (!markerRef.current) {
+            markerRef.current = new mapboxgl.Marker()
+                .setLngLat([lng, lat])
+                .addTo(map.current);
+        } else {
+            markerRef.current.setLngLat([lng, lat]);
+        }
+    
+        // Call the marker click handler
+        handleMarkerClick(lng, lat);
+    }
 
 
   const reverseGeocode = async (lng, lat) => {
@@ -189,104 +163,82 @@ export default function EditAdd({onUpdateAddress}){
   }, []);
 
 
+  const[rec_name, setRecName] = useState('');
+  const[mobile_number, setMobileNum] = useState('');
+  const[myAddress, setMyAddress] = useState('');
+  const[region, setRegion] = useState('');
+  const[street, setStreet] = useState('');
+  const[zipcode, setZipCode] = useState('');
+
+
+    
+
     return(
         <>
-            <div>
+            <div className="container">
                 <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />
-                <p id="ps">NOTE: PUT A MARKER TO YOUR EXACT LOCATION</p>
-                {lat !== null && lng !== null && (
-                  <>
-                  <div className="d-flex gap-2">
-                    <label htmlFor="static1" className="col-form-label">Latitude: </label>
-                    <input 
-                        type="text"
-                        id="static1"
-                        className="form-control-plaintext"
-                        value={lat}
-                        onChange={handleChange}
-                        >
-                      </input>
-                      <label htmlFor="static2" className="col-form-label">Latitude: </label>
-                      <input 
-                        type="text"
-                        id="static2"
-                        className="form-control-plaintext"
-                        value={lng}
-                        onChange={handleChange}
-                        readOnly>
-                      </input>
-                  </div>
-                   
-                  </>
-                  
-                )}
-                {address && (
-                    <div>
-                    Address: {address}
-                    </div>
-                )}
-                 <h1>ADDRESS DETAILS</h1>
-                    <div className="form-floating mb-3">
-                    <input
-                            type="text"
-                            id="floatingInput1"
-                            className="form-control"
-                            placeholder="Recipient's Name"
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="floatingInput1">Recipient's Name</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                    <input
-                            type="text"
-                            id="floatingInput2"
-                            className="form-control"
-                            placeholder="Phone Number"
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="floatingInput2">Phone Number</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                    <input
-                            type="text"
-                            id="floatingInput3"
-                            className="form-control"
-                            placeholder="Address"
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="floatingInput3">Address</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                    <input
-                            type="text"
-                            id="floatingInput4"
-                            className="form-control"
-                            placeholder="Region"
-                            onChange={handleChange}
-                    />
-                        <label htmlFor="floatingInput4">Region/City/District</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                    <input
-                            type="text"
-                            id="floatingInput5"
-                            className="form-control"
-                            placeholder="Street"
-                            onChange={handleChange}
-                        />
-                        <label htmlFor="floatingInput5">Street/Building Name</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                    <input
-                            type="text"
-                            id="floatingInput6"
-                            className="form-control"
-                            placeholder="Zipcode"
-                            onChange={handleChange}
-                       />
-                        <label htmlFor="floatingInput6">Zipcode</label>
-                    </div>
+                <p>{address}</p>
+                <p>{lat} {lng}</p>
             </div>
+            <div className="container pt-4 pb-4 px-5 mb-5 rounded" id="address-book-container">
+                <h3>ADDRESS BOOK</h3>
+                <div className="row">
+                    <div className="col btn btn-outline-dark p-3" id="addressBookList">
+                        <div className="d-flex gap-5">
+                            <span>Home:</span>
+                            <span>Name</span>
+                            <span>Address</span>
+                            <span>zipcode</span>
+                            <span>phone number</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="container">
+                <div className="row">
+                    <div className="col">
+                        <div className="container-fluid">
+                            <div className="row d-flex flex-column">
+                                <div className="col mb-3">
+                                    <label htmlFor="recipientName">Recipient's Name</label>
+                                    <input type="text" id="recipientName" className="form-control" placeholder={`Recipient's Name`}/>
+                                </div>
+                                <div className="col mb-3">
+                                    <label htmlFor="mobile_number">Mobile Number</label>
+                                    <input type="text" id="mobile_number" className="form-control" placeholder={`Phone Number`}/>
+                                </div>
+                                <div className="col d-flex gap-3">
+                                    <button className="btn btn-outline-success">Office</button>
+                                    <button className="btn btn-outline-info">Home</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="container-fluid">
+                            <div className="row d-flex flex-column">
+                                <div className="col mb-3">
+                                    <label htmlFor="address">Address</label>
+                                    <input type="text" id="address" className="form-control" placeholder={`Address`}/>
+                                </div>
+                                <div className="col mb-3">
+                                    <label htmlFor="Region">Region</label>
+                                    <input type="text" id="region" className="form-control" placeholder={`Region`}/>
+                                </div>
+                                <div className="col mb-3">
+                                    <label htmlFor="street">Street</label>
+                                    <input type="text" id="street" className="form-control" placeholder={`Street`}/>
+                                </div>
+                                <div className="col mb-3">
+                                    <label htmlFor="zipCode">Zipcode</label>
+                                    <input type="text" id="zipCode" className="form-control" placeholder={`Zipcode`}/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
         </>
     )
 }

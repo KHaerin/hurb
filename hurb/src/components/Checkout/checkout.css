@@ -74,3 +74,15 @@
 }
 
 
+#address-book-container{
+    border: 1px solid #000000;
+}
+
+#addressBookList{
+    width: 30rem;
+    border: 1px solid #000000;
+}
+
+#floatText{
+    color: black;
+}
