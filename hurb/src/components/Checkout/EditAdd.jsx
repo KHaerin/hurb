@@ -8,7 +8,7 @@ import './checkout';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiaHVyYmtvbCIsImEiOiJjbHVlc24yb2owMndqMm5xdXk4eGE3YmhuIn0.Yr-o2EfRyg75G9NmpD0aYw';
 
-export default function EditAdd(){
+export default function EditAdd({addressData}){
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
   const [address, setAddress] = useState('');
@@ -134,7 +134,6 @@ export default function EditAdd(){
                 .then(response => {
                     const formattedAddress = formatAddress(response);
                     setAddress(formattedAddress);
-                    handleChange(); // Update address data
                 })
                 .catch(error => {
                     console.error('Error fetching address:', error);
@@ -162,6 +161,22 @@ export default function EditAdd(){
     };
   }, []);
 
+  const[addressDetails, setAddressDetails] = useState([]);
+
+  useEffect(() => {
+      const getAddressBook = async () => {
+          try{
+              const user_id = localStorage.getItem('userId');
+              const url = await axios.get(`http://localhost/hurb/AddressBook/getAddress.php?user_id=${user_id}`);
+              const addressDetails = url.data;
+              setAddressDetails(addressDetails);
+          }catch(error){
+              console.error(error);
+          }
+      };
+      getAddressBook();
+  }, [])
+
 
   const[rec_name, setRecName] = useState('');
   const[mobile_number, setMobileNum] = useState('');
@@ -169,29 +184,200 @@ export default function EditAdd(){
   const[region, setRegion] = useState('');
   const[street, setStreet] = useState('');
   const[zipcode, setZipCode] = useState('');
+  const[bookID, setBookID] = useState('');
 
+  const handleName = () => {
+    setRecName(document.getElementById('recipientName').value);
+  }
 
+  const handleNumber = () => {
+    setMobileNum(document.getElementById('mobile_number').value);
+  }
+
+  const handleAddress = () => {
+    setMyAddress(document.getElementById('address').value);
+  }
+
+  const handleRegion = () => {
+    setRegion(document.getElementById('region').value);
+  }
+
+  const handleStreet = () => {
+    setStreet(document.getElementById('street').value);
+  }
+
+  const handleZip = () => {
+    setZipCode(document.getElementById('zipCode').value);
+  }
+  
+ const handlePlaceAddress =  async () => {
+    if(bookID !== ''){
+        try{
+            const form = new FormData();
+            form.append('addBook_id', bookID);
+            form.append('recipient_name', rec_name);
+            form.append('mobile_number', mobile_number);
+            form.append('address', myAddress);
+            form.append('region', region);
+            form.append('street', street);
+            form.append('zipcode', zipcode);
+            form.append('map_lat', lat);
+            form.append('map_long', lng);
+            console.log('upodate')
+            await axios.post("http://localhost/hurb/AddressBook/updateAddress.php", form);
+            const addData = {
+                bookID,
+                rec_name,
+                mobile_number,
+                myAddress,
+                region,
+                street,
+                zipcode,
+                lat,
+                lng
+            }
+            addressData(addData);
+            const closeModalButton = document.querySelector('#staticBackdrop .btn-close');
+            closeModalButton.click();
+        }catch(error){
+            console.error(error);
+        }
+    }else {
+        if (!rec_name || !mobile_number || !myAddress || !region || !street || !zipcode){
+            alert('Please fill up all fields.');
+            return;
+        } 
+        if(!lat || !lng){
+            alert('Mark your location on the map');
+            return;
+        }
+        try{
+            const addUrl = "http://localhost/hurb/AddressBook/addAddress.php";
+
+            const user_id = localStorage.getItem('userId');
+
+            let fData = new FormData();
+            fData.append('user_id', user_id);
+            fData.append('fullName', rec_name);
+            fData.append('mobile_number', mobile_number);
+            fData.append('address', myAddress);
+            fData.append('region', region);
+            fData.append('street', street);
+            fData.append('zipcode', zipcode);
+            fData.append('map_lat', lat);
+            fData.append('map_long', lng);
+    
+            axios.post(addUrl, fData)
+            .then(response=>{
+                alert(response.data);
+                
+                setRecName('');
+                setAddress('');
+                setMobileNum('');
+                setRegion('');
+                setStreet('');
+                setZipCode('');
+                console.log('add');
+                const closeModalButton = document.querySelector('#staticBackdrop .btn-close');
+                closeModalButton.click();
+            })
+            .catch(error=>alert(error));
+        }catch(error){
+            console.error(error);
+        }
+    }
+  };
+  
+  const clearFields = () => {
+    setLat('');
+    setLng('');
+    setBookID('');
+    setRecName('');
+    setMobileNum('');
+    setMyAddress('');
+    setRegion('');
+    setStreet('');
+    setZipCode('');
+
+    if (markerRef.current) {
+        markerRef.current.remove();
+        markerRef.current = null; // Reset markerRef.current to null
+    }
+  }
+
+  const bookClick = (addDetails) => {
+    setLat(addDetails.map_lat);
+    setLng(addDetails.map_long);
+    setBookID(addDetails.addBook_id);
+    setRecName(addDetails.recipient_name);
+    setMobileNum(addDetails.mobile_number);
+    setMyAddress(addDetails.address);
+    setRegion(addDetails.region);
+    setStreet(addDetails.street);
+    setZipCode(addDetails.zipcode);
+
+    if (addDetails.map_lat !== '' && addDetails.map_long !== '') {
+        const newLat = parseFloat(addDetails.map_lat);
+        const newLng = parseFloat(addDetails.map_long);
+
+        // Move the marker to the new coordinates
+        if (markerRef.current) {
+            markerRef.current.setLngLat([newLng, newLat]);
+        } else {
+            markerRef.current = new mapboxgl.Marker()
+                .setLngLat([newLng, newLat])
+                .addTo(map.current);
+        }
+    }
+
+  }
     
 
     return(
         <>
+          <div className="modal fade"  id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
+            <div className="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div className="modal-content">
+                <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="staticBackdropLabel">Address</h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
             <div className="container">
-                <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />
-                <p>{address}</p>
-                <p>{lat} {lng}</p>
+                <div className="row">
+                    <div className="col">
+                        <div ref={mapContainer} style={{ width: '100%', height: '400px' }} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <p>{address}</p>
+                        <p>{lat} {lng}</p>
+                    </div>
+                </div>
+                <div className="row d-flex justify-content-end align-items-end mb-3">
+                    <div className="col-auto">
+                        <button className="btn btn-outline-secondary" onClick={clearFields}>Clear</button>
+                    </div>
+                </div>
+                
+               
             </div>
             <div className="container pt-4 pb-4 px-5 mb-5 rounded" id="address-book-container">
                 <h3>ADDRESS BOOK</h3>
-                <div className="row">
-                    <div className="col btn btn-outline-dark p-3" id="addressBookList">
-                        <div className="d-flex gap-5">
-                            <span>Home:</span>
-                            <span>Name</span>
-                            <span>Address</span>
-                            <span>zipcode</span>
-                            <span>phone number</span>
-                        </div>
-                    </div>
+                <div className="row row-cols-1">
+                    {addressDetails.map((addDetails, index) => (
+                    <div className="col btn btn-outline-dark p-3 mb-3" onClick={() => {bookClick(addDetails)}} key={addDetails.addBook_id} id="addressBookList">
+                         <div className="d-flex gap-5">
+                             <span>Home</span>
+                             <span>{addDetails.recipient_name}</span>
+                             <span>{addDetails.address}</span>
+                             <span>{addDetails.zipcode}</span>
+                             <span>{addDetails.mobile_number}</span>
+                         </div>
+                     </div>
+                    ))}
+
                 </div>
             </div>
             <div className="container">
@@ -201,11 +387,11 @@ export default function EditAdd(){
                             <div className="row d-flex flex-column">
                                 <div className="col mb-3">
                                     <label htmlFor="recipientName">Recipient's Name</label>
-                                    <input type="text" id="recipientName" className="form-control" placeholder={`Recipient's Name`}/>
+                                    <input type="text" id="recipientName" value={rec_name} onChange={handleName} className="form-control" placeholder={`Recipient's Name`}/>
                                 </div>
                                 <div className="col mb-3">
                                     <label htmlFor="mobile_number">Mobile Number</label>
-                                    <input type="text" id="mobile_number" className="form-control" placeholder={`Phone Number`}/>
+                                    <input type="text" id="mobile_number" value={mobile_number} onChange={handleNumber} className="form-control" placeholder={`Phone Number`}/>
                                 </div>
                                 <div className="col d-flex gap-3">
                                     <button className="btn btn-outline-success">Office</button>
@@ -219,26 +405,37 @@ export default function EditAdd(){
                             <div className="row d-flex flex-column">
                                 <div className="col mb-3">
                                     <label htmlFor="address">Address</label>
-                                    <input type="text" id="address" className="form-control" placeholder={`Address`}/>
+                                    <input type="text" id="address" value={myAddress} onChange={handleAddress} className="form-control" placeholder={`Address`}/>
                                 </div>
                                 <div className="col mb-3">
                                     <label htmlFor="Region">Region</label>
-                                    <input type="text" id="region" className="form-control" placeholder={`Region`}/>
+                                    <input type="text" id="region" value={region} onChange={handleRegion} className="form-control" placeholder={`Region`}/>
                                 </div>
                                 <div className="col mb-3">
                                     <label htmlFor="street">Street</label>
-                                    <input type="text" id="street" className="form-control" placeholder={`Street`}/>
+                                    <input type="text" id="street" value={street} onChange={handleStreet} className="form-control" placeholder={`Street`}/>
                                 </div>
                                 <div className="col mb-3">
                                     <label htmlFor="zipCode">Zipcode</label>
-                                    <input type="text" id="zipCode" className="form-control" placeholder={`Zipcode`}/>
+                                    <input type="text" id="zipCode" value={zipcode} onChange={handleZip} className="form-control" placeholder={`Zipcode`}/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-           
+            </div>
+             <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button 
+                           type="button" 
+                           className="btn btn-primary" 
+                           onClick={handlePlaceAddress} 
+                       >Place Address</button>
+                   </div>
+                </div>
+            </div>
+        </div>    
         </>
     )
 }

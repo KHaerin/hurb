@@ -4,6 +4,7 @@ import './checkout.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruck, faCreditCard, faWallet, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import EditAddress from './EditAdd';
+import Tree from '../Tree/Tree';
 
 export default function checkout(){
 
@@ -11,9 +12,11 @@ export default function checkout(){
     const[qtyField, setQtyField] = useState('');
     const runningBarRef = useRef(null);
     const [totalAmount, setTotalAmount] = useState('');
+    const [estimatedArrival, setEstimatedArrival] = useState('');
 
     useEffect(() => {
         fetchCartProducts();
+        calculateEstimatedArrival();
 
         window.addEventListener('scroll', handleScroll);
         return () => {
@@ -21,6 +24,18 @@ export default function checkout(){
         };
 
     }, []);
+
+    const calculateEstimatedArrival = () => {
+        const today = new Date();
+        const estimatedArrivalDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000); 
+        
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedToday = today.toLocaleDateString(undefined, options);
+        const formattedEstimatedArrival = estimatedArrivalDate.toLocaleDateString(undefined, options);
+    
+        const arrivalRange = `${formattedToday} - ${formattedEstimatedArrival}`;
+        setEstimatedArrival(arrivalRange);
+    };
 
     const fetchCartProducts = async () => {
         try {
@@ -113,12 +128,18 @@ export default function checkout(){
             }
         }
         getAddressBook();
+
     }, [])
 
-      const handlePlaceAddress =  () => {
-        localStorage.removeItem('addBook_id');
-        alert('place address');
-    };
+    const[addressData, setAddressData] = useState([]);
+    const handleAddressData = (data) => {
+        setAddressData([data]);
+        console.log(data);
+    }
+
+    useEffect(() => {
+        console.log('address data: ', addressData);
+    }, [addressData]);
 
     return(
         <>
@@ -133,13 +154,13 @@ export default function checkout(){
                     <span id="checkout-labels">Shipping Address</span>
                 </div>
                 <div className="col-lg-8 mb-5">
-                    <div className="container" id="ship-address-container">
+                    <div className="container" id={addressData.length > 0 ? 'ship-address-container' : ''}>
                         <div className="row">
-                            {addressBook.map((Book, index) => (
-                                <div className="col p-4" key={Book.addBook_id}>                
+                            {addressData.map((Book, index) => (
+                                <div className="col p-4" key={Book.bookID}>                
                                     <div className="contain">
                                         <span>
-                                            {Book.recipient_name}
+                                            {Book.rec_name}
                                         </span>
                                     </div>
                                     <div className="contain">
@@ -149,7 +170,7 @@ export default function checkout(){
                                     </div>
                                     <div className="contain">
                                         <span>
-                                            {Book.address}
+                                            {Book.myAddress}
                                         </span>
                                     </div>
                                 </div>
@@ -196,7 +217,7 @@ export default function checkout(){
                             <span>Standard Shipping</span>
                             </div>
                             <div className="col">
-                                <span>{'( Arrives between April 1 - May 1)'}</span>
+                                <span>{`( Arrives between ${estimatedArrival} )`}</span>
                             </div>
                         </div>
                     </div>
@@ -322,29 +343,7 @@ export default function checkout(){
                 </div>
             </div>
         </div>
-
-        <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div className="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable modal-lg">
-                <div className="modal-content">
-                <div className="modal-header">
-                    <h1 className="modal-title fs-5" id="staticBackdropLabel">Address</h1>
-                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div className="modal-body">
-                    <EditAddress></EditAddress>
-                </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button 
-                        type="button" 
-                        className="btn btn-primary" 
-                        onClick={handlePlaceAddress} 
-                        // data-bs-dismiss={isClicked? 'modal' : ''}
-                    >Place Address</button>
-                </div>
-                </div>
-            </div>
-        </div>
+        <EditAddress addressData={handleAddressData}></EditAddress>
         </>
     )
 }
