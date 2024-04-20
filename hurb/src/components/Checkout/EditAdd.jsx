@@ -181,6 +181,7 @@ export default function EditAdd({addressData}){
   const[rec_name, setRecName] = useState('');
   const[mobile_number, setMobileNum] = useState('');
   const[myAddress, setMyAddress] = useState('');
+  const[province, setProvince] = useState('');
   const[region, setRegion] = useState('');
   const[street, setStreet] = useState('');
   const[zipcode, setZipCode] = useState('');
@@ -196,6 +197,10 @@ export default function EditAdd({addressData}){
 
   const handleAddress = () => {
     setMyAddress(document.getElementById('address').value);
+  }
+
+  const handleProvince = () => {
+    setProvince(document.getElementById('province').value);
   }
 
   const handleRegion = () => {
@@ -218,6 +223,7 @@ export default function EditAdd({addressData}){
             form.append('recipient_name', rec_name);
             form.append('mobile_number', mobile_number);
             form.append('address', myAddress);
+            form.append('province', province);
             form.append('region', region);
             form.append('street', street);
             form.append('zipcode', zipcode);
@@ -230,6 +236,7 @@ export default function EditAdd({addressData}){
                 rec_name,
                 mobile_number,
                 myAddress,
+                province,
                 region,
                 street,
                 zipcode,
@@ -261,6 +268,7 @@ export default function EditAdd({addressData}){
             fData.append('fullName', rec_name);
             fData.append('mobile_number', mobile_number);
             fData.append('address', myAddress);
+            fData.append('province', province);
             fData.append('region', region);
             fData.append('street', street);
             fData.append('zipcode', zipcode);
@@ -275,6 +283,7 @@ export default function EditAdd({addressData}){
                 setAddress('');
                 setMobileNum('');
                 setRegion('');
+                setProvince('');
                 setStreet('');
                 setZipCode('');
                 console.log('add');
@@ -293,6 +302,7 @@ export default function EditAdd({addressData}){
     setLng('');
     setBookID('');
     setRecName('');
+    setProvince('');
     setMobileNum('');
     setMyAddress('');
     setRegion('');
@@ -311,6 +321,7 @@ export default function EditAdd({addressData}){
     setBookID(addDetails.addBook_id);
     setRecName(addDetails.recipient_name);
     setMobileNum(addDetails.mobile_number);
+    setProvince(addDetails.province);
     setMyAddress(addDetails.address);
     setRegion(addDetails.region);
     setStreet(addDetails.street);
@@ -408,11 +419,15 @@ export default function EditAdd({addressData}){
                                     <input type="text" id="address" value={myAddress} onChange={handleAddress} className="form-control" placeholder={`Address`}/>
                                 </div>
                                 <div className="col mb-3">
-                                    <label htmlFor="Region">Region</label>
+                                    <label htmlFor="province">Province</label>
+                                    <input type="text" id="province" value={province} onChange={handleProvince} className="form-control" placeholder={`Province`}/>
+                                </div>
+                                <div className="col mb-3">
+                                    <label htmlFor="Region">Municipality/City</label>
                                     <input type="text" id="region" value={region} onChange={handleRegion} className="form-control" placeholder={`Region`}/>
                                 </div>
                                 <div className="col mb-3">
-                                    <label htmlFor="street">Street</label>
+                                    <label htmlFor="street">Street/Barangay</label>
                                     <input type="text" id="street" value={street} onChange={handleStreet} className="form-control" placeholder={`Street`}/>
                                 </div>
                                 <div className="col mb-3">

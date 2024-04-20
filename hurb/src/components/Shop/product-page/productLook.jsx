@@ -10,7 +10,7 @@ import Navy from '../../color-images/navy blue.jpg';
 import White from '../../color-images/white.jpg';
 import Star from '../../icons/star.png/';
 import EStar from '../../icons/emptystar.png';
-
+import { ToastContainer, toast } from 'react-toastify';
 
 import './productLook.css';
 
@@ -63,7 +63,7 @@ export default function ProductLook() {
             setQtyField(currentQty + 1);
             setProdQty(currentQty + 1);
         } else {
-            alert('Cannot add more quantity, exceeds stock!');
+            toast.warning('Cannot add more quantity, exceeds stock!');
         }
     }
 
@@ -76,7 +76,12 @@ export default function ProductLook() {
 
 
      const handleAddCart = () => {
+        event.preventDefault();
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
+        if(parseInt(qtyField) > productStock){
+            toast.warning(`Exceed Stock, Stock Left: ${productStock}`);
+            return;
+        }
         if(storedLoginStatus){
             setProdQty(qtyField);
             const url = "http://localhost/hurb/track_bought.php";
@@ -92,12 +97,12 @@ export default function ProductLook() {
     
             axios.post(url, fData)
             .then(response=>{
-                alert(response.data);
+                toast.success(response.data);
                 window.location.href="/shop/cart";
             })
             .catch(error=>alert(error));
         }else{
-            alert('Please login first');
+            toast.error("Please login first !")
         }
        
     }
@@ -209,6 +214,7 @@ export default function ProductLook() {
                                                 <button className="btn btn-outline-secondary" type="button" onClick={handleAddQtyField}id="addBtn">+</button>
                                             </div>
                                             <Link className="btn btn-dark d-flex justify-content-center align-items-center" onClick={handleAddCart} id="addToCartBtn">ADD TO CART</Link>
+                                            <ToastContainer position="top-center" limit={1}/>
                                         </div>
                                     </div>
                                     <div className="row">

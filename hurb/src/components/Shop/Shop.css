@@ -54,4 +54,9 @@
 
 #Product-Card-1{
     text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+#Product-Card-1:hover{
+    transform: scale(1.1);
 }

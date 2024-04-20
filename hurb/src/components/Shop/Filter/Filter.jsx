@@ -5,30 +5,48 @@ import Navy from '../../color-images/navy blue.jpg';
 import White from '../../color-images/white.jpg';
 import './filter.css';
 
-export default function Filter({ isVisible }){
-    
+export default function Filter({ isVisible, products, onCategorySelect }){
+
+    const uniqueSubCategories = [...new Set(products.map(product => product.product_sub_category))];
+
+    const handleSubCategoryClick = (subCategory) => {
+        if (subCategory === "/shop") {
+            // Pass down null or an empty string to indicate all items are selected
+            onCategorySelect("Men's Collection", 'All Items');
+        } else {
+            onCategorySelect("Men's Collection", subCategory);
+        }
+    };
+
     return(
         <>
-            <div className={`filter-section ${isVisible ? 'visible' : 'hidden'}`}>
+        <div className={`filter-section ${isVisible ? 'visible' : 'hidden'}`}>
             <div className="row">
                 <div className="col-auto" id="item-category">
                     <nav className="nav d-flex flex-column">
-                        <a className="nav-link" href="#" id="shop-category">Shirts</a>
-                        <a className="nav-link" href="#" id="shop-category">Polos</a>
-                        <a className="nav-link" href="#" id="shop-category">Henleys Tops</a>
-                        <a className="nav-link" href="#" id="shop-category">Oversized Shirts</a>
-                        <a className="nav-link" href="#" id="shop-category">Henleys</a>
+                        <a href="/shop" id="shop-category" onClick={() => handleSubCategoryClick("/shop")} className='nav-link'>All</a>
+                    {uniqueSubCategories.map((subCategory, index) => (
+                            <a 
+                                href={`#${subCategory}`} 
+                                id="shop-category" 
+                                className="nav-link" 
+                                key={index} 
+                                onClick={() => handleSubCategoryClick(subCategory)}
+                            >
+                                {subCategory}
+                            </a>
+                        ))}
                     </nav>
                     <hr className="border border-dark border-1 opacity-40" />
                 </div>
             </div>
             <div className="row row-cols-1" id="gender">
                 <div className="col">
-                    <h3>Gender (#)</h3>
+                    <h3>Gender</h3>
                 </div>
                 <div className="col-auto">
                     <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="uniCheck" />
+                        <input type="checkbox" className="form-check-input" id="uniCheck" defaultChecked/>
                         <label htmlFor="uniCheck" className="form-check-label">Unisex</label>
                     </div>
                     <div className="form-check">

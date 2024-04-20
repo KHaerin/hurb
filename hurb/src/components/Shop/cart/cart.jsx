@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './cart.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Cart(){
 
@@ -51,7 +52,7 @@ export default function Cart(){
         const currentStock = existingTrack.product_stock;
     
         if (newQuantity > currentStock) {
-            alert('Exceeded available stock');
+            toast.warning(`Exceed stocks, Stock left ${currentStock}`);
         } else {
             updateQuantity(track_id, newQuantity);
         }
@@ -79,15 +80,15 @@ export default function Cart(){
             const response = await axios.post("http://localhost/hurb/remove_product.php", formData);
             fetchCartProducts();
             window.location.reload();
-            alert(response.data);
+            toast(response.data);
         } catch (error) {
-            alert(error);
+            toast.error(error);
         }
     };
 
     const checkOut = () => {
         if(tracks.length === 0){
-            alert('No products to checkout');
+            toast.warning('There are no items in your cart');
         }else{
             window.location.href = "/checkout";
         }
@@ -188,6 +189,8 @@ export default function Cart(){
                     </div>
                 </div>
             </div>
+            <ToastContainer position="top-center" limit={1}/>
+
         </>
     )
 }
