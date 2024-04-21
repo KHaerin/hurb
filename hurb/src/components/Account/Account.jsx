@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import AccMenu from './accMenu';
 import Profile from './AccountMenu/Profile';
-import AddressBook from './AccountMenu/AddressBook';  // Import the components you want to conditionally render
+import AddressBook from './AccountMenu/AddressBook';  
 import AddAddress from './AccountMenu/AddAddress';
+import MyOrder from './AccountMenu/MyOrder';
+
 
 export default function Account(){
 
@@ -15,6 +17,7 @@ export default function Account(){
     const[phoneNum, setPhoneNum] = useState('');
     const[password, setPassword] = useState('');
     const[profile_picture, setProfilePic] = useState('');
+    const[isSeller, setIsSeller] = useState('');
     const userId = localStorage.getItem('userId');
 
     const [activeLink, setActiveLink] = useState('profile');
@@ -48,6 +51,7 @@ export default function Account(){
             setPhoneNum(phoneNum);
             setPassword(password);
             setProfilePic(profile_picture);
+            setIsSeller(userDBFetch.isSeller);
 
         }catch(error){
             console.error('Error fetch: ', error);
@@ -71,7 +75,7 @@ export default function Account(){
                             <span>{lName}, {fName}</span>
                         </div>
                         <hr className="border border-dark border-1 opacity-40" id="hr"/>
-                            <AccMenu handleLinkClick={handleLinkClick} activeLink={activeLink}></AccMenu>
+                            <AccMenu handleLinkClick={handleLinkClick} activeLink={activeLink} isSeller={isSeller}></AccMenu>
                     </div>
                 </div>
             <div className="col" id="middle-container">
@@ -79,7 +83,7 @@ export default function Account(){
                 {activeLink === 'addressBook' && <AddressBook  handleLinkClick={handleLinkClick} />}
                 {activeLink === 'addAddress' && <AddAddress handleLinkClick={handleLinkClick}/>}                
                 {activeLink === 'changePassword' && <ChangePassword />}
-                {activeLink === 'orderHistory' && <OrderHistory />}
+                {activeLink === 'orderHistory' && <MyOrder />}
                 {activeLink === 'myVouchers' && <MyVouchers />}
             </div>
         </div>

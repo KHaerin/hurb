@@ -13,7 +13,6 @@ export default function Applications() {
         try {
             const response = await axios.get('http://localhost/hurb/SellerApplication/Application.php');
             setApplicants(response.data);
-            console.log(response.data);
         } catch (error) {
             console.error('Error', error);
         }
@@ -55,7 +54,7 @@ export default function Applications() {
             <div className="container">
                 <div className="row">
                     <div className="col">
-                        <h1>dasburd</h1>
+                        <h1>Seller Application</h1>
                     </div>
                 </div>
                 <div className="row">

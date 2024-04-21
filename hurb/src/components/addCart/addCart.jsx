@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import ShopCart from '../icons/account-icon/shopping-cart.png';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function AddCart() {
 
@@ -45,18 +45,19 @@ export default function AddCart() {
         if(isLoggedIn){
             navigate('/shop/cart');
         }else if (!isLoggedIn){
-            alert('Log in first');
+            toast.warning('Please login first');
             navigate('/login');
         }
     };
 
     return (
         <button type="button" onClick={handleCartClick} className="btn position-relative d-flex align-items-center">
-        <FontAwesomeIcon icon={faCartShopping} id="cartIcon"></FontAwesomeIcon>
+        <img src={ShopCart} id="cartIcon"></img>
         <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             {tracks.length}
           <span className="visually-hidden"></span>
         </span>
+        <ToastContainer position="top-center" limit={1}/>
       </button>
     );
 }

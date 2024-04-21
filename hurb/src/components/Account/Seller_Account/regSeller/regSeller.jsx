@@ -2,6 +2,7 @@ import Map from '../../../googleMap/Map';
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './regSeller.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function regSeller() {
     const [showMap, setShowMap] = useState(false);
@@ -82,10 +83,11 @@ export default function regSeller() {
     const handleVerifyEmail = async () => {
         if (shop_mail === '' || shop_name === '') {
             alert('Please provide business name and email');
+            toast.warning('Please provide business name and email');
             return;
         }
         if (!emailPattern.test(shop_mail)) {
-            alert('Please provide a valid email');
+            toast.warning('Please provide a valid email address');
             return;
         }
     
@@ -101,7 +103,7 @@ export default function regSeller() {
             const response = await axios.get(`http://localhost/hurb/register/getApplication.php?user_id=${userId}`);
             const isVerified = response.data.isVerified;
             if (isVerified === '1') {
-                alert('Your email is already verified');
+                toast.warning('Your email is already verified');
                 return;
             }
         } catch (error) {
@@ -113,9 +115,9 @@ export default function regSeller() {
             .then(response => {
                 console.log(response.data);
                 if (response.data === 'Success') {
-                    alert('Please check your email for verification');
+                    toast.warning('Please check your email for verification');
                 } else {
-                    alert('Email not registered');
+                    toast.warning('Email not registered');
                 }
             })
             .catch(error => alert(error));
@@ -155,14 +157,14 @@ export default function regSeller() {
         
         // If email is not verified, prevent submission
         if (!isEmailVerified) {
-            alert('Please verify your email before submitting');
+            toast.warning('Please verify your email before submitting');
             verifyBtnRef.current.scrollIntoView({ behavior: "smooth" });
             return;
         }
         
         // Proceed with submission
         if (Object.values(error).some(errors => errors !== '')) {
-            alert('Error in the fields');
+            toast.error('Error in the fields');
             return;
         } else {
             const url = "http://localhost/hurb/register/registerSeller.php";
@@ -173,7 +175,7 @@ export default function regSeller() {
             const userId = localStorage.getItem('userId');
     
             if (map_lat === null || map_long === null) {
-                alert('Please provide location in map below');
+                toast.warning('Please mark your location in the map');
                 return;
             }
             let fData = new FormData();
@@ -326,6 +328,7 @@ export default function regSeller() {
                     </div>
                 </div>
             </div>
+            <ToastContainer position="top-center" limit={1}/>
         </>
     )
 }

@@ -2,12 +2,12 @@ import './Shop.css';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSlidersH} from '@fortawesome/free-solid-svg-icons';
+import {faUser} from '@fortawesome/free-regular-svg-icons';
 import Heart from '../icons/heart.svg';
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Filter from './Filter/Filter';
 import { Container, Row, Col, Button, Image, InputGroup, Card, Breadcrumb} from 'react-bootstrap';
-
 
 export default function Shop() {
 
@@ -23,11 +23,8 @@ export default function Shop() {
     }
 
     useEffect(() => {
-       
-        console.log(storedFilterVisible)
         if (storedFilterVisible !== null) {
             setFilterVisible(storedFilterVisible === 'true');
-            console.log('xd');
         }
         setCount(products.length); 
         fetchProducts();
@@ -62,11 +59,9 @@ export default function Shop() {
                 <Row>
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb>
-                                <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
-                                <Breadcrumb.Item ><Link to="/shop">Shop</Link></Breadcrumb.Item>
-                                {selectedSubCategory && <Breadcrumb.Item active>{selectedSubCategory}</Breadcrumb.Item>}                        
-                            </Breadcrumb>
+                            <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+                            <Breadcrumb.Item><Link to="/shop">Shop</Link></Breadcrumb.Item>
+                            {selectedSubCategory && <Breadcrumb.Item active>{selectedSubCategory}</Breadcrumb.Item>}                        
                         </Breadcrumb>
                     </Col>
                     <Col className="d-flex gap-5 align-items-center justify-content-end">
@@ -78,9 +73,9 @@ export default function Shop() {
                     </Col>
                 </Row>
                 <Row>
-                    <di className="col-auto" id="category-title">
+                    <div className="col-auto" id="category-title">
                         <h3>{selectedSubCategory ? selectedSubCategory : 'All Items'} ({filteredProducts.length})</h3>                    
-                    </di>
+                    </div>
                 </Row>
                 <Row>
                     <Col className='col-auto'>

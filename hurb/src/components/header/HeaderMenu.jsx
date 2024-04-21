@@ -32,7 +32,9 @@ export default function Header() {
         window.location.href = "/shop";
     }
 
- 
+    const linkStyle = {
+        color: '#000000',
+    }
 
     return (
         <>
@@ -73,8 +75,8 @@ export default function Header() {
                                 <li className='nav-item dropdown'>
                                     <Link to="#" className="nav-link dropdown-toggle pointers-events-none" id="headerLinks" role="button" data-bs-toggle="dropwdown" aria-expanded="false" aria-disabled><img src={AccountIcon} alt="" id="accIcon" /></Link>
                                     <ul className="dropdown-menu dropdown-menu-hover">
-                                        <li className="dropdown-item"><Link to="/login" className='nav-link' >Login</Link></li>
-                                        <li className='dropdown-item'><Link to="/register" className='nav-link'>Sign Up</Link></li>
+                                        <li className="dropdown-item"><Link to="/login" className='nav-link' style={linkStyle}>Login</Link></li>
+                                        <li className='dropdown-item'><Link to="/register" className='nav-link' style={linkStyle}>Sign Up</Link></li>
                                     </ul>
 
                                 </li>

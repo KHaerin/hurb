@@ -23,7 +23,13 @@ import Checkout from './components/Checkout/checkout';
 import Profile from './components/Account/AccountMenu/Profile';
 import AddressBook from './components/Account/AccountMenu/AddressBook';
 import AddAddress from './components/Account/AccountMenu/AddAddress';
+import Dashboard from './components/admin/admin-menu/dashboard';
+import ListAccounts from './components/admin/admin-menu/listAccounts';
+import ListSellers from './components/admin/admin-menu/listSellers';
+import SettingsAdmin from './components/admin/admin-menu/settings';
 import "./App.css";
+
+
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setAdmin] = useState(false);
@@ -78,6 +84,10 @@ function App() {
             <Route path="/checkout" element={<Checkout/>} />
             <Route path="/regSeller" element={<RegSeller/>} />
             <Route path="/login/admin" element={<Admin/>} />
+            <Route path="/admin/dashboard" element={<Dashboard/>} />
+            <Route path="/admin/listAccounts" element={<ListAccounts/>} />
+            <Route path="/admin/listSellers" element={<ListSellers/>} />
+            <Route path="/admin/Settings" element={<SettingsAdmin/>} />
             <Route path="/admin/application" element={<Application/>}  />
         </Routes>
     </BrowserRouter>

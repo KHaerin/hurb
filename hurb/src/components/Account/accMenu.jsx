@@ -1,7 +1,15 @@
 import axios from 'axios';
+import { useEffect } from 'react';
 import {Link , useNavigate} from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faUser, faAddressBook} from '@fortawesome/free-regular-svg-icons';
+import Coupon from '../icons/account-icon/coupon.png';
+import Padlock from '../icons/account-icon/padlock.png';
+import ShopCart from '../icons/account-icon/shopping-cart.png';
+import { ToastContainer, toast } from 'react-toastify';
 
-export default function accMenu({handleLinkClick, activeLink}){
+
+export default function accMenu({handleLinkClick, activeLink, isSeller}){
     const navigate = useNavigate();
     const handleNavigateAndReload = async () => {
 
@@ -12,7 +20,7 @@ export default function accMenu({handleLinkClick, activeLink}){
         const getUserIdDB = dataFetch.user_id;
         const getVerified = dataFetch.isVerified;
         if(getUserIdDB === getUserId && getVerified === '1'){
-            alert('Please wait for the admin to confirm your application.');
+            toast.warning('Your application is under review by the admin');
         }else{
             navigate("/regSeller");
             window.location.reload();
@@ -20,16 +28,14 @@ export default function accMenu({handleLinkClick, activeLink}){
 
     }catch(error){
         console.log('Error fetching data:', error);
-    }
-        
-
-    
+    }   
 }
     return(
         <>
          <div className="dashboard-menu">
             <ul className="navbar-nav gap-2">
-                <li className="nav-item">
+                <li className="nav-item d-flex align-items-center gap-2 text-center">
+                <FontAwesomeIcon icon={faUser} id="nav-icons"/>
                     <Link
                         to="#"
                         className={`nav-link ${activeLink === 'profile' ? 'active' : ''}`}
@@ -38,7 +44,8 @@ export default function accMenu({handleLinkClick, activeLink}){
                         Profile
                     </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item d-flex align-items-center gap-2 text-center">
+                <FontAwesomeIcon icon={faAddressBook} id="nav-icons"/>
                     <Link
                         to="#"
                         className={`nav-link ${activeLink === 'addressBook' ? 'active' : ''}`}
@@ -47,7 +54,8 @@ export default function accMenu({handleLinkClick, activeLink}){
                         Address Book
                     </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item d-flex align-items-center gap-2 text-center">
+                    <img src={Padlock} alt="" id="nav-icons"/>
                     <Link
                         to="#"
                         className={`nav-link ${activeLink === 'changePassword' ? 'active' : ''}`}
@@ -56,7 +64,8 @@ export default function accMenu({handleLinkClick, activeLink}){
                         Change Password
                     </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item d-flex align-items-center gap-2 text-center">
+                    <img src={ShopCart} alt="" id="nav-icons"/>
                     <Link
                         to="#"
                         className={`nav-link ${activeLink === 'orderHistory' ? 'active' : ''}`}
@@ -65,7 +74,8 @@ export default function accMenu({handleLinkClick, activeLink}){
                         Order History
                     </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item d-flex align-items-center gap-2 text-center">
+                    <img src={Coupon} alt="" id="nav-icons"/>
                     <Link
                         to="#"
                         className={`nav-link ${activeLink === 'myVouchers' ? 'active' : ''}`}
@@ -74,12 +84,15 @@ export default function accMenu({handleLinkClick, activeLink}){
                         My Vouchers
                     </Link>
                 </li>
-                <li className="nav-item">
-                    <Link onClick={handleNavigateAndReload} className="nav-link" id="advertise">Advertise your brand now!</Link>
-                 </li>
+                {isSeller === '0' && 
+                    <li className="nav-item">
+                        <Link onClick={handleNavigateAndReload} className="nav-link" id="advertise">Advertise your brand now!</Link>
+                     </li>
+                }
+                
             </ul>
         </div>
-           
+        <ToastContainer position="top-center" limit={1}/>
         </>
     )
 }

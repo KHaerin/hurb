@@ -11,7 +11,6 @@ export default function accDropDown(){
 
     const history = useNavigate();
 
-   
     useEffect(() => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
         const userId = localStorage.getItem('userId');
@@ -34,8 +33,7 @@ export default function accDropDown(){
     }
 
     const handleAdminPage = () => {
-        history("/login/admin");
-        window.location.reload();
+        window.location.href='/login/admin';
     }
 
     const[profile_picture, setProfilePic] = useState(null);
@@ -58,6 +56,7 @@ export default function accDropDown(){
             console.error('Error fetch: ', error);
         }
     }
+    
 
     const userId = localStorage.getItem('userId');
     return(
