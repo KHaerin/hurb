@@ -19,14 +19,28 @@ function MyOrder() {
                 const user_id = localStorage.getItem('userId');
                 const url = await axios.get(`http://localhost/hurb/CustomerOrder/MyOrder.php?user_id=${user_id}`);
                 const orders = url.data;
+                console.log(orders);
                 setOrder(orders);
-                console.log('ORDERS: ', orders);
             }catch(error){
                 console.error(error);
             }
         };
         getAddressBook();
     }, [])
+
+    const handleCancelOrder = async (order_item_id) => {
+        try{
+            const fData = new FormData();
+            fData.append('order_item_id', order_item_id);
+
+            const response = await axios.post("http://localhost/hurb/CustomerOrder/CancelOrder.php", fData);
+            console.log(response);
+            window.location.reload();
+        }catch(error){
+            console.error(error);
+        }
+        console.log(order_item_id);
+    }
 
 
     const order_container = {
@@ -68,6 +82,19 @@ function MyOrder() {
                     <Container fluid className='d-flex flex-column gap-4'>
                         {myOrders.map((order, index) => (
                         <div key={order.order_item_id} style={order_container}>
+                            <Row className='px-4 pt-4'>
+                            {order.deliver_status === 'ship' && 
+                                <span>Seller is preparing to ship.</span>
+                            }
+
+                            {order.deliver_status === 'received' && 
+                                <span>Delivered</span>
+                            }
+
+                            {order.deliver_status === 'onDeliver' && 
+                                <span>To Receive</span>
+                            }
+                            </Row>
                             <Row className='p-5' >
                                 <Col className='col-auto'>
                                     <Image src={`http://localhost/hurb/${order.product_img}`} style={product_size}></Image>
@@ -79,6 +106,7 @@ function MyOrder() {
                                         <span>{`Variation: Black, ${order.size}`}</span>
                                         <span>{`P${order.unit_price}`}</span>
                                     </div>
+                                    <span>Subtotal: {order.unit_price * order.quantity}</span>
                                 </Col>
                                 <Col className='d-flex justify-content-end align-items-end'>
                                     <span>{`Order Total: ${order.totalPayable}`}</span>
@@ -92,7 +120,10 @@ function MyOrder() {
                             <Row>
                                 <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
                                 {order.deliver_status === "ship" && 
-                                    <Button variant="dark" disabled>Order Received</Button>
+                                <>
+                                    <Button variant="danger" style={ratebuyBtn} onClick={() => handleCancelOrder(order.order_item_id)}>Cancel</Button>                
+                                    <Button variant="dark" style={ratebuyBtn} disabled>Order Received</Button>
+                                </>    
                                 }
                                 {order.deliver_status === "onDeliver" && 
                                     <Button variant="dark">Order Received</Button>
@@ -137,8 +168,9 @@ function MyOrder() {
                             </Col>
                         </Row>
                         <Row>
-                            <Col className='d-flex justify-content-end mx-5 mb-3'>                
-                                <Button variant="dark" disabled>Order Received</Button>
+                            <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
+                                <Button variant="danger" style={ratebuyBtn}>Cancel</Button>                
+                                <Button variant="dark" style={ratebuyBtn} disabled>Order Received</Button>
                             </Col>
                         </Row>
                     </div> 

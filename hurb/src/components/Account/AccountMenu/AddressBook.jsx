@@ -33,7 +33,7 @@ export default function AddressBook({handleLinkClick}){
     }
 
     const handleAddAddressClick = () => {
-        handleLinkClick('addAddress');
+        handleLinkClick('/account/addAddress');
     };
 
     const[addressDetails, setAddressDetails] = useState([]);
@@ -54,7 +54,7 @@ export default function AddressBook({handleLinkClick}){
 
     const handleEditBtn = (addBook_id) => {
         localStorage.setItem('addBook_id', addBook_id);
-        handleLinkClick('addAddress');
+        handleLinkClick('/account/addAddress');
     }
 
 

@@ -71,9 +71,8 @@ function App() {
             <Route path="/top" element={<Top />} />
             <Route path="/bottom" element={<Bottom />} />
             <Route path="/account" element={<Account/>}/>
-            <Route path="/account/profile" element={<Profile/>}  />
-            <Route path="/account/addressBook" element={<AddressBook/>}  />
-            <Route path="/account/addressBook/addAddress" element={<AddAddress/>}  />
+            <Route path="/account/addressBook" element={<Account/>}/>
+            <Route path="/account/myOrder" element={<Account/>}/>
             <Route path="/seller" element={<Seller/>} />
             <Route path="/seller/products" element={<Products />} />
             <Route path="/seller/products/addproducts" element={<AddProduct/>} />

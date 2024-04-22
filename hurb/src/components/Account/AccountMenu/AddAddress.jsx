@@ -96,7 +96,7 @@ export default function AddAddress({handleLinkClick}){
     
 
     const handleAddAddressClick = () => {
-        handleLinkClick('addressBook');
+        handleLinkClick('/account/addressBook');
         localStorage.removeItem('addBook_id');
     };
 

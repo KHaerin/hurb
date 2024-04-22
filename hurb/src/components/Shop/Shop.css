@@ -38,6 +38,11 @@
     height: 1.563rem;
 }
 
+#product-name{
+    font-size: 2rem;
+    
+}
+
 #product-name, #product-price, #product-details, #product-color{
     margin: 0 0 2px 0;
 }

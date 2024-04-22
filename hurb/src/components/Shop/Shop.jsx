@@ -59,8 +59,8 @@ export default function Shop() {
                 <Row>
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
-                            <Breadcrumb.Item><Link to="/shop">Shop</Link></Breadcrumb.Item>
+                            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+                            <Breadcrumb.Item href="/shop">Shop</Breadcrumb.Item>
                             {selectedSubCategory && <Breadcrumb.Item active>{selectedSubCategory}</Breadcrumb.Item>}                        
                         </Breadcrumb>
                     </Col>
@@ -99,14 +99,14 @@ export default function Shop() {
                                             </div>
                                             <hr className="border border-dark border-1 opacity-40" id="shop-line" />
                                             <Card.Text className="d-flex flex-column">
-                                                <h3 id="product-name">{product.product_name}</h3>
-                                                <p className='d-flex gap-2' id="product-details">
+                                                <span id="product-name">{product.product_name}</span>
+                                                <span className='d-flex gap-2' id="product-details">
                                                     <span>{product.product_sex}</span>
                                                     <span>{product.product_category}</span>
                                                     <span>{product.product_sub_category}</span>
-                                                </p>
-                                                <p id="product-color">color diri</p>
-                                                <p id="product-price">{product.product_price}</p>
+                                                </span>
+                                                <span id="product-color">color diri</span>
+                                                <span id="product-price">{product.product_price}</span>
                                             </Card.Text>
                                         </Card>
                                     </Link>

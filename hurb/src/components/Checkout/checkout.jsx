@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruck, faCreditCard, faWallet, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col, Button, Image, InputGroup, Form} from 'react-bootstrap';
 import EditAddress from './EditAdd';
+import 'bootstrap/dist/js/bootstrap.min.js';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function checkout(){
@@ -172,6 +173,7 @@ export default function checkout(){
         });
         orderData.append('totalPayable', totalAmount);
         orderData.append('date_bought', todayDate);
+        orderData.append('deliver_status', 'ship');
         console.log('today date: ', todayDate);
 
         axios.post(orderUrl, orderData)
@@ -222,8 +224,6 @@ export default function checkout(){
         setTotalAmount(total);
         setNoItems(tracks.length);
     }, [subTotal, shippingFee, serviceFee]);
-
-   
 
     return(
         <>

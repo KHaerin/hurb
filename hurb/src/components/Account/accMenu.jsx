@@ -37,9 +37,9 @@ export default function accMenu({handleLinkClick, activeLink, isSeller}){
                 <li className="nav-item d-flex align-items-center gap-2 text-center">
                 <FontAwesomeIcon icon={faUser} id="nav-icons"/>
                     <Link
-                        to="#"
-                        className={`nav-link ${activeLink === 'profile' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('profile')}
+                        to="/account"
+                        className={`nav-link ${activeLink === '/account' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/account')}
                     >
                         Profile
                     </Link>
@@ -47,9 +47,9 @@ export default function accMenu({handleLinkClick, activeLink, isSeller}){
                 <li className="nav-item d-flex align-items-center gap-2 text-center">
                 <FontAwesomeIcon icon={faAddressBook} id="nav-icons"/>
                     <Link
-                        to="#"
-                        className={`nav-link ${activeLink === 'addressBook' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('addressBook')}
+                        to="/account/addressBook"
+                        className={`nav-link ${activeLink === '/account/addressBook' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/account/addressBook')}
                     >
                         Address Book
                     </Link>
@@ -67,9 +67,9 @@ export default function accMenu({handleLinkClick, activeLink, isSeller}){
                 <li className="nav-item d-flex align-items-center gap-2 text-center">
                     <img src={ShopCart} alt="" id="nav-icons"/>
                     <Link
-                        to="#"
-                        className={`nav-link ${activeLink === 'orderHistory' ? 'active' : ''}`}
-                        onClick={() => handleLinkClick('orderHistory')}
+                        to="/account/myOrder"
+                        className={`nav-link ${activeLink === '/account/myOrder' ? 'active' : ''}`}
+                        onClick={() => handleLinkClick('/account/myOrder')}
                     >
                         Order History
                     </Link>
