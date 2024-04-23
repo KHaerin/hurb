@@ -45,19 +45,27 @@ export default function AddCart() {
         if(isLoggedIn){
             navigate('/shop/cart');
         }else if (!isLoggedIn){
-            toast.warning('Please login first');
-            navigate('/login');
+            const errorToastId = toast.error("Please login first !", {
+                onClose: () => {
+                    window.location.href = "/login";
+                }
+            });
+            
         }
     };
 
     return (
-        <button type="button" onClick={handleCartClick} className="btn position-relative d-flex align-items-center">
-        <img src={ShopCart} id="cartIcon"></img>
-        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {tracks.length}
-          <span className="visually-hidden"></span>
-        </span>
-        <ToastContainer position="top-center" limit={1}/>
-      </button>
+        <>
+         <button type="button" onClick={handleCartClick} className="btn position-relative d-flex align-items-center">
+            <img src={ShopCart} id="cartIcon"></img>
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {tracks.length}
+            <span className="visually-hidden"></span>
+            </span>
+        
+        </button>
+         <ToastContainer position="top-center" limit={1}/>
+        </>
+       
     );
 }

@@ -176,14 +176,14 @@ export default function Register(){
                                 </div>
                                 <div className="col">
                                     <div className="form-floating mb-4">
-                                        <input type="text" className={`form-control ${errors.password ? 'is-invalid' : ''}`} id="password" name="password" placeholder='Password' required value={password} onChange={handlePasswordChange}/>
+                                        <input type="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} id="password" name="password" placeholder='Password' required value={password} onChange={handlePasswordChange}/>
                                         <label htmlFor="password">Password</label>
                                         {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                                     </div>
                                 </div>
                                 <div className="col">
                                     <div className="form-floating mb-4">
-                                        <input type="text" className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`} name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' value={conPass} onChange={handleConPassChange} required/>
+                                        <input type="password" className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`} name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' value={conPass} onChange={handleConPassChange} required/>
                                         <label htmlFor="confirmPassword">Confirm Password</label>
                                         {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
                                     </div>

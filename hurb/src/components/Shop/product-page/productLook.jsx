@@ -76,7 +76,6 @@ export default function ProductLook() {
 
 
      const handleAddCart = () => {
-        event.preventDefault();
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
         if(parseInt(qtyField) > productStock){
             toast.warning(`Exceed Stock, Stock Left: ${productStock}`);
@@ -102,7 +101,11 @@ export default function ProductLook() {
             })
             .catch(error=>alert(error));
         }else{
-            toast.error("Please login first !")
+            const errorToastId = toast.error("Please login first !", {
+                onClose: () => {
+                    window.location.href = "/login";
+                }
+            });
         }
        
     }
@@ -213,8 +216,7 @@ export default function ProductLook() {
                                                 aria-label="Example text with two button addons" id="qtyField"/>
                                                 <button className="btn btn-outline-secondary" type="button" onClick={handleAddQtyField}id="addBtn">+</button>
                                             </div>
-                                            <Link className="btn btn-dark d-flex justify-content-center align-items-center" onClick={handleAddCart} id="addToCartBtn">ADD TO CART</Link>
-                                            <ToastContainer position="top-center" limit={1}/>
+                                            <div className="btn btn-dark d-flex justify-content-center align-items-center" onClick={handleAddCart} id="addToCartBtn">ADD TO CART</div>      
                                         </div>
                                     </div>
                                     <div className="row">
@@ -248,6 +250,7 @@ export default function ProductLook() {
                 ))}
                 </div>
             </div>
+            <ToastContainer position="top-center" limit={1}/>
         </div>
     );
 }
