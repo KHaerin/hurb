@@ -107,7 +107,7 @@ export default function regSeller() {
                 return;
             }
         } catch (error) {
-            console.log('Error fetching verification status:', error);
+            console.log('Error fetching verification status:', error);3
         }
     
         // If not already verified, send verification request
@@ -117,7 +117,7 @@ export default function regSeller() {
                 if (response.data === 'Success') {
                     toast.warning('Please check your email for verification');
                 } else {
-                    toast.warning('Email not registered');
+                    toast.warning('Email already registered');
                 }
             })
             .catch(error => alert(error));

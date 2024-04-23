@@ -2,6 +2,7 @@ import './Login.css';
 import {Link, useNavigate} from 'react-router-dom';
 import React, { useState } from 'react';
 import axios from 'axios';
+import * as FaIcons from 'react-icons/fa';
 
 export default function Login({updateLoginStatus}){
     const[userName, setUserName]        = useState('');
@@ -71,6 +72,12 @@ export default function Login({updateLoginStatus}){
         }
     };
 
+    const[showPass, setShowPass] = useState(true);
+
+    const showBtn = () => {
+        setShowPass(prevState => !prevState);
+    }
+
     return(
         <>
         <div className="container" id="loginContainer">
@@ -92,9 +99,10 @@ export default function Login({updateLoginStatus}){
                                     {errors.userName && <div className="invalid-feedback">{errors.userName}</div>}
                                 </div>
 
-                                <div className="form-floating mb-3">
-                                    <input type="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} id="loginPassword" name="password" onChange={handlePasswordChange} placeholder="Password"/>
+                                <div className="form-floating  position-relative mb-3">
+                                    <input type={showPass ? 'password' : 'text'} className={`form-control ${errors.password ? 'is-invalid' : ''}`} id="loginPassword" name="password" onChange={handlePasswordChange} placeholder="Password"/>
                                     <label htmlFor="loginPassword">Password</label>
+                                    <button className="btn" id="eye-btn-login" type="button" onClick={showBtn}>{showPass ? <FaIcons.FaEye/> : <FaIcons.FaEyeSlash/> }</button>
                                     {errors.password && <div className="invalid-feedback">{errors.password}</div>}
 
                                 </div>

@@ -1,7 +1,8 @@
-import './register.css';
 import {Link} from 'react-router-dom';
 import React, { useState } from 'react';
 import axios from 'axios';
+import * as FaIcons from 'react-icons/fa';
+
 export default function Register(){
 
     const[firstName, setFirstName]      = useState('');
@@ -124,6 +125,17 @@ export default function Register(){
             .catch(error=>alert(error));
         }
     }
+
+    const[showPass, setShowPass] = useState(true);
+    const[showCon, setShowCon] = useState(true);
+
+    const showBtn = () => {
+        setShowPass(prevState => !prevState);
+    }
+
+    const conBtn = () => {
+        setShowCon(prevState => !prevState);
+    }
     
     return(
         <>
@@ -175,16 +187,18 @@ export default function Register(){
                                     </div>
                                 </div>
                                 <div className="col">
-                                    <div className="form-floating mb-4">
-                                        <input type="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} id="password" name="password" placeholder='Password' required value={password} onChange={handlePasswordChange}/>
+                                    <div className="form-floating position-relative mb-4">
+                                        <input type={showPass ? 'password' : 'text'} className={`form-control ${errors.password ? 'is-invalid' : ''}`} id="password" name="password" placeholder='Password' required value={password} onChange={handlePasswordChange}/>
                                         <label htmlFor="password">Password</label>
+                                        <button className="btn" id="eye-btn" type="button" onClick={showBtn}>{showPass ? <FaIcons.FaEye/> : <FaIcons.FaEyeSlash/> }</button>
                                         {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                                     </div>
                                 </div>
                                 <div className="col">
-                                    <div className="form-floating mb-4">
-                                        <input type="password" className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`} name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' value={conPass} onChange={handleConPassChange} required/>
+                                    <div className="form-floating position-relative mb-4">
+                                        <input type={showCon ? 'password' : 'text'} className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`} name="confirmPassword" id="confirmPassword" placeholder='Confirm Password' value={conPass} onChange={handleConPassChange} required/>
                                         <label htmlFor="confirmPassword">Confirm Password</label>
+                                        <button className="btn" id="eye-btn" type="button" onClick={conBtn}>{showCon ? <FaIcons.FaEye/> : <FaIcons.FaEyeSlash/> }</button>
                                         {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
                                     </div>
                                 </div>

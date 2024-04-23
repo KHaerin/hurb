@@ -136,7 +136,7 @@ export default function checkout(){
                 const userID = localStorage.getItem('userId');
                 const url = await axios.get(`http://localhost/hurb/AddressBook/getAddress.php?user_id=${userID}`);
                 if (Array.isArray(url.data) && url.data.length > 0) {
-                    setAddressBook([url.data[0]]);
+                    setAddressData([url.data[0]]);
                 } else {
                     setAddressBook([]);
                 }
@@ -241,10 +241,10 @@ export default function checkout(){
                     <Container id={addressData.length > 0 ? 'ship-address-container' : ''}>
                         <Row>
                             {addressData.map((Book, index) => (
-                                <Col className="p-4" key={Book.bookID}>                
+                                <Col className="p-4" key={Book.bookID || Book.addBook_id}>                
                                     <div className="contain">
                                         <span>
-                                            {Book.rec_name}
+                                            {Book.rec_name || Book.recipient_name}
                                         </span>
                                     </div>
                                     <div className="contain">
@@ -254,7 +254,7 @@ export default function checkout(){
                                     </div>
                                     <div className="contain">
                                         <span>
-                                            {Book.myAddress}
+                                            {Book.myAddress || Book.address}
                                         </span>
                                     </div>
                                 </Col>

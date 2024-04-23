@@ -78,7 +78,9 @@ function MyOrder() {
           <Container fluid>
             <Row>
               <Col>
-                {activeKey === "All" &&
+                {myOrders.length >= 1 ? 
+                <> 
+                    {activeKey === "All" &&
                     <Container fluid className='d-flex flex-column gap-4'>
                         {myOrders.map((order, index) => (
                         <div key={order.order_item_id} style={order_container}>
@@ -213,7 +215,7 @@ function MyOrder() {
                   ))}
               </Container>
                 }
-                {activeKey === "received" &&
+                  {activeKey === "received" &&
                     <Container fluid className='d-flex flex-column gap-4'>
                     {myOrders
                     .filter(order => order.deliver_status === 'received')
@@ -250,6 +252,9 @@ function MyOrder() {
                     ))}
                 </Container>
                 }
+                </>: <h1>You have yet to receive your first order.</h1>}
+                
+              
               </Col>
             </Row>
           </Container>

@@ -163,6 +163,7 @@ export default function EditAdd({addressData}){
 
   const[addressDetails, setAddressDetails] = useState([]);
 
+
   useEffect(() => {
       const getAddressBook = async () => {
           try{
@@ -287,6 +288,8 @@ export default function EditAdd({addressData}){
                 setStreet('');
                 setZipCode('');
                 console.log('add');
+                window.location.reload();
+                
                 const closeModalButton = document.querySelector('#staticBackdrop .btn-close');
                 closeModalButton.click();
             })
