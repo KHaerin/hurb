@@ -1,9 +1,5 @@
 .navbar-admin{
     background-color: #000000;
-    height: 80px;
-    display: flex;
-    justify-content: start;
-    align-items: center;
     margin-bottom: 2%;
 }
 
@@ -18,6 +14,9 @@
 }
 
 .menu-bars{
+    display: flex;
+    justify-content: start;
+    align-items: center;
     margin-left: 2rem;
     font-size: 2rem;
     background: none;

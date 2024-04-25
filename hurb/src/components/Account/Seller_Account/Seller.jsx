@@ -1,54 +1,122 @@
-import {Link} from 'react-router-dom';
-import SellerMenu from './SellerMenu';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import * as FaIcons from 'react-icons/fa';
+import * as AiIcons from 'react-icons/ai';
+import { sideBarData } from './Seller-Dashboard/sideBar';
+import { Container, Row, Col} from 'react-bootstrap';
+import MyProducts from './Seller_Menu/Products';
+import AddProduct from './Seller_Menu/addproduct/addproduct';
 
 export default function Seller(){
+
+ const [isOpen, setIsOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState(() => {
+    return localStorage.getItem('activeLinkSeller') || '#dashboard';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('activeLinkSeller', activeLink);
+  }, [activeLink]);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLinkClick = (link) => {
+    setActiveLink(link);
+
+    if(link === '#logout'){
+        logout();
+    }
+  };
+
+  const logout = () => {
+        setActiveLink('#dashboard');
+        window.location.href="/"
+  }
+
+    const[sidebar, setSidebar] = useState(false);
+
+    const showSidebar = () => setSidebar(!sidebar);
+
+    const goHome = () => {
+        setActiveLink('#dashboard');
+        localStorage.removeItem('onSeller');
+        window.location.href="/";
+    }
+
+    const text_style = {
+        color: '#ffffff'
+    }
+
     return(
         <>
-        <div className="container-fluid" id="account-container">
-            <div className="row gap-5">
-               <SellerMenu></SellerMenu>
-                <div className="col">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col">
-                                <div className="header bg-secondary d-flex justify-content-center p-2">
-                                    <h1>Dashboard</h1>
-                                </div>
-                            </div>
-                            <div className="row mb-5">
-                                    <div className="container">
-                                    <div className="row">
-                                        <div className="col">
-                                            <h1>table</h1>
-                                        </div>
-                                        <div className="col d-flex justify-content-end gap-5">
-                                            <h1>total sales</h1>
-                                            <h1>avg. order value</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                    <div className="col d-flex justify-content-end gap-5">
-                                        <h1>order sessions</h1>
-                                            <h1>conversion rate</h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col">
-                                    <h1>Selling Products</h1>
-                                </div>
-                                <div className="col">
-                                    <h1>
-                                        Top Products
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-       </div>
-        </>
+        <Container fluid className="navbar-admin p-4">
+            <Row>
+                <Col className='menu-bars col-auto'>
+                    <Link to="#" className="menu-bars">
+                        <FaIcons.FaBars id="burger" onClick={showSidebar}/>
+                    </Link>
+                </Col>
+                <Col className='d-flex justify-content-center align-items-center'>
+                {activeLink === '#dashboard' && 
+                       <h1 style={text_style}>Dashboard</h1>
+                    }
+                    {activeLink === '#myProducts' && 
+                        <h1 style={text_style}>My Products</h1>
+                    }
+                    {activeLink === '#addProduct' && 
+                       <h1 style={text_style}>Add Product</h1>
+                    }
+                    {activeLink === '#settings' && 
+                        <h1 style={text_style}>Settings</h1>
+                    }
+                </Col>
+            </Row>
+           
+    </Container>
+    <Container>
+        <Row>
+            <Col>
+            <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
+                <ul className="nav-menu-items">
+                    <li className="navbar-toggle" id="toggle" onClick={showSidebar}>
+                        <Link to="#" id="burger" className='menu-bars'>
+                            <AiIcons.AiOutlineClose/>
+                        </Link>
+                    </li>
+                    {sideBarData.map((links, index) => {
+                        return(
+                            <li key={index} className={links.cName}>
+                                <Link to={links.path} onClick={() => handleLinkClick(links.path)}>
+                                    {links.icon}
+                                    <span id="link-title">{links.title}</span>
+                                </Link>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </nav> 
+            </Col>
+        </Row>
+        <Row>
+            <Col>
+                    {activeLink === '#dashboard' && 
+                       <h1>Under Construction...</h1>
+                    }
+                    {activeLink === '#myProducts' && 
+                       <MyProducts/>
+                    }
+                    {activeLink === '#addProduct' && 
+                        <AddProduct/>
+                    }
+                    {activeLink === '#settings' && 
+                        <h1>Under Construction...</h1>
+                    }
+                    {activeLink === '#home' && goHome()}
+            </Col>
+        </Row>
+    </Container>
+    </>
     )
 }

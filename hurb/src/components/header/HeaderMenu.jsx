@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import './header.css';
-import AccountIcon from '../../components/icons/header-icon/user.png';
+import * as VscIcons from 'react-icons/vsc';
 import HeaderAcc from './accDropDown';
 import AddCart from '../addCart/addCart';
 
@@ -73,7 +73,7 @@ export default function Header() {
                             )}
                             {!isLoggedIn && (
                                 <li className='nav-item dropdown'>
-                                    <Link to="#" className="nav-link dropdown-toggle pointers-events-none" id="headerLinks" role="button" data-bs-toggle="dropwdown" aria-expanded="false" aria-disabled><img src={AccountIcon} alt="" id="accIcon" /></Link>
+                                    <Link to="#" className="nav-link dropdown-toggle pointers-events-none" id="headerLinks" role="button" data-bs-toggle="dropwdown" aria-expanded="false" aria-disabled><VscIcons.VscAccount id="accIcon"/></Link>
                                     <ul className="dropdown-menu dropdown-menu-hover">
                                         <li className="dropdown-item"><Link to="/login" className='nav-link' style={linkStyle}>Login</Link></li>
                                         <li className='dropdown-item'><Link to="/register" className='nav-link' style={linkStyle}>Sign Up</Link></li>

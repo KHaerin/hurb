@@ -6,6 +6,8 @@ import Profile from './AccountMenu/Profile';
 import AddressBook from './AccountMenu/AddressBook';  
 import AddAddress from './AccountMenu/AddAddress';
 import MyOrder from './AccountMenu/MyOrder';
+import ChangePassword from './AccountMenu/ChangePassword';
+import Vouchers from './AccountMenu/Vouchers';
 
 
 export default function Account(){
@@ -20,7 +22,7 @@ export default function Account(){
     const[isSeller, setIsSeller] = useState('');
     const userId = localStorage.getItem('userId');
 
-    const [activeLink, setActiveLink] = useState('/account');
+    const [activeLink, setActiveLink] = useState('#account');
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
  
@@ -79,12 +81,12 @@ export default function Account(){
                     </div>
                 </div>
             <div className="col" id="middle-container">
-                {activeLink === '/account' && <Profile />}
-                {activeLink === '/account/addressBook' && <AddressBook  handleLinkClick={handleLinkClick} />}
-                {activeLink === '/account/addAddress' && <AddAddress handleLinkClick={handleLinkClick}/>}                
-                {/* {activeLink === '#changePassword' && <ChangePassword />} */}
-                {activeLink === '/account/myOrder' && <MyOrder />}
-                {/* {activeLink === '#myVouchers' && <MyVouchers />} */}
+                {activeLink === '#account' && <Profile />}
+                {activeLink === '#account/addressBook' && <AddressBook  handleLinkClick={handleLinkClick} />}
+                {activeLink === '#account/addAddress' && <AddAddress handleLinkClick={handleLinkClick}/>}                
+                {activeLink === '#changePassword' && <ChangePassword />}
+                {activeLink === '#account/myOrder' && <MyOrder />}
+                {activeLink === '#myVouchers' && <Vouchers />}
             </div>
         </div>
    </div>

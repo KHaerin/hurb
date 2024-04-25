@@ -52,7 +52,6 @@ export default function Shop() {
     ? products.filter(product => product.product_sub_category === selectedSubCategory)
     : products;
     
-
     return (
         <>
             <Container fluid className="mt-5" id="shop-section">
@@ -87,13 +86,13 @@ export default function Shop() {
                     </Col>
                     <Col className="mt-4">
                         <Container fluid>
-                            <Row className={`d-flex justify-content-${filteredProducts.length <= 2 ? '' : 'between'}`}>
+                            <Row className={`d-flex`}>
                             {products
                                 .filter(product => !selectedSubCategory || product.product_sub_category === selectedSubCategory)
                                 .map((product, index) => (
                                     <Link to={`/shop/productLook/${product.product_id}`} className="col-lg-4 col-md-6 mb-5 d-flex justify-content-center" key={product.product_id} id="Product-Card-1">
                                         <Card id="card-product">
-                                            <Image src={`http://localhost/hurb/${product.product_img}`} alt="" id="product-shop-img" className={filterVisible ? 'normal' : 'largeUp'}/>
+                                            <Image fluid src={`http://localhost/hurb/${product.product_img}`} alt="" id="product-shop-img" className={filterVisible ? 'normal' : 'largeUp'}/>
                                             <div className="d-flex align-items-center justify-content-end mt-3">
                                                 <Image src={Heart} alt="" id="heartIcon" />
                                             </div>

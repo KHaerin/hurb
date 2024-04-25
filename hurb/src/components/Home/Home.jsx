@@ -7,6 +7,10 @@ import Women from '../icons/model women.jpg';
 import Clothes from '../icons/clothes.jpg';
 import Labor from '../icons/labor.jpg';
 export default function Home(){
+
+    const goShop = () => {
+        window.location.href="/shop";
+    }
     
     
     return( 
@@ -23,7 +27,7 @@ export default function Home(){
                         Embark on a fashion journey with a conscience at Hurb, where style seamlessly integrates with sustainability. Explore our thoughtfully curated collections for men, women, and kids, crafted with eco-friendly materials and practices. Every garment at Hurb not only exudes fashion-forward aesthetics but also champions environmental responsibility. Join us in our commitment to a greener future as you indulge in trendsetting pieces that prioritize both style and sustainability. At Hurb, fashion meets eco-consciousness for a wardrobe that looks good and does good.
                         </span>
                         <div className="button-contain d-flex justify-content-center">
-                            <button className='btn btn-dark' id="exploreBtn">Start Exploring</button>
+                            <button className='btn btn-dark' id="exploreBtn" onClick={goShop}>Start Exploring</button>
                         </div>
                     </div>
                     <div className="col" id="home-img-container">
@@ -43,7 +47,7 @@ export default function Home(){
                                             <span id="collection-text"><span id="mens-text">Men's</span> <br/>Collection</span>
                                         </div>
                                         <div className="col">
-                                            <button className='btn btn-dark' id="shop_now-btn">Shop Now</button>
+                                            <button className='btn btn-dark' id="shop_now-btn" onClick={goShop}>Shop Now</button>
                                         </div>
                                     </div>
                                     </div>
@@ -67,7 +71,7 @@ export default function Home(){
                                                 <span id="collection-text-late">LATE TRENDS</span>
                                             </div>
                                             <div className="col">
-                                                <button className='btn btn-dark' id="shop_now-btn">Shop Now</button>
+                                                <button className='btn btn-dark' id="shop_now-btn" onClick={goShop}>Shop Now</button>
                                             </div>
                                         </div>             
                                     </div>
@@ -80,7 +84,7 @@ export default function Home(){
                                                 <span id="collectionW-text"><span id="womens-text">Women's</span><br/>Collection</span>
                                             </div>
                                             <div className="col">
-                                                <button className='btn btn-dark' id="shop_now-btn">Shop Now</button>
+                                                <button className='btn btn-dark' id="shop_now-btn" onClick={goShop}>Shop Now</button>
                                             </div>
                                         </div>
                                 </div>

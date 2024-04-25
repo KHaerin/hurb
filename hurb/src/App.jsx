@@ -33,9 +33,10 @@ import "./App.css";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setAdmin] = useState(false);
-
+    const [onSeller, setOnSeller] = useState(false);
     useEffect(() => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
+        setOnSeller(localStorage.getItem('onSeller'));
         const admin_id = localStorage.getItem('userId');
         if(admin_id === '1'){
             setAdmin(true);
@@ -56,41 +57,59 @@ function App() {
         return location.pathname.includes("/login/admin");
     }
 
-
+    const renderHeader = () => {
+        if (isAdminRoute() || onSeller) {
+            return null; 
+        }
+        return (
+            <>
+                <Header />
+            </>
+        );
+    };
+    
+    const renderFooter = () => {
+        if (isAdminRoute() || onSeller) {
+            return null; 
+        }
+        return (
+            <>
+                <Footer />
+            </>
+        );
+    }
 
 
   return (
     <>
-    <BrowserRouter>
-    {!isAdminRoute() &&<Header/>}
-        <Routes>
-            <Route path="/" element={<Home/>} />
-            <Route path="/about" element={<About />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/top" element={<Top />} />
-            <Route path="/bottom" element={<Bottom />} />
-            <Route path="/account" element={<Account/>}/>
-            <Route path="/account/addressBook" element={<Account/>}/>
-            <Route path="/account/myOrder" element={<Account/>}/>
-            <Route path="/seller" element={<Seller/>} />
-            <Route path="/seller/products" element={<Products />} />
-            <Route path="/seller/products/addproducts" element={<AddProduct/>} />
-            <Route path="/shop/productLook/:productId" element={<ProductLook/>} />
-            <Route path="/login" element={<Login updateLoginStatus={handleLoginStatus} /> } />
-            <Route path="/register" element={<Register/>} />
-            <Route path="/shop/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout/>} />
-            <Route path="/regSeller" element={<RegSeller/>} />
-            <Route path="/login/admin" element={<Admin/>} />
-            <Route path="/admin/dashboard" element={<Dashboard/>} />
-            <Route path="/admin/listAccounts" element={<ListAccounts/>} />
-            <Route path="/admin/listSellers" element={<ListSellers/>} />
-            <Route path="/admin/Settings" element={<SettingsAdmin/>} />
-            <Route path="/admin/application" element={<Application/>}  />
-        </Routes>
-    </BrowserRouter>
-    {!isAdminRoute() && <Footer/>}
+      <BrowserRouter>
+                {renderHeader()}
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/shop" element={<Shop />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/top" element={<Top />} />
+                    <Route path="/bottom" element={<Bottom />} />
+                    <Route path="/account" element={<Account />} />
+                    <Route path="/seller" element={<Seller />} />
+                    <Route path="/seller/products" element={<Products />} />
+                    <Route path="/seller/products/addproducts" element={<AddProduct />} />
+                    <Route path="/shop/productLook/:productId" element={<ProductLook />} />
+                    <Route path="/login" element={<Login updateLoginStatus={handleLoginStatus} />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/shop/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/regSeller" element={<RegSeller />} />
+                    <Route path="/login/admin" element={<Admin />} />
+                    <Route path="/admin/dashboard" element={<Dashboard />} />
+                    <Route path="/admin/listAccounts" element={<ListAccounts />} />
+                    <Route path="/admin/listSellers" element={<ListSellers />} />
+                    <Route path="/admin/Settings" element={<SettingsAdmin />} />
+                    <Route path="/admin/application" element={<Application />} />
+                </Routes>
+                {renderFooter()}
+        </BrowserRouter>
     </>
   )
 }

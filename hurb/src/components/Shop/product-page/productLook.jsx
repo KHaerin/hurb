@@ -10,6 +10,9 @@ import Navy from '../../color-images/navy blue.jpg';
 import White from '../../color-images/white.jpg';
 import Star from '../../icons/star.png/';
 import EStar from '../../icons/emptystar.png';
+import RedShirt from '../../icons/shirt-test/b5.png'
+import BlackShirt from '../../icons/shirt-test/b6.png'
+import WhiteShirt from '../../icons/shirt-test/b7.png'
 import { ToastContainer, toast } from 'react-toastify';
 
 import './productLook.css';
@@ -20,18 +23,24 @@ export default function ProductLook() {
     const [showDetails, setShowDetails] = useState(false);
     const [qtyField, setQtyField] = useState(1);
     const [productStock, setProductStock] = useState([]);
+    const[availSizes, setAvailSize] = useState([]);
 
     const [product_id, setProdId] = useState('');
     const [product_name, setProdName] = useState('');
-    const [product_size, setProdSize] = useState('xs');
+    const [product_size, setProdSize] = useState(availSizes.length > 0 ? availSizes[0].size : 'xs');
     const [product_price, setProdPrice] = useState('');
     const [product_qty, setProdQty] = useState(qtyField);
     const [product_img, setProdImg] = useState(null);
+    const[colors, setColors] = useState(``);
+    const[size_Qty, setSizeQty] = useState('');
+
+    
 
     const history = useNavigate();
 
     useEffect(() => {
         fetchProduct(productId);
+        fetchSizes(productId);
     }, [productId]);
 
     const fetchProduct = async (productId) => {
@@ -55,6 +64,16 @@ export default function ProductLook() {
             console.error('Error fetching product:', error);
         }
     };
+
+    const fetchSizes = async(productId) => {
+        try {
+            const response = await axios.get(`http://localhost/hurb/selectSizes.php?product_id=${productId}`);
+            console.log(response.data); 
+            setAvailSize(response.data);
+        } catch (error) {
+            console.error('Error fetching sizes: ', error);
+        }
+    }
 
     
     const handleAddQtyField = () => {
@@ -107,7 +126,15 @@ export default function ProductLook() {
                 }
             });
         }
-       
+    }
+
+    const ColorChange = (color) => {
+        setColors(color);
+        console.log(color, 'COLOR')
+    }
+
+    const checkSize = (size) =>{
+        console.log('SIZE: ', size);
     }
     
     return (
@@ -122,31 +149,29 @@ export default function ProductLook() {
                                     <div className="col mb-4">
                                         <div className="product-image-container d-flex justify-content-center align-items-center">
                                             <img src={`http://localhost/hurb/${product.product_img}`} name="product_img"alt="" id="product_image"/>
+                                            {/* {colors === '' && 
+                                                <img src={`http://localhost/hurb/${product.product_img}`} name="product_img"alt="" id="product_image"/>
+                                            }
+                                            {colors === 'Red' && 
+                                                <img src={RedShirt} name="product_img"alt="" id="product_image"/>
+                                            }
+                                            {colors === 'White' && 
+                                                 <img src={WhiteShirt} name="product_img"alt="" id="product_image"/>
+                                            } */}
                                         </div>
                                     </div>
                                     <div className="col" id="color-container">
-                                            <div className="container d-flex flex-column justify-content-center">
-                                            <div className="col mb-3 justify-content-center">
-                                                <span>Color: Black </span>
-                                            </div>
-                                            <div className="col d-flex gap-3">
-                                                <input type="radio" className="btn-check" name="options-base" id="option1" autoComplete="off" defaultChecked/>
-                                                <label htmlFor="option1" className="btn color-radio"><img src={Black} alt="" id="color-radio-img"/></label>
-
-                                                <input type="radio" className="btn-check" name="options-base" id="option2" autoComplete="off"/>
-                                                <label htmlFor="option2" className="btn color-radio"><img src={White} alt="" id="color-radio-img" /></label>
-
-                                                <input type="radio" className="btn-check" name="options-base" id="option3" autoComplete="off"/>
-                                                <label htmlFor="option3" className="btn color-radio"><img src={Red} alt="" id="color-radio-img" /></label>
-
-                                                <input type="radio" className="btn-check" name="options-base" id="option4" autoComplete="off"/>
-                                                <label htmlFor="option4" className="btn color-radio"><img src={Navy} alt="" id="color-radio-img" /></label>
-
-                                                <input type="radio" className="btn-check " name="options-base" id="option5" autoComplete="off"/>
-                                                <label htmlFor="option5" className="btn color-radio"><img src={Grey} alt="" id="color-radio-img" /></label>
-                                            </div>
-                                            </div>
-                                            
+                                     <span>Color:</span>
+                                     <div className="container d-flex  justify-content-center" >
+                                     {availSizes.map((availColors, index) => (
+                                        <div className="col d-flex gap-3" key={availColors.product_scq_id}>
+                                            <input type="radio" className="btn-check" name="options-base" id={`option${availColors.product_scq_id}`} autoComplete="off"/>
+                                            <label htmlFor={`option${availColors.product_scq_id}`} onClick={() => { ColorChange(availColors.color)}} className="btn color-radio">
+                                                <img src={Black} alt="" id="color-radio-img"/>{availColors.color}
+                                            </label>
+                                        </div>
+                                    ))} 
+                                     </div>      
                                     </div>
                                 </div>
                             </div>
@@ -167,34 +192,45 @@ export default function ProductLook() {
                                             <span id="priceTXT" value={product_price}>${product.product_price}.00</span>
                                         </div>
                                         <div className="col">
-                                            <span>Stock Available: {productStock}</span>
+                                            <span>Stock Available: {size_Qty}</span>
                                         </div>
                                     </div>
                                     <div className="row row-cols-1 mb-4">
                                         <div className="col mb-2">
                                             <span id="details-title">Size</span>
                                         </div>
-                                        <div className="col-lg-10 col-md-8">
-                                            <input type="radio" className="btn-check" name="options-base" id="xs" autoComplete="off" value="xs" onChange={(e) => setProdSize(e.target.value)} defaultChecked={product_size === 'xs'}/>
-                                            <label className="btn btn-outline-dark" htmlFor="xs" id="xs">X Small</label>
-
-                                            <input type="radio" className="btn-check" name="options-base" id="sm" autoComplete="off" value="sm"  onChange={(e) => setProdSize(e.target.value)}/>
-                                            <label className="btn btn-outline-dark" htmlFor="sm" id="sm">Small</label>
-
-                                            <input type="radio" className="btn-check" name="options-base" id="md" autoComplete="off" value="md"  onChange={(e) => setProdSize(e.target.value)}/>
-                                            <label className="btn btn-outline-dark" htmlFor="md" id="md">Medium</label>
-
-                                            <input type="radio" className="btn-check" name="options-base" id="lg" autoComplete="off" value="lg"  onChange={(e) => setProdSize(e.target.value)}/>
-                                            <label className="btn btn-outline-dark" htmlFor="lg" id="lg">Large</label>
-
-                                            <input type="radio" className="btn-check" name="options-base" id="xlg" autoComplete="off" value="xlg"   onChange={(e) => setProdSize(e.target.value)}/>
-                                            <label className="btn btn-outline-dark" htmlFor="xlg" id="xlg">X Large</label>
-
-                                            <input type="radio" className="btn-check" name="options-base" id="xxlg" autoComplete="off" value="xxlg"  onChange={(e) => setProdSize(e.target.value)}/>
-                                            <label className="btn btn-outline-dark" htmlFor="xxlg" id="xxlg">XX Large</label>
-
-                                            <input type="radio" className="btn-check" name="options-base" id="xxxlg" autoComplete="off" value="xxxlg"   onChange={(e) => setProdSize(e.target.value)}/>
-                                            <label className="btn btn-outline-dark" htmlFor="xxxlg" id="xxxlg">XXX Large</label>
+                                        <div className="col-lg-10 col-md-8 d-flex gap-3">
+                                        {availSizes.map((size, index) => (
+                                                <div key={size.product_scq_id}>
+                                                    <input 
+                                                        type="radio" 
+                                                        className="btn-check" 
+                                                        name="options-size" 
+                                                        id={size.size} 
+                                                        autoComplete="off" 
+                                                        value={size.size} 
+                                                        onChange={(e) => { 
+                                                            setProdSize(e.target.value); 
+                                                            setSizeQty(size.quantity); 
+                                                        }} 
+                                                        onClick={() => checkSize(size.size)}
+                                                        defaultChecked={product_size === size.size}  
+                                                    />
+                                                    <label 
+                                                        className="btn btn-outline-dark" 
+                                                        htmlFor={size.size} 
+                                                        id={size.size}
+                                                    >
+                                                        {size.size === "XS" && 'X Small'}
+                                                        {size.size === "S" && 'Small'}
+                                                        {size.size === "M" && 'Medium'}
+                                                        {size.size === "L" && 'Large'}
+                                                        {size.size === "XL" && 'X Large'}
+                                                        {size.size === "XXL" && 'XX Large'}
+                                                        {size.size === "XXXL" && 'XXX Large'}
+                                                    </label>    
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                     <div className="row row-cols-1 mb-5">

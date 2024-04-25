@@ -56,8 +56,12 @@ export default function accDropDown(){
             console.error('Error fetch: ', error);
         }
     }
-    
 
+    const sellerDashBoard = () => {
+        localStorage.setItem('onSeller', true);
+        window.location.href="/seller";
+    }
+    
     const userId = localStorage.getItem('userId');
     return(
         <>
@@ -82,7 +86,7 @@ export default function accDropDown(){
                                  </li>}
                                  {isSeller === '1' &&
                                      <li>
-                                        <Link to="/seller" className='dropdown-item'>Seller's Profile</Link>
+                                        <Link onClick={sellerDashBoard} className='dropdown-item' >My Shop</Link>
                                     </li>
                                 }
                             
