@@ -10,9 +10,9 @@ import Navy from '../../color-images/navy blue.jpg';
 import White from '../../color-images/white.jpg';
 import Star from '../../icons/star.png/';
 import EStar from '../../icons/emptystar.png';
-import RedShirt from '../../icons/shirt-test/b5.png'
-import BlackShirt from '../../icons/shirt-test/b6.png'
-import WhiteShirt from '../../icons/shirt-test/b7.png'
+// import RedShirt from '../../icons/shirt-test/b5.png'
+// import BlackShirt from '../../icons/shirt-test/b6.png'
+// import WhiteShirt from '../../icons/shirt-test/b7.png'
 import { ToastContainer, toast } from 'react-toastify';
 
 import './productLook.css';
