@@ -89,14 +89,14 @@ export default function AddAddress({handleLinkClick}){
             setRegion('');
             setStreet('');
             setZipcode('');
-            handleLinkClick('addressBook');
+            handleLinkClick('#account/addressBook');
         })
         .catch(error=>alert(error));
     }
     
 
     const handleAddAddressClick = () => {
-        handleLinkClick('/account/addressBook');
+        handleLinkClick('#account/addressBook');
         localStorage.removeItem('addBook_id');
     };
 

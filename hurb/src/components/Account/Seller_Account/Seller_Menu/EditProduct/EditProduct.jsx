@@ -241,6 +241,7 @@ function EditProduct({ productData, product }) {
                            type="button" 
                            className="btn btn-primary" 
                            onClick={handleUpdate}
+                           disabled
                        >Update</button>
                    </div>
                 </div>

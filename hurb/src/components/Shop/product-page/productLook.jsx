@@ -149,7 +149,7 @@ export default function ProductLook() {
                                     <div className="col mb-4">
                                         <div className="product-image-container d-flex justify-content-center align-items-center">
                                             <img src={`http://localhost/hurb/${product.product_img}`} name="product_img"alt="" id="product_image"/>
-                                            {/* {colors === '' && 
+                                            {/* {colors === 'Black' && 
                                                 <img src={`http://localhost/hurb/${product.product_img}`} name="product_img"alt="" id="product_image"/>
                                             }
                                             {colors === 'Red' && 
