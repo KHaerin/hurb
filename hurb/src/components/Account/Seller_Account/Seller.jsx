@@ -6,7 +6,7 @@ import { sideBarData } from './Seller-Dashboard/sideBar';
 import { Container, Row, Col} from 'react-bootstrap';
 import MyProducts from './Seller_Menu/Products';
 import AddProduct from './Seller_Menu/addproduct/addproduct';
-
+import Orders from './Seller_Menu/ListOrders';
 export default function Seller(){
 
  const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function Seller(){
                     </Link>
                 </Col>
                 <Col className='d-flex justify-content-center align-items-center'>
-                {activeLink === '#dashboard' && 
+                    {activeLink === '#dashboard' && 
                        <h1 style={text_style}>Dashboard</h1>
                     }
                     {activeLink === '#myProducts' && 
@@ -70,6 +70,9 @@ export default function Seller(){
                     }
                     {activeLink === '#settings' && 
                         <h1 style={text_style}>Settings</h1>
+                    }
+                    {activeLink === '#orders' && 
+                        <h1 style={text_style}>Orders</h1>
                     }
                 </Col>
             </Row>
@@ -109,6 +112,9 @@ export default function Seller(){
                     }
                     {activeLink === '#addProduct' && 
                         <AddProduct/>
+                    }
+                    {activeLink === '#orders' && 
+                        <Orders/>
                     }
                     {activeLink === '#settings' && 
                         <h1>Under Construction...</h1>

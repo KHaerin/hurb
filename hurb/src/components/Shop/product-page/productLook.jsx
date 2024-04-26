@@ -10,9 +10,9 @@ import Navy from '../../color-images/navy blue.jpg';
 import White from '../../color-images/white.jpg';
 import Star from '../../icons/star.png/';
 import EStar from '../../icons/emptystar.png';
-// import RedShirt from '../../icons/shirt-test/b5.png'
-// import BlackShirt from '../../icons/shirt-test/b6.png'
-// import WhiteShirt from '../../icons/shirt-test/b7.png'
+import RedShirt from '../../icons/shirt-test/b5.png'
+import BlackShirt from '../../icons/shirt-test/b6.png'
+import WhiteShirt from '../../icons/shirt-test/b7.png'
 import { ToastContainer, toast } from 'react-toastify';
 
 import './productLook.css';
@@ -27,12 +27,13 @@ export default function ProductLook() {
 
     const [product_id, setProdId] = useState('');
     const [product_name, setProdName] = useState('');
-    const [product_size, setProdSize] = useState(availSizes.length > 0 ? availSizes[0].size : 'xs');
+    const [product_size, setProdSize] = useState('');
     const [product_price, setProdPrice] = useState('');
     const [product_qty, setProdQty] = useState(qtyField);
     const [product_img, setProdImg] = useState(null);
     const[colors, setColors] = useState(``);
     const[size_Qty, setSizeQty] = useState('');
+    const [selectedSize, setSelectedSize] = useState('');
 
     
 
@@ -42,6 +43,25 @@ export default function ProductLook() {
         fetchProduct(productId);
         fetchSizes(productId);
     }, [productId]);
+
+    useEffect(() => {
+        if (availSizes.length > 0) {
+            const firstSize = availSizes[0];
+            setProdSize(firstSize.size);
+            setSizeQty(firstSize.quantity);
+            setSelectedSize(firstSize.size);
+        }
+    }, [availSizes]);
+
+    // Function to handle size selection
+    const handleSizeChange = (size) => {
+        setProdSize(size);
+        const selectedSizeInfo = availSizes.find(s => s.size === size);
+        if (selectedSizeInfo) {
+            setSizeQty(selectedSizeInfo.quantity);
+            setSelectedSize(size);
+        }
+    };
 
     const fetchProduct = async (productId) => {
         try {
@@ -130,13 +150,8 @@ export default function ProductLook() {
 
     const ColorChange = (color) => {
         setColors(color);
-        console.log(color, 'COLOR')
     }
 
-    const checkSize = (size) =>{
-        console.log('SIZE: ', size);
-    }
-    
     return (
         <div className="container" id="product-look">
             <div className="row">
@@ -209,12 +224,8 @@ export default function ProductLook() {
                                                         id={size.size} 
                                                         autoComplete="off" 
                                                         value={size.size} 
-                                                        onChange={(e) => { 
-                                                            setProdSize(e.target.value); 
-                                                            setSizeQty(size.quantity); 
-                                                        }} 
-                                                        onClick={() => checkSize(size.size)}
-                                                        defaultChecked={product_size === size.size}  
+                                                        onChange={() => handleSizeChange(size.size)} 
+                                                        checked={selectedSize === size.size}
                                                     />
                                                     <label 
                                                         className="btn btn-outline-dark" 

@@ -137,8 +137,11 @@ export default function checkout(){
                 const url = await axios.get(`http://localhost/hurb/AddressBook/getAddress.php?user_id=${userID}`);
                 if (Array.isArray(url.data) && url.data.length > 0) {
                     setAddressData([url.data[0]]);
+                    setAddressBook(url.data[0]);
+                    console.log('success url addresss');
                 } else {
                     setAddressBook([]);
+                    console.log('failed sa address');
                 }
             }catch(error){
                 console.error(error);
@@ -148,6 +151,11 @@ export default function checkout(){
         getAddressBook();
 
     }, [])
+
+    useEffect(() => {
+        console.log('address: ', addressBook);
+        console.log('addressdata: ', addressData);
+    })
 
     const[addressData, setAddressData] = useState([]);
     const[local, setLocal] = useState(false);
@@ -164,7 +172,7 @@ export default function checkout(){
 
         let orderData = new FormData();
         orderData.append('user_id', user_id);
-        orderData.append('addBook_id', addressData[0].bookID);
+        orderData.append('addBook_id', addressBook.addBook_id);
         trackProduct.forEach(product => {
             orderData.append('product_id[]', product.product_id);
             orderData.append('quantity[]', product.product_qty);

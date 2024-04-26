@@ -9,6 +9,12 @@ import * as MdIcons from 'react-icons/md';
 
 export const sideBarData = [
     {
+        title: 'Home',
+        path: '#home',
+        icon: <IoIcons.IoIosHome/>,
+        cName: 'nav-text'
+    },
+    {
         title: 'Dashboard',
         path: '#dashboard',
         icon: <MdIcons.MdSpaceDashboard/>,
@@ -27,15 +33,15 @@ export const sideBarData = [
         cName: 'nav-text'
     },
     {
+        title: 'Orders',
+        path: '#orders',
+        icon: <FaIcons.FaClipboardList/>,
+        cName: 'nav-text'
+    },
+    {
         title: 'Settings',
         path: '#settings',
         icon: <IoIcons.IoMdSettings/>,
         cName: 'nav-text'
     },
-    {
-        title: 'Home',
-        path: '#home',
-        icon: <RiIcons.RiLogoutBoxLine/>,
-        cName: 'nav-text'
-    }
 ]
