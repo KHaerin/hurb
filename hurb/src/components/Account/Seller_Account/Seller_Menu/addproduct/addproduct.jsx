@@ -155,19 +155,18 @@ export default function addproduct(){
 
     const containerStyle = {
         backgroundColor: "#F6F6F6",
-        marginBottom: "10%"
+        marginBottom: "10%",
+        position: 'relative',
+        zIndex: 1
     }
 
     const sizeColors ={
         backgroundColor: "#EBEBEB",
     }
-
-    
-
    
     return(
         <>
-            <div className="container-fluid p-5" style={containerStyle}>
+            <div className="container-fluid p-5" id="addProduct-container" style={containerStyle}>
                 <div className="row">
                     <div className="col">
                         <h3>Basic Information</h3>

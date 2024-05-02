@@ -11,6 +11,7 @@ import Footer from './components/Footer/Footer';
 import Seller from './components/Account/Seller_Account/Seller';
 import Products from './components/Account/Seller_Account/Seller_Menu/Products';
 import AddProduct from './components/Account/Seller_Account/Seller_Menu/addproduct/addproduct';
+import AddCart from './components/addCart/addCart';
 import ProductLook from './components/Shop/product-page/productLook';
 import Login from './components/Login/Login';
 import Register from './components/Login/Register/Register';
@@ -27,6 +28,8 @@ import Dashboard from './components/admin/admin-menu/dashboard';
 import ListAccounts from './components/admin/admin-menu/listAccounts';
 import ListSellers from './components/admin/admin-menu/listSellers';
 import SettingsAdmin from './components/admin/admin-menu/settings';
+import {CartProvider} from './components/CartContext';
+import { ToastContainer, toast } from 'react-toastify';
 import "./App.css";
 
 
@@ -82,7 +85,8 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+    <CartProvider>
+        <BrowserRouter>
                 {renderHeader()}
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -109,7 +113,10 @@ function App() {
                     <Route path="/admin/application" element={<Application />} />
                 </Routes>
                 {renderFooter()}
+                <ToastContainer position="top-center" autoClose={500} limit={1}/>
         </BrowserRouter>
+    </CartProvider>
+      
     </>
   )
 }

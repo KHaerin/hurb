@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ShopCart from '../icons/account-icon/shopping-cart.png';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import {CartContext} from '../CartContext';
 
 export default function AddCart() {
+
+    const { reloadContact, toggleReloadContact } = useContext(CartContext);
 
     const[tracks, setTrack] = useState([]);
     const[totalAmount, setTotalAmount] = useState('');
 
     const[isLoggedIn, setIsLoggedIn] = useState(false);
+
     useEffect(() => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
         if (storedLoginStatus === 'true') {
             setIsLoggedIn(true);
+            fetchCartProducts();
         }
-        fetchCartProducts();
-
-    }, []);
+    }, [reloadContact])
 
     const fetchCartProducts = async () => {
         try {
@@ -34,6 +37,7 @@ export default function AddCart() {
             }));
             setTotalAmount(total);
             setTrack(processedData);
+            toggleReloadContact(false);
         } catch (error) {
             console.log('Error fetching data:', error);
         }
@@ -64,7 +68,6 @@ export default function AddCart() {
             </span>
         
         </button>
-         <ToastContainer position="top-center" limit={1}/>
         </>
        
     );

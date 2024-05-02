@@ -24,6 +24,7 @@ export default function Seller(){
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
+    showSidebar();
 
     if(link === '#logout'){
         logout();
@@ -49,9 +50,14 @@ export default function Seller(){
         color: '#ffffff'
     }
 
+    const dashStyle = {
+        position: 'relative',
+        zIndex: 2
+    }
+
     return(
         <>
-        <Container fluid className="navbar-admin p-4">
+        <Container fluid className="navbar-admin p-4" style={dashStyle}>
             <Row>
                 <Col className='menu-bars col-auto'>
                     <Link to="#" className="menu-bars">
@@ -78,7 +84,7 @@ export default function Seller(){
             </Row>
            
     </Container>
-    <Container>
+    <Container style={dashStyle}>
         <Row>
             <Col>
             <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>

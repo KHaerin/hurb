@@ -121,3 +121,7 @@
 .testing101{
     border: 2px solid black;
 }
+
+#addProduct-container{
+    z-index: 1;
+}

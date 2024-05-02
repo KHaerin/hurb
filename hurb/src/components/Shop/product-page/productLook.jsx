@@ -1,6 +1,5 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Black from '../../color-images/black.jpg';
@@ -13,7 +12,9 @@ import EStar from '../../icons/emptystar.png';
 import RedShirt from '../../icons/shirt-test/b5.png'
 import BlackShirt from '../../icons/shirt-test/b6.png'
 import WhiteShirt from '../../icons/shirt-test/b7.png'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+
+import {CartContext} from '../../CartContext';
 
 import './productLook.css';
 
@@ -34,10 +35,6 @@ export default function ProductLook() {
     const[colors, setColors] = useState(``);
     const[size_Qty, setSizeQty] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
-
-    
-
-    const history = useNavigate();
 
     useEffect(() => {
         fetchProduct(productId);
@@ -88,7 +85,6 @@ export default function ProductLook() {
     const fetchSizes = async(productId) => {
         try {
             const response = await axios.get(`http://localhost/hurb/selectSizes.php?product_id=${productId}`);
-            console.log(response.data); 
             setAvailSize(response.data);
         } catch (error) {
             console.error('Error fetching sizes: ', error);
@@ -113,6 +109,8 @@ export default function ProductLook() {
         }
     }
 
+    const { toggleReloadContact } = useContext(CartContext);
+
 
      const handleAddCart = () => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
@@ -135,8 +133,8 @@ export default function ProductLook() {
     
             axios.post(url, fData)
             .then(response=>{
-                toast.success(response.data);
-                window.location.href="/shop/cart";
+                toast.success(response.data);     
+                toggleReloadContact(true);
             })
             .catch(error=>alert(error));
         }else{
@@ -297,7 +295,6 @@ export default function ProductLook() {
                 ))}
                 </div>
             </div>
-            <ToastContainer position="top-center" limit={1}/>
         </div>
     );
 }
