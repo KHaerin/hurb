@@ -64,11 +64,11 @@ export default function Shop() {
                         </Breadcrumb>
                     </Col>
                     <Col className="d-flex gap-5 align-items-center justify-content-end">
+                        <span>Search</span>
                         <span className='d-flex align-items-center gap-2' id="filter-btn" onClick={toggleFilterVisibility}>
                             {filterVisible ? 'Hide Filters' : 'Show Filters'}
                             <FontAwesomeIcon icon={faSlidersH} />
                         </span>
-                        <span>Sort By</span>
                     </Col>
                 </Row>
                 <Row>
