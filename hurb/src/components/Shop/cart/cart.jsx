@@ -9,6 +9,7 @@ export default function Cart(){
     const [tracks, setTracks] = useState([]);
     const [qtyField, setQtyField] = useState('');
     const [totalAmount, setTotalAmount] = useState('');
+    const [selectAll, setSelectAll] = useState(false); // State for "Select All" checkbox
 
     useEffect(() => {
         fetchCartProducts();
@@ -28,7 +29,7 @@ export default function Cart(){
                 return { ...item, ...productData, totalAmount };
             }));
             setTotalAmount(total);
-            setTracks(processedData);
+            setTracks(processedData.map(item => ({ ...item, selected: false })));
         } catch (error) {
             console.log('Error fetching data:', error);
         }
@@ -86,10 +87,30 @@ export default function Cart(){
         }
     };
 
+    const handleSelectAllChange = (event) => {
+        const checked = event.target.checked;
+        setSelectAll(checked);
+        // Update individual item checkboxes
+        setTracks(tracks.map(track => ({ ...track, selected: checked })));
+    };
+
+    const handleItemCheckboxChange = (track_id, selected) => {
+        const updatedTracks = tracks.map(track => {
+            if (track.track_id === track_id) {
+                return { ...track, selected };
+            }
+            return track;
+        });
+        setTracks(updatedTracks);
+        const allSelected = updatedTracks.every(track => track.selected);
+        setSelectAll(allSelected);
+    };
+
     const checkOut = () => {
-        if(tracks.length === 0){
-            toast.warning('There are no items in your cart');
-        }else{
+        const selectedItems = tracks.filter(track => track.selected);
+        if (selectedItems.length === 0) {
+            toast.warning('Please select at least one item to proceed to checkout');
+        } else {
             window.location.href = "/checkout";
         }
     };
@@ -104,7 +125,14 @@ export default function Cart(){
                     <div className="col">
                         <div className="container">
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                                <input 
+                                    className="form-check-input" 
+                                    type="checkbox" 
+                                    value="" 
+                                    id="flexCheckDefault"
+                                    checked={selectAll} 
+                                    onChange={handleSelectAllChange} 
+                                />
                                 <label htmlFor="flexCheckDefault" className="form-check-label">ALL ITEMS</label>
                             </div>
                         </div>
@@ -131,7 +159,14 @@ export default function Cart(){
                                  <div className="row">
                                      <div className="col m-3">
                                          <div className="form-check">
-                                             <input className="form-check-input" type="checkbox" value="" id="cart-check"/>
+                                         <input 
+                                                className="form-check-input product-check" 
+                                                type="checkbox" 
+                                                value={track.track_id} 
+                                                id={`product-checkbox-${track.track_id}`} 
+                                                checked={track.selected} 
+                                                onChange={(e) => handleItemCheckboxChange(track.track_id, e.target.checked)} 
+                                            />
                                          </div>
                                      </div>
                                  </div>
@@ -189,8 +224,6 @@ export default function Cart(){
                     </div>
                 </div>
             </div>
-            <ToastContainer position="top-center" limit={1}/>
-
         </>
     )
 }

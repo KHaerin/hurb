@@ -3,9 +3,10 @@ import axios from 'axios';
 import './checkout.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruck, faCreditCard, faWallet, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
-import { Container, Row, Col, Button, Image, InputGroup, Form} from 'react-bootstrap';
+import { Container, Row, Col, Button, Image, InputGroup, Form, Modal} from 'react-bootstrap';
 import EditAddress from './EditAdd';
 import 'bootstrap/dist/js/bootstrap.min.js';
+import Paypal from './Paypal';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function checkout(){
@@ -19,6 +20,8 @@ export default function checkout(){
     const[shippingFee, setShipFee] = useState('');
     const[estimatedArrival, setEstimatedArrival] = useState('');
     const[trackProduct, setTrackProduct] = useState('');
+    const[payed, setPayed] = useState('');
+    const[isPayed, setIsPayed] = useState(false);
 
     useEffect(() => {
         fetchCartProducts();
@@ -138,7 +141,6 @@ export default function checkout(){
                 if (Array.isArray(url.data) && url.data.length > 0) {
                     setAddressData([url.data[0]]);
                     setAddressBook(url.data[0]);
-                    console.log('success url addresss');
                 } else {
                     setAddressBook([]);
                     console.log('failed sa address');
@@ -152,14 +154,11 @@ export default function checkout(){
 
     }, [])
 
-    useEffect(() => {
-        console.log('address: ', addressBook);
-        console.log('addressdata: ', addressData);
-    })
-
     const[addressData, setAddressData] = useState([]);
     const[local, setLocal] = useState(false);
     const[noItems, setNoItems] = useState('');
+
+    const [showPaypal, setShowPaypal] = useState(false);
  
     const handleOrder = () => {
         if(addressData.length === 0){
@@ -172,6 +171,8 @@ export default function checkout(){
 
         let orderData = new FormData();
         orderData.append('user_id', user_id);
+        orderData.append('payed_id', payed.id);
+        orderData.append('payed_status', payed.status);
         orderData.append('addBook_id', addressBook.addBook_id);
         trackProduct.forEach(product => {
             orderData.append('product_id[]', product.product_id);
@@ -216,7 +217,6 @@ export default function checkout(){
         if(data.province === 'Cebu'){
             setLocal(true);
         }
-        console.log(data);
     }
 
     useEffect(() => {
@@ -232,6 +232,28 @@ export default function checkout(){
         setTotalAmount(total);
         setNoItems(tracks.length);
     }, [subTotal, shippingFee, serviceFee]);
+
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Cash On Delivery');
+
+    
+    const handleCheckboxChange = (method) => {
+        setSelectedPaymentMethod(method);
+    };
+
+    const [showPay, setShowPay] = useState(false);
+    const handleClosePay = () => setShowPay(false);
+    const handleOpenPay = () => setShowPay(true);
+
+    const handlePaypalOrder = (orderData) => {
+        // Handle order data received from Paypal
+        setPayed(orderData);
+        setIsPayed(true);
+        if(orderData.status === "COMPLETED"){
+            toast.success('Payment complete');
+        }else{
+            toast.error('Payment pending...');
+        }
+    };
 
     return(
         <>
@@ -278,7 +300,7 @@ export default function checkout(){
                 <Col xs={12}>
                     <span id="checkout-labels">Order Details</span>
                 </Col>
-                <Col className="d-flex">
+                <Col className="d-flex col-auto">
                     {tracks.map((track, index) => (
                         <Container className="d-flex" key={track.track_id}>
                             <Row>
@@ -334,11 +356,43 @@ export default function checkout(){
                              }
                              name="flexRadioDefault"
                              type={type}
-                             id={`inline-${type}-1`} 
-                             defaultChecked
-                             />   
+                             id={`inline-${type}-1`}
+                             checked={selectedPaymentMethod === 'Cash On Delivery'} 
+                             onChange={() => handleCheckboxChange('Cash On Delivery')}
+                             />             
+                             <Form.Check 
+                            inline 
+                            label=
+                            {
+                                <Form.Check aria-label="flexRadioDefault" className="form-check-label mb-4" htmlFor="flexRadioDefault1">
+                                      <FontAwesomeIcon icon={faWallet} id="payment-icons"/>
+                                      <span id="payment-text">Paypal</span>
+                                </Form.Check>
+                             }
+                             name="flexRadioDefault"
+                             type={type}
+                             id={`inline-${type}-1`}
+                             checked={selectedPaymentMethod === 'Paypal'} 
+                             onChange={() => handleCheckboxChange('Paypal')} 
+                             />  
 
                             <Form.Check 
+                            inline 
+                            label=
+                            {
+                                <Form.Check aria-label="flexRadioDefault" className="form-check-label mb-4" htmlFor="flexRadioDefault1">
+                                      <FontAwesomeIcon icon={faCreditCard} id="payment-icons"/>
+                                      <span id="payment-text">Credit / Debit Card</span>
+                                </Form.Check>
+                             }
+                             name="flexRadioDefault"
+                             type={type}
+                             id={`inline-${type}-1`}
+                             checked={selectedPaymentMethod === 'Card'} 
+                             onChange={() => handleCheckboxChange('Card')} 
+                             /> 
+
+                              <Form.Check 
                             inline 
                             label=
                             {
@@ -351,37 +405,7 @@ export default function checkout(){
                              type={type}
                              id={`inline-${type}-1`} 
                              disabled
-                             />  
-                             
-                             <Form.Check 
-                            inline 
-                            label=
-                            {
-                                <Form.Check aria-label="flexRadioDefault" className="form-check-label mb-4" htmlFor="flexRadioDefault1">
-                                      <FontAwesomeIcon icon={faWallet} id="payment-icons"/>
-                                      <span id="payment-text">Paypal (Soon to be available)</span>
-                                </Form.Check>
-                             }
-                             name="flexRadioDefault"
-                             type={type}
-                             id={`inline-${type}-1`} 
-                             disabled
-                             />  
-
-                            <Form.Check 
-                            inline 
-                            label=
-                            {
-                                <Form.Check aria-label="flexRadioDefault" className="form-check-label mb-4" htmlFor="flexRadioDefault1">
-                                      <FontAwesomeIcon icon={faCreditCard} id="payment-icons"/>
-                                      <span id="payment-text">Credit / Debit Card (Soon to be available)</span>
-                                </Form.Check>
-                             }
-                             name="flexRadioDefault"
-                             type={type}
-                             id={`inline-${type}-1`} 
-                             disabled
-                             />  
+                             />   
                                
                          </div>
                         ))}
@@ -460,15 +484,30 @@ export default function checkout(){
                                 <span id="placeorder-text">Total: ₱{totalAmount}.00</span>
                             </Col>
                             <Col className="col-auto">
-                                <Button variant="success" onClick={handleOrder} type="button">Place Order</Button>
+                                <Button variant="success" onClick={selectedPaymentMethod === 'Cash On Delivery' ? handleOrder : handleOpenPay} type="button">Place Order</Button>
                             </Col>
                         </Row>
                     </Container>
                 </Col>
             </Row>
         </Container>
+        <Modal show={showPay} onHide={handleClosePay}>
+            <Modal.Header closeButton>
+                <Modal.Title>Payment</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Paypal handlePaypalOrder={handlePaypalOrder} totalAmount={totalAmount} />
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={handleClosePay}>
+                Close
+            </Button>
+            <Button variant="primary" onClick={handleOrder}>
+                Confirm Order
+            </Button>
+            </Modal.Footer>
+        </Modal>
         <EditAddress addressData={handleAddressData}></EditAddress>
-        <ToastContainer position="top-center" limit={1}/>
         </>
     )
 }
