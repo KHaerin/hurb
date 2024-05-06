@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './cart.css';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function Cart(){
-
+    
+    const navigate = useNavigate();
     const [tracks, setTracks] = useState([]);
     const [qtyField, setQtyField] = useState('');
-    const [totalAmount, setTotalAmount] = useState('');
-    const [selectAll, setSelectAll] = useState(false); // State for "Select All" checkbox
+    const [totalAmount, setTotalAmount] = useState(0);
+    const [selectAll, setSelectAll] = useState(false);
 
     useEffect(() => {
         fetchCartProducts();
     }, []);
+
+    useEffect(() => {
+        calculateTotalAmount();
+    }, [tracks]);
+
 
     const fetchCartProducts = async () => {
         try {
@@ -28,11 +34,17 @@ export default function Cart(){
                 total += totalAmount;
                 return { ...item, ...productData, totalAmount };
             }));
-            setTotalAmount(total);
             setTracks(processedData.map(item => ({ ...item, selected: false })));
         } catch (error) {
             console.log('Error fetching data:', error);
         }
+    };
+
+    const calculateTotalAmount = () => {
+        const selectedItemsTotal = tracks
+            .filter(track => track.selected) 
+            .reduce((total, item) => total + (item.product_price * item.product_qty), 0); 
+        setTotalAmount(selectedItemsTotal); 
     };
 
     const updateQuantity = async (track_id, newQuantity) => {
@@ -40,9 +52,22 @@ export default function Cart(){
             const formData = new FormData();
             formData.append('track_id', track_id);
             formData.append('product_qty', newQuantity);
-
+    
             const response = await axios.post("http://localhost/hurb/update_quantity.php", formData);
-            fetchCartProducts();
+           
+            const updatedDataFetch = await axios.get(`http://localhost/hurb/track_select.php?user_id=${localStorage.getItem('userId')}`);
+            const processedData = await Promise.all(updatedDataFetch.data.map(async (item) => {
+                const productResponse = await axios.get(`http://localhost/hurb/products.php?product_id=${item.product_id}`);
+                const productData = productResponse.data[0]; 
+                const totalAmount = item.product_qty * productData.product_price;
+                return { ...item, ...productData, totalAmount };
+            }));
+          
+            const updatedTracks = processedData.map(item => {
+                const existingTrack = tracks.find(track => track.track_id === item.track_id);
+                return { ...item, selected: existingTrack ? existingTrack.selected : false };
+            });
+            setTracks(updatedTracks);
         } catch (error) {
             console.error('Error updating quantity:', error);
         }
@@ -87,11 +112,13 @@ export default function Cart(){
         }
     };
 
+ 
     const handleSelectAllChange = (event) => {
         const checked = event.target.checked;
+        const updatedTracks = tracks.map(track => ({ ...track, selected: checked }));
+        setTracks(updatedTracks);
         setSelectAll(checked);
-        // Update individual item checkboxes
-        setTracks(tracks.map(track => ({ ...track, selected: checked })));
+        calculateTotalAmount();
     };
 
     const handleItemCheckboxChange = (track_id, selected) => {
@@ -104,6 +131,7 @@ export default function Cart(){
         setTracks(updatedTracks);
         const allSelected = updatedTracks.every(track => track.selected);
         setSelectAll(allSelected);
+        calculateTotalAmount(); 
     };
 
     const checkOut = () => {
@@ -111,7 +139,12 @@ export default function Cart(){
         if (selectedItems.length === 0) {
             toast.warning('Please select at least one item to proceed to checkout');
         } else {
-            window.location.href = "/checkout";
+            navigate('/checkout', {
+                state: {
+                    selectedItems,
+                    totalAmount
+                }
+            });
         }
     };
 
@@ -212,7 +245,12 @@ export default function Cart(){
                                 </div>
                                 <div className="row">
                                     <div className="col mb-3">
-                                        <span id="orderTXT-total" className="d-flex justify-content-end">{totalAmount}</span>
+                                        <span id="orderTXT-total" className="d-flex justify-content-end">
+                                            {tracks
+                                            .filter(track => track.selected)
+                                            .reduce((total, item) => total + (item.product_price * item.product_qty), 0)
+                                            }
+                                        </span>
                                     </div>
                                 </div>
                                 <div className="row">

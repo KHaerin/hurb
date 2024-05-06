@@ -19,7 +19,6 @@ function MyOrder() {
                 const user_id = localStorage.getItem('userId');
                 const url = await axios.get(`http://localhost/hurb/CustomerOrder/MyOrder.php?user_id=${user_id}`);
                 const orders = url.data;
-                console.log(orders);
                 setOrder(orders);
             }catch(error){
                 console.error(error);
@@ -34,7 +33,6 @@ function MyOrder() {
             fData.append('order_item_id', order_item_id);
 
             const response = await axios.post("http://localhost/hurb/CustomerOrder/CancelOrder.php", fData);
-            console.log(response);
             window.location.reload();
         }catch(error){
             console.error(error);
@@ -87,14 +85,16 @@ function MyOrder() {
                             <Row className='px-4 pt-4'>
                             {order.deliver_status === 'ship' && 
                                 <span>Seller is preparing to ship.</span>
+                                
                             }
-
                             {order.deliver_status === 'received' && 
                                 <span>Delivered</span>
                             }
-
                             {order.deliver_status === 'onDeliver' && 
                                 <span>To Receive</span>
+                            }
+                            {order.payed_status === 'COMPLETED' &&
+                              <span>{`(Payed)`}</span>
                             }
                             </Row>
                             <Row className='p-5' >

@@ -56,6 +56,7 @@
 }
 
 #running-bar{
+    z-index: 99;
     background: linear-gradient(to left, #1F5A37, #3AC172);
 }
 

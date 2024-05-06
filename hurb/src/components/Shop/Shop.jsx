@@ -90,7 +90,7 @@ export default function Shop() {
                             {products
                                 .filter(product => !selectedSubCategory || product.product_sub_category === selectedSubCategory)
                                 .map((product, index) => (
-                                    <Link to={`/shop/productLook/${product.product_id}`} className="col-lg-4 col-md-6 mb-5 d-flex justify-content-center" key={product.product_id} id="Product-Card-1">
+                                    <Link to={`/shop/productLook/${product.product_id}`} className="col-lg-4 col-md-6 mb-5 d-flex justify-content-center p-3" key={product.product_id} id="Product-Card-1">
                                         <Card id="card-product">
                                             <Image fluid src={`http://localhost/hurb/${product.product_img}`} alt="" id="product-shop-img" className={filterVisible ? 'normal' : 'largeUp'}/>
                                             <div className="d-flex align-items-center justify-content-end mt-3">

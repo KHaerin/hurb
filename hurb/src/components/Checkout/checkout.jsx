@@ -8,9 +8,12 @@ import EditAddress from './EditAdd';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import Paypal from './Paypal';
 import { ToastContainer, toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function checkout(){
 
+    const location = useLocation();
+    const navigate = useNavigate();
     const[tracks, setTrack] = useState([]);
     const[qtyField, setQtyField] = useState('');
     const runningBarRef = useRef(null);
@@ -24,15 +27,24 @@ export default function checkout(){
     const[isPayed, setIsPayed] = useState(false);
 
     useEffect(() => {
-        fetchCartProducts();
+        if (location.state && location.state.selectedItems) {
+            const selectedItems = location.state.selectedItems;
+            const totalAmount = location.state.totalAmount;
+            setTrack(selectedItems);
+            setSubTotal(totalAmount);
+            setTotalAmount(totalAmount);
+        } else {
+            navigate('/cart');
+        }
+
         calculateEstimatedArrival();
 
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
+    }, [location.state, navigate]);
 
-    }, []);
 
     const[todayDate, setToday] = useState('');
 
@@ -57,35 +69,24 @@ export default function checkout(){
         setEstimatedArrival(arrivalRange);
     };
 
-    const fetchCartProducts = async () => {
-        try {
-            const user_id = localStorage.getItem('userId');
-            const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${user_id}`);
-            const dataFetch = response.data;
-            setTrackProduct(dataFetch);
-            let total = 0;
-            const processedData = await Promise.all(dataFetch.map(async (item) => {
-                const productResponse = await axios.get(`http://localhost/hurb/products.php?product_id=${item.product_id}`);
-                const productData = productResponse.data[0]; 
-                const subTotal = item.product_qty * productData.product_price;
-                total += subTotal;
-                return { ...item, ...productData, subTotal };
-            }));
-            setSubTotal(total);
-            setTrack(processedData);
-        } catch (error) {
-            console.log('Error fetching data:', error);
-        }
-    };
-
     const updateQuantity = async (track_id, newQuantity) => {
         try {
             const formData = new FormData();
             formData.append('track_id', track_id);
             formData.append('product_qty', newQuantity);
-
+    
             const response = await axios.post("http://localhost/hurb/update_quantity.php", formData);
-            fetchCartProducts();
+            
+            setTrack(prevTracks => {
+                return prevTracks.map(track => {
+                    if (track.track_id === track_id) {
+                        return { ...track, product_qty: newQuantity };
+                    } else {
+                        return track;
+                    }
+                });
+            });
+            
         } catch (error) {
             console.error('Error updating quantity:', error);
         }
@@ -100,6 +101,9 @@ export default function checkout(){
             toast.warning(`Exceed Stock, Stock Left ${currentStock}`);
         } else {
             updateQuantity(track_id, newQuantity);
+
+            calculateSubTotal();
+            calculateTotalAmount();
         }
     };
 
@@ -108,13 +112,28 @@ export default function checkout(){
         const newQuantity = parseInt(currentQuantity) + 1;
         handleQuantityChange(track_id, newQuantity);
     };
-
+    
     const decreaseQuantity = (track_id, currentQuantity) => {
         if (parseInt(currentQuantity) > 1) {
             const newQuantity = parseInt(currentQuantity) - 1;
             handleQuantityChange(track_id, newQuantity);
         }
     };
+    
+    const calculateSubTotal = () => {
+        const subtotal = tracks.reduce((total, item) => total + (item.product_price * item.product_qty), 0);
+        setSubTotal(subtotal);
+    };
+    
+    const calculateTotalAmount = () => {
+        const total = subTotal + serviceFee + shippingFee;
+        setTotalAmount(total);
+    };
+    
+    useEffect(() => {
+        calculateSubTotal();
+        calculateTotalAmount();
+    }, [tracks, shippingFee]);
 
     const handleScroll = () => {
         const runningBar = runningBarRef.current;
@@ -174,7 +193,7 @@ export default function checkout(){
         orderData.append('payed_id', payed.id);
         orderData.append('payed_status', payed.status);
         orderData.append('addBook_id', addressBook.addBook_id);
-        trackProduct.forEach(product => {
+        tracks.forEach(product => {
             orderData.append('product_id[]', product.product_id);
             orderData.append('quantity[]', product.product_qty);
             orderData.append('size[]', product.product_size);
@@ -244,8 +263,13 @@ export default function checkout(){
     const handleClosePay = () => setShowPay(false);
     const handleOpenPay = () => setShowPay(true);
 
+    useEffect(() => {
+        if (isPayed && payed) {
+            handleOrder();
+        }
+    }, [isPayed, payed]);
+
     const handlePaypalOrder = (orderData) => {
-        // Handle order data received from Paypal
         setPayed(orderData);
         setIsPayed(true);
         if(orderData.status === "COMPLETED"){
@@ -309,9 +333,9 @@ export default function checkout(){
                                     <span>{track.product_size.toUpperCase()}</span>
                                     <span id="price-text">₱{track.product_price}.00</span>
                                     <InputGroup className="input-group mb-3 d-flex justify-content-center align-items-center" id="qtybox">
-                                            <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button"  onClick={() => decreaseQuantity(track.track_id, track.product_qty)} id="minusBtn-cart">-</Button>
-                                            <Form.Control type="text" value={track.product_qty} onChange={(e) => setQtyField(e.target.value)} aria-label="Example text with two button addons" id="qtyField-cart"/>
-                                            <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button" onClick={() => increaseQuantity(track.track_id, track.product_qty)} id="plusBtn-cart">+</Button>
+                                        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button"  onClick={() => decreaseQuantity(track.track_id, track.product_qty)} id="minusBtn-cart">-</Button>
+                                        <Form.Control type="text" value={track.product_qty} readOnly aria-label="Example text with two button addons" id="qtyField-cart"/>
+                                        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button" onClick={() => increaseQuantity(track.track_id, track.product_qty)} id="plusBtn-cart">+</Button>
                                     </InputGroup>
                                 </Col>
                             </Row>
@@ -498,14 +522,6 @@ export default function checkout(){
             <Modal.Body>
                 <Paypal handlePaypalOrder={handlePaypalOrder} totalAmount={totalAmount} />
             </Modal.Body>
-            <Modal.Footer>
-            <Button variant="secondary" onClick={handleClosePay}>
-                Close
-            </Button>
-            <Button variant="primary" onClick={handleOrder}>
-                Confirm Order
-            </Button>
-            </Modal.Footer>
         </Modal>
         <EditAddress addressData={handleAddressData}></EditAddress>
         </>
