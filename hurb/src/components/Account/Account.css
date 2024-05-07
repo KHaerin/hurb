@@ -3,63 +3,40 @@
     padding: 0;
 }
 
-#account-container{
-    margin-top: 5%;
-    margin-bottom: 5%;
-}
-
-#profile-picture{
-    border-radius: 50px;
-    width: 100%;
-    max-width: 6.25rem;
-    height: 6.25rem;
-    object-fit: cover;
-    background-color: rgb(0, 0, 0);
-}
-
-#dashboard-container{
-    margin-left: 5%;
-}
-
-#hr{
-    width: 100%;
-    max-width: 12.5rem;
-}
-
-#hr2{
-    width: 100%;
-    max-width: 47.063rem;
-}
-
-.titleText{
-    margin-left: 5%;
-}
-
 #dashboardBox{
-    border-radius: 5px;
-    max-width: 82.875rem;
-    height: 41.25rem;
+    background-color: #FAFAFA;
 }
 
-.profile-field-container{
-    margin-left: 10%;
-}
-
-#floatingName, #floatingEmail, #floatingUsername, #floatingPhone, #floatingInput{
-    width: 100%;
-    max-width: 23.063rem;
-}
-
-#profileFileInput{
-    width: 100%;
-    max-width: 23.063rem;
+.visually-hidden {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0 !important;
+    border: 0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
 }
 
 #profile-container-img{
+    height: 20rem;
     width: 100%;
-    max-width: 25.938rem;
-    height: 33.125rem;
-    border-radius: 5px;
+    max-width: 20rem;
+    background-color: #F6F6F6;
+}
+
+#profile-picture{
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    color: rgba(255, 255, 255, 0.411);
+    object-fit: cover;
+    background-color: #0c0c0c;
+}
+
+#acc-menu-link{
+    text-decoration: none;
+    font-size: 1.3rem;
+    color: black;
 }
 
 #advertise{
@@ -116,10 +93,6 @@
 
 #nav-icons{
     height: 25px;
-}
-
-.testing101{
-    border: 2px solid black;
 }
 
 #addProduct-container{

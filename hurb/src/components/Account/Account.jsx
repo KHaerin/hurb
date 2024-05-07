@@ -22,7 +22,7 @@ export default function Account(){
     const[isSeller, setIsSeller] = useState('');
     const userId = localStorage.getItem('userId');
 
-    const [activeLink, setActiveLink] = useState('#account');
+    const [activeLink, setActiveLink] = useState('#profile');
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
  
@@ -61,18 +61,25 @@ export default function Account(){
     }
 
    
+    useEffect(() => {
+        const storedActiveLink = localStorage.getItem('activeLink');
+        setActiveLink(storedActiveLink || '#profile');
+    }, []);
+    
     const handleLinkClick = (link) => {
         setActiveLink(link);
+        localStorage.setItem('activeLink', link); 
     };
 
+    
     return(
     <>
     {isLoggedIn && 
-        <div className="container-fluid" id="account-container">
+        <div className="container mt-5 mb-5" id="account-container">
             <div className="row">
                 <div className="col-auto" id="dashboard-container"> 
                     <div className="container dashboard">
-                        <div className="image-cont d-flex align-items-center gap-3 mb-4">
+                        <div className="d-flex align-items-center gap-3 mb-4">
                             <img src={`http://localhost/hurb/${profile_picture}`} alt="profile" className="d-flex" id="profile-picture" />
                             <span>{lName}, {fName}</span>
                         </div>
@@ -81,7 +88,7 @@ export default function Account(){
                     </div>
                 </div>
             <div className="col" id="middle-container">
-                {activeLink === '#account' && <Profile />}
+                {activeLink === '#profile' && <Profile handleLinkClick={handleLinkClick} />}
                 {activeLink === '#account/addressBook' && <AddressBook  handleLinkClick={handleLinkClick} />}
                 {activeLink === '#account/addAddress' && <AddAddress handleLinkClick={handleLinkClick}/>}                
                 {activeLink === '#changePassword' && <ChangePassword />}

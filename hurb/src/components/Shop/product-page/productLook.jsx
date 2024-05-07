@@ -32,9 +32,12 @@ export default function ProductLook() {
     const [product_price, setProdPrice] = useState('');
     const [product_qty, setProdQty] = useState(qtyField);
     const [product_img, setProdImg] = useState(null);
+    const [selected_img, setSelectedImg] = useState('');
     const[colors, setColors] = useState(``);
+    const[colorImg, setColorImg] = useState([]);
     const[size_Qty, setSizeQty] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
+    const [firstImg, setFirstImg] = useState([]);
 
     useEffect(() => {
         fetchProduct(productId);
@@ -44,19 +47,27 @@ export default function ProductLook() {
     useEffect(() => {
         if (availSizes.length > 0) {
             const firstSize = availSizes[0];
+            const allColorImages = availSizes.map(size => size.images).flat();
+            setColorImg(allColorImages);
+            setFirstImg(firstSize.images[0]);
             setProdSize(firstSize.size);
             setSizeQty(firstSize.quantity);
             setSelectedSize(firstSize.size);
+            setSelectedImg(firstImg.color_id);
+            console.log('image ni: ', firstImg.product_img);
+            console.log(firstImg.color_id)
+            console.log("mao ni: ", availSizes);
         }
     }, [availSizes]);
 
-    // Function to handle size selection
+   
     const handleSizeChange = (size) => {
         setProdSize(size);
         const selectedSizeInfo = availSizes.find(s => s.size === size);
         if (selectedSizeInfo) {
             setSizeQty(selectedSizeInfo.quantity);
             setSelectedSize(size);
+            
         }
     };
 
@@ -148,6 +159,8 @@ export default function ProductLook() {
 
     const ColorChange = (color) => {
         setColors(color);
+        
+        setSelectedImg(color);
     }
 
     return (
@@ -161,16 +174,16 @@ export default function ProductLook() {
                                 <div className="container d-flex flex-column justify-content-center align-items-center" id="product-color-container">
                                     <div className="col mb-4">
                                         <div className="product-image-container d-flex justify-content-center align-items-center">
-                                            <img src={`http://localhost/hurb/${product.product_img}`} name="product_img"alt="" id="product_image"/>
-                                            {/* {colors === 'Black' && 
-                                                <img src={`http://localhost/hurb/${product.product_img}`} name="product_img"alt="" id="product_image"/>
-                                            }
-                                            {colors === 'Red' && 
-                                                <img src={RedShirt} name="product_img"alt="" id="product_image"/>
-                                            }
-                                            {colors === 'White' && 
-                                                 <img src={WhiteShirt} name="product_img"alt="" id="product_image"/>
-                                            } */}
+                                        {colorImg
+                                        .filter(cImg => cImg.color === colors) // Filter images by selected color
+                                        .map((cImg, index) => (
+                                            <img 
+                                                key={index} 
+                                                src={`http://localhost/hurb/${cImg.product_img}`} 
+                                                alt="" 
+                                                id="product_image"
+                                            />
+                                        ))}
                                         </div>
                                     </div>
                                     <div className="col" id="color-container">
@@ -178,12 +191,23 @@ export default function ProductLook() {
                                      <div className="container d-flex  justify-content-center" >
                                      {availSizes.map((availColors, index) => (
                                         <div className="col d-flex gap-3" key={availColors.product_scq_id}>
-                                            <input type="radio" className="btn-check" name="options-base" id={`option${availColors.product_scq_id}`} autoComplete="off"/>
-                                            <label htmlFor={`option${availColors.product_scq_id}`} onClick={() => { ColorChange(availColors.color)}} className="btn color-radio">
-                                                <img src={Black} alt="" id="color-radio-img"/>{availColors.color}
+                                            <input 
+                                                type="radio" 
+                                                className="btn-check" 
+                                                name="options-base" 
+                                                id={`option${availColors.product_scq_id}`} 
+                                                autoComplete="off"
+                                                checked={selected_img === availColors.color_id} // Check if it matches selected_img
+                                                onChange={() => { 
+                                                    ColorChange(availColors.color);
+                                                    setSelectedImg(availColors.color_id); // Update selected_img when changed
+                                                }} 
+                                            />
+                                            <label htmlFor={`option${availColors.product_scq_id}`} className="btn color-radio">
+                                                <img src={availColors.color === 'Black' ? Black : availColors.color === 'Red' ? Red : availColors.color === 'White' ? White : Grey} alt="" id="color-radio-img"/>{availColors.color}
                                             </label>
                                         </div>
-                                    ))} 
+                                    ))}
                                      </div>      
                                     </div>
                                 </div>

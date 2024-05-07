@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import {Link} from 'react-router-dom';
 import axios from 'axios';
-export default function Profile(){
+export default function Profile( { handleLinkClick } ){
     
     const[fName, setFirstName] = useState('');
     const[lName, setLastName] = useState('');
@@ -67,12 +68,11 @@ export default function Profile(){
         }
     }
 
-
     return(
         <>
-            <div className="container bg-secondary" id="dashboardBox">
+            <div className="container pt-2 px-5" id="dashboardBox">
                     <div className="row">
-                        <div className="col-auto col-lg-7 col-md-6">
+                        <div className="col-auto col-lg-7 col-md-6 mb-5">
                             <div className="titleText d-flex flex-column mt-4 mb-3">
                                 <h1 className="d-flex align-items-center">My Profile</h1>
                                 <hr className="border border-dark border-1 opacity-40" id="hr2"/>
@@ -80,44 +80,50 @@ export default function Profile(){
 
                             <div className="profile-field-container">
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingName" value={fName} onChange={(e) => setFirstName(e.target.value)} placeholder="Name" disabled/>
+                                    <input type="text" className="form-control" id="floatingName" value={fName} onChange={(e) => setFirstName(e.target.value)} placeholder="Name" />
                                     <label htmlFor="floatingName">Name</label>
                                 </div>
 
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingUsername" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="Username" disabled/>
+                                    <input type="text" className="form-control" id="floatingUsername" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="Username" />
                                     <label htmlFor="floatingUsername">Username</label>
                                 </div>
 
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingEmail" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" disabled/>
+                                    <input type="text" className="form-control" id="floatingEmail" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
                                     <label htmlFor="floatingEmail">Email</label>
                                 </div>
 
                                 <div className="form-floating mb-3">
-                                    <input type="text" className="form-control" id="floatingPhone" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} placeholder="Phone Number" disabled/>
+                                    <input type="text" className="form-control" id="floatingPhone" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} placeholder="Phone Number" />
                                     <label htmlFor="floatingPhone">Phone Number</label>
                                 </div>
 
-                                <button type="button" className="btn btn-primary" disabled>Confirm</button>
+                                <div className="">
+                                    <Link to="#changePassword" onClick={() => handleLinkClick('#changePassword')}>Change Password</Link>
+                                </div>
+                                
+                                <div className="d-flex justify-content-end align-items-end">
+                                    <button type="button" className="btn btn-dark" onClick={handleChangeProfile}>Save</button>
+                                </div>
                             </div>
                         </div>
                         <div className="col-lg-5 col-md-6 d-flex flex-column justify-content-center mt-5">
-                            <div className="container bg-dark d-flex flex-column justify-content-center align-items-center" id="profile-container-img">
-                                <img src={`http://localhost/hurb/${profile_picture}`} alt="profile" className="d-flex" id="profile-picture"/>
-
+                            <div className="container d-flex flex-column justify-content-center align-items-center p-5" id="profile-container-img">
+                                <img src={`http://localhost/hurb/${profile_picture}`} alt="profile" className="d-flex mb-3" id="profile-picture"/>
                                 <div className="mb-3">
-                                    <label htmlFor="formFile" className="form-label"></label>
+                                    <label htmlFor="profileFileInput" className="btn btn-outline-dark">
+                                        Choose File
+                                    </label>
                                     <input 
-                                        className="form-control" 
+                                        className="form-control visually-hidden"
                                         type="file" 
                                         id="profileFileInput" 
                                         name="profile_picture"  
                                         onChange={(e) => setProfilePic(e.target.files[0])}
                                     />
+                                    
                                 </div>
-                                <button type="button" className="btn btn-primary" onClick={handleChangeProfile}>Confirm</button>
-
                             </div>
                         </div>
                     </div>
