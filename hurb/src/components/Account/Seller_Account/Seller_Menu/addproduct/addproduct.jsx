@@ -24,22 +24,20 @@ export default function addproduct(){
     const [sizeData, setSizeData] = useState({});
 
     const handleSizeChange = (size) => {
-        
-        setSelectedSizes(prevSelectedSizes => {
+        setSelectedSizes((prevSelectedSizes) => {
             if (prevSelectedSizes.includes(size)) {
-            
-                return prevSelectedSizes.filter(s => s !== size);
+                setProductImg('');
+                return prevSelectedSizes.filter((s) => s !== size);
             } else {
                 return [...prevSelectedSizes, size];
             }
         });
-    
-        setSizeData(prevSizeData => {
+        setSizeData((prevSizeData) => {
             if (prevSizeData[size]) {
                 const { [size]: removedSize, ...newSizeData } = prevSizeData;
                 return newSizeData;
             } else {
-                return { ...prevSizeData, [size]: { quantity: '', color: '' } };
+                return { ...prevSizeData, [size]: { quantity: '', color: '', img: '' } };
             }
         });
     };
@@ -174,14 +172,6 @@ export default function addproduct(){
                 </div>
                 <div className="row">
                     <div className="col">
-                        <h3>Product Image</h3>
-                    </div>
-                    <div className="col">
-                        <input className="form-control mb-3" onChange={(e) => setProductImg(e.target.files[0])} name="product_img" type="file" id="formFile"></input>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
                         <div className="form-floating mb-3">
                             <input type="text" className="form-control form-control-sm" value={product_name} onChange={(e) => setProductName(e.target.value)} name="product_name" id="floatingInput" placeholder="name@example.com"/>
                             <label htmlFor="floatingInput">Product Name</label>
@@ -299,6 +289,15 @@ export default function addproduct(){
                                                             <ColorsDrop onSelectColors={setColors}/>
                                                         </select>
                                                     </div>  
+                                                </div>
+                                                <div className="col">
+                                                    <input
+                                                        className="form-control mb-3"
+                                                        onChange={(e) => handleImageChange(size, e.target.files[0])}
+                                                        name={`product_img_${size}`} 
+                                                        type="file"
+                                                        id={`formFile_${size}`} 
+                                                    />       
                                                 </div>
                                             </>
                                         )}
