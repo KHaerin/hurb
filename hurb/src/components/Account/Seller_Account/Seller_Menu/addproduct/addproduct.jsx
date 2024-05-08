@@ -23,23 +23,21 @@ export default function addproduct(){
     const [selectedQuantities, setSelectedQuantities] = useState([]);
     const [sizeData, setSizeData] = useState({});
 
-    const handleSizeChange = (size) => {
-        
-        setSelectedSizes(prevSelectedSizes => {
+    const handleSizeChange = (size, color) => {
+        setSelectedSizes((prevSelectedSizes) => {
             if (prevSelectedSizes.includes(size)) {
-            
-                return prevSelectedSizes.filter(s => s !== size);
+                setProductImg('');
+                return prevSelectedSizes.filter((s) => s !== size);
             } else {
                 return [...prevSelectedSizes, size];
             }
         });
-    
-        setSizeData(prevSizeData => {
+        setSizeData((prevSizeData) => {
             if (prevSizeData[size]) {
                 const { [size]: removedSize, ...newSizeData } = prevSizeData;
                 return newSizeData;
             } else {
-                return { ...prevSizeData, [size]: { quantity: '', color: '' } };
+                return { ...prevSizeData, [size]: { quantity: '', color, img: '' } };
             }
         });
     };
@@ -52,9 +50,23 @@ export default function addproduct(){
     };
 
     const handleColorChange = (size, color) => {
+        // Check if this is the first size selecting this color
+        const isFirstSizeWithColor = !Object.keys(sizeData).some(s => sizeData[s].color === color);
+    
+        // Get the image from the first size with this color
+        const img = isFirstSizeWithColor ? sizeData[size].img : sizeData[Object.keys(sizeData).find(s => sizeData[s].color === color)].img;
+    
+        // Update the color selection for the current size
         setSizeData(prevSizeData => ({
             ...prevSizeData,
-            [size]: { ...prevSizeData[size], color }
+            [size]: { ...prevSizeData[size], color, img }
+        }));
+    };
+
+    const handleImgChange = (size, img) => {
+        setSizeData(prevSizeData => ({
+            ...prevSizeData,
+            [size]: { ...prevSizeData[size], img}
         }));
     };
 
@@ -85,11 +97,9 @@ export default function addproduct(){
             alert('Product details empty!'); 
         } else if(product_price.length === 0){
             alert('Product price empty!');
-        } else if(!product_img){
-            alert('Please provide an image for your product!');
         } else {
 
-            const selectedSizesWithChecked = Object.keys(sizeData).map(size => size); // Get selected sizes from sizeData
+        const selectedSizesWithChecked = Object.keys(sizeData).map(size => size); // Get selected sizes from sizeData
         const quantitiesToSend = Object.keys(sizeData).map(size => sizeData[size].quantity || 0); // Get quantities from sizeData
         const colorsToSend = Object.keys(sizeData).map(size => sizeData[size].color); // Get colors from sizeData
 
@@ -110,16 +120,15 @@ export default function addproduct(){
                 fData.append('product_sub_category', product_sub_category);
                 fData.append('product_details', product_details);
                 fData.append('product_price', product_price);
-                fData.append('product_img', product_img);
                 fData.append('product_stock', product_stock);
                 fData.append('selected_sizes', JSON.stringify(selectedSizesWithChecked));
                 fData.append('selected_quantities', JSON.stringify(quantitiesToSend));
                 fData.append('selected_colors', JSON.stringify(selectedColorsWithChecked));
-
-                console.log('selected size', selectedSizesWithChecked);
-                console.log('selected qty', quantitiesToSend);
-                console.log('selected color', selectedColorsWithChecked);
-
+                Object.keys(sizeData).forEach(size => {
+                    if (sizeData[size].img) {
+                        fData.append(`product_img_${size}`, sizeData[size].img);
+                    }
+                });
                 axios.post(url, fData)
                     .then(response => {
                        console.log(response.data);
@@ -140,7 +149,7 @@ export default function addproduct(){
                         document.getElementById('formFile').value = '';
 
                     })
-                    .catch(error => alert(error));
+                    .catch(error => alert('hi: ', error));
             }
         }
     }
@@ -170,14 +179,6 @@ export default function addproduct(){
                 <div className="row">
                     <div className="col">
                         <h3>Basic Information</h3>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <h3>Product Image</h3>
-                    </div>
-                    <div className="col">
-                        <input className="form-control mb-3" onChange={(e) => setProductImg(e.target.files[0])} name="product_img" type="file" id="formFile"></input>
                     </div>
                 </div>
                 <div className="row">
@@ -299,6 +300,18 @@ export default function addproduct(){
                                                             <ColorsDrop onSelectColors={setColors}/>
                                                         </select>
                                                     </div>  
+                                                </div>
+                                                <div className="col mt-5">
+                                                    <input 
+                                                        className="form-control mb-3" 
+                                                        onChange={(e) => handleImgChange(size, e.target.files[0])} 
+                                                        name="product_img" 
+                                                        type="file" 
+                                                        id={`formFile-${size}`}
+                                                    />
+                                                    {sizeData[size].color !== 'DEFAULT' && (
+                                                        <p className="text-muted">Note: Choosing the same color applies the same image for all sizes with that color.</p>
+                                                    )}
                                                 </div>
                                             </>
                                         )}
