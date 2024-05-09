@@ -27,13 +27,11 @@ export default function Cart(){
             const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${user_id}`);
             const dataFetch = response.data;
             let total = 0;
-            const processedData = await Promise.all(dataFetch.map(async (item) => {
-                const productResponse = await axios.get(`http://localhost/hurb/products.php?product_id=${item.product_id}`);
-                const productData = productResponse.data[0]; 
-                const totalAmount = item.product_qty * productData.product_price;
+            const processedData = dataFetch.map(item => {
+                const totalAmount = item.product_qty * item.product_price;
                 total += totalAmount;
-                return { ...item, ...productData, totalAmount };
-            }));
+                return { ...item, totalAmount };
+            });
             setTracks(processedData.map(item => ({ ...item, selected: false })));
         } catch (error) {
             console.log('Error fetching data:', error);
@@ -54,19 +52,16 @@ export default function Cart(){
             formData.append('product_qty', newQuantity);
     
             const response = await axios.post("http://localhost/hurb/update_quantity.php", formData);
-           
-            const updatedDataFetch = await axios.get(`http://localhost/hurb/track_select.php?user_id=${localStorage.getItem('userId')}`);
-            const processedData = await Promise.all(updatedDataFetch.data.map(async (item) => {
-                const productResponse = await axios.get(`http://localhost/hurb/products.php?product_id=${item.product_id}`);
-                const productData = productResponse.data[0]; 
-                const totalAmount = item.product_qty * productData.product_price;
-                return { ...item, ...productData, totalAmount };
-            }));
-          
-            const updatedTracks = processedData.map(item => {
-                const existingTrack = tracks.find(track => track.track_id === item.track_id);
-                return { ...item, selected: existingTrack ? existingTrack.selected : false };
+    
+            // Update the quantity in the tracks array
+            const updatedTracks = tracks.map(track => {
+                if (track.track_id === track_id) {
+                    return { ...track, product_qty: newQuantity }; // Update the quantity
+                }
+                return track;
             });
+    
+            // Update the state with the new tracks array
             setTracks(updatedTracks);
         } catch (error) {
             console.error('Error updating quantity:', error);
@@ -103,7 +98,7 @@ export default function Cart(){
             const formData = new FormData();
             formData.append('track_id', track_id);
 
-            const response = await axios.post("http://localhost/hurb/remove_product.php", formData);
+            const response = await axios.post("http://localhost/hurb/removeProduct.php", formData);
             fetchCartProducts();
             window.location.reload();
             toast(response.data);
@@ -212,7 +207,7 @@ export default function Cart(){
                                      <div className="col-lg-4 d-flex flex-column" id="cartDetails">
                                             <span className="mb-3" id="track-prod-name">{track.product_name}</span>
                                             <span id="sizetext">
-                                            Size: {track.product_size.toUpperCase()}
+                                            Size: {track.size}
                                             </span>
                                             <button className="btn btn-danger" type="button" onClick={() => removeFromCart(track.track_id)}>Remove</button>
                                      </div>

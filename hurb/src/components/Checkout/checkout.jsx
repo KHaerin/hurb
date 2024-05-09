@@ -31,6 +31,7 @@ export default function checkout(){
             const selectedItems = location.state.selectedItems;
             const totalAmount = location.state.totalAmount;
             setTrack(selectedItems);
+            console.log('tracks: ',tracks);
             setSubTotal(totalAmount);
             setTotalAmount(totalAmount);
         } else {
@@ -44,6 +45,10 @@ export default function checkout(){
             window.removeEventListener('scroll', handleScroll);
         };
     }, [location.state, navigate]);
+
+    useEffect(() => {
+        console.log('tracks: ',tracks);
+    })
 
 
     const[todayDate, setToday] = useState('');
@@ -196,7 +201,7 @@ export default function checkout(){
         tracks.forEach(product => {
             orderData.append('product_id[]', product.product_id);
             orderData.append('quantity[]', product.product_qty);
-            orderData.append('size[]', product.product_size);
+            orderData.append('size[]', product.size);
             orderData.append('product_price[]', product.product_price);
         });
         orderData.append('totalPayable', totalAmount);
@@ -222,7 +227,7 @@ export default function checkout(){
             const formData = new FormData();
             formData.append('track_id', track_id);
     
-            const response = await axios.post("http://localhost/hurb/remove_product.php", formData);
+            const response = await axios.post("http://localhost/hurb/remove_copy.php", formData);
             fetchCartProducts();
             toast(response.data);
         } catch (error) {
@@ -330,7 +335,7 @@ export default function checkout(){
                             <Row>
                                 <Col className="d-flex flex-column justify-content-center align-items-center">
                                     <Image src={`http://localhost/hurb/${track.product_img}`} alt="" id="checkout-product-img"/>
-                                    <span>{track.product_size.toUpperCase()}</span>
+                                    <span>{track.size}</span>
                                     <span id="price-text">₱{track.product_price}.00</span>
                                     <InputGroup className="input-group mb-3 d-flex justify-content-center align-items-center" id="qtybox">
                                         <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button"  onClick={() => decreaseQuantity(track.track_id, track.product_qty)} id="minusBtn-cart">-</Button>

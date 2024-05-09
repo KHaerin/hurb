@@ -13,6 +13,8 @@ function MyOrder() {
 
     const[myOrders, setOrder] = useState([]);
 
+    useEffect(() => console.log('orders: ',myOrders));
+
     useEffect(() => {
         const getAddressBook = async () => {
             try{
@@ -21,7 +23,7 @@ function MyOrder() {
                 const orders = url.data;
                 setOrder(orders);
             }catch(error){
-                console.error(error);
+                console.error('myOrder error: ',error);
             }
         };
         getAddressBook();

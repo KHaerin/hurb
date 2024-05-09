@@ -89,14 +89,14 @@ export default function Filter({ isVisible, products, onCategorySelect }){
                     <h3>Colours</h3>
                 </div>
                 <div className="col-auto d-flex gap-4">
-                    <input type="radio" className="btn-check" name="options-base" id="option1" autoComplete="off" defaultChecked />
+                    {/* <input type="radio" className="btn-check" name="options-base" id="option1" autoComplete="off" defaultChecked />
                     <label htmlFor="option1" className="btn color-radio"><img src={Black} alt="" id="color-radio-img" /></label>
 
                     <input type="radio" className="btn-check" name="options-base" id="option2" autoComplete="off" />
                     <label htmlFor="option2" className="btn color-radio"><img src={White} alt="" id="color-radio-img" /></label>
 
                     <input type="radio" className="btn-check" name="options-base" id="option3" autoComplete="off" />
-                    <label htmlFor="option3" className="btn color-radio"><img src={Red} alt="" id="color-radio-img" /></label>
+                    <label htmlFor="option3" className="btn color-radio"><img src={Red} alt="" id="color-radio-img" /></label> */}
                 </div>
             </div>
         </div>

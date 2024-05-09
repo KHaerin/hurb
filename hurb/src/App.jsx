@@ -113,7 +113,7 @@ function App() {
                     <Route path="/admin/application" element={<Application />} />
                 </Routes>
                 {renderFooter()}
-                <ToastContainer position="top-center" autoClose={500} limit={1}/>
+                <ToastContainer position="top-center" autoClose={1000} limit={1}/>
         </BrowserRouter>
     </CartProvider>
       

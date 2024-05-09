@@ -25,22 +25,23 @@ export default function ProductLook() {
     const [qtyField, setQtyField] = useState(1);
     const [productStock, setProductStock] = useState([]);
     const[availSizes, setAvailSize] = useState([]);
+    const [selectedColor, setSelectedColor] = useState(null);
+    const [selectedColorId, setSelectedColorId] = useState(null); 
 
     const [product_id, setProdId] = useState('');
     const [product_name, setProdName] = useState('');
     const [product_size, setProdSize] = useState('');
     const [product_price, setProdPrice] = useState('');
     const [product_qty, setProdQty] = useState(qtyField);
-    const [product_img, setProdImg] = useState(null);
+    const [product_img_id, setImgID] = useState(null);
     const [selected_img, setSelectedImg] = useState('');
-    const[colors, setColors] = useState(``);
+    const [selectedSizeID, setSelectedSizeID] = useState(null);
     const[colorImg, setColorImg] = useState([]);
     const[size_Qty, setSizeQty] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [firstImg, setFirstImg] = useState([]);
 
     useEffect(() => {
-        fetchProduct(productId);
         fetchSizes(productId);
     }, [productId]);
 
@@ -53,16 +54,22 @@ export default function ProductLook() {
             setProdSize(firstSize.size);
             setSizeQty(firstSize.quantity);
             setSelectedSize(firstSize.size);
-            setSelectedImg(firstImg.color_id);
-            console.log('image ni: ', firstImg.product_img);
-            console.log(firstImg.color_id)
-            console.log("mao ni: ", availSizes);
+            setSelectedColor(firstSize.color);
+            setSelectedSizeID(firstSize.size_id); 
+
+            const defaultColorImage = firstSize.images.find(img => img.color_id === firstSize.color_id);
+            if (defaultColorImage) {
+                setSelectedImg(defaultColorImage.product_img);
+                setSelectedColorId(firstImg.color_id);
+                setImgID(firstImg.product_img_id);
+            }
         }
     }, [availSizes]);
 
    
-    const handleSizeChange = (size) => {
+    const handleSizeChange = (size, size_id) => {
         setProdSize(size);
+        setSelectedSizeID(size_id);
         const selectedSizeInfo = availSizes.find(s => s.size === size);
         if (selectedSizeInfo) {
             setSizeQty(selectedSizeInfo.quantity);
@@ -71,32 +78,25 @@ export default function ProductLook() {
         }
     };
 
-    const fetchProduct = async (productId) => {
-        try {
-            const response = await axios.get(`http://localhost/hurb/products.php?product_id=${productId}`);
-            const stockFetch = response.data[0];
-            const qtyFetch = stockFetch.product_stock;
-            const imgFetch = stockFetch.product_img;
-            const idFetch = stockFetch.product_id;
-            const nameFetch = stockFetch.product_name;
-            const priceFetch = stockFetch.product_price;
-
-            setShowDetails(stockFetch.product_details);
-            setProdId(idFetch);
-            setProdName(nameFetch);
-            setProdPrice(priceFetch);
-            setProdImg(imgFetch);
-            setProductStock(qtyFetch);
-            setProduct(response.data);
-        } catch (error) {
-            console.error('Error fetching product:', error);
-        }
-    };
-
     const fetchSizes = async(productId) => {
         try {
             const response = await axios.get(`http://localhost/hurb/selectSizes.php?product_id=${productId}`);
             setAvailSize(response.data);
+            setProduct(response.data);
+
+            const stockFetch = response.data[0];
+            const qtyFetch = stockFetch.product_stock;
+            const idFetch = stockFetch.product_id;
+            const nameFetch = stockFetch.product_name;
+            const priceFetch = stockFetch.product_price;
+    
+            setShowDetails(stockFetch.product_details);
+            setProdId(idFetch);
+            setProdName(nameFetch);
+            setProdPrice(priceFetch);
+            setProductStock(qtyFetch);
+            setImgID()
+     
         } catch (error) {
             console.error('Error fetching sizes: ', error);
         }
@@ -136,11 +136,10 @@ export default function ProductLook() {
             let fData = new FormData();
             fData.append('product_id', product_id);
             fData.append('user_id', getID);
-            fData.append('product_name', product_name);
-            fData.append('product_size', product_size);
-            fData.append('product_price', product_price)
+            fData.append('size_id', selectedSizeID);
+            fData.append('color_id', selectedColorId);
             fData.append('product_qty', product_qty);
-            fData.append('product_img', product_img);
+            fData.append('product_img_id', product_img_id);
     
             axios.post(url, fData)
             .then(response=>{
@@ -157,58 +156,81 @@ export default function ProductLook() {
         }
     }
 
-    const ColorChange = (color) => {
-        setColors(color);
-        
-        setSelectedImg(color);
-    }
+    const handleColorChange = (color, colorId) => {
+        setSelectedColor(color); // Update selected color
+        setSelectedColorId(colorId); // Update selected color's ID
+        const selectedColorImages = colorImg.filter(cImg => cImg.color === color);
+        if (selectedColorImages.length > 0) {
+            setSelectedImg(selectedColorImages[0].product_img);
+            setImgID(selectedColorImages[0].product_img_id);
+        }
+    };
+
+    const colorBgMap = {
+        Black: "black",
+        Red: "red",
+        Grey: "grey",
+        Blue: "blue",
+        White: "white",
+        Pink: 'pink',
+        Purple: 'purple',
+        Green: 'green',
+        Yellow: 'yellow',
+        Orange: 'orange'
+
+        // Add more color mappings here as needed
+    };
+    const uniqueColors = [...new Set(availSizes.map(size => size.color))];
+
+    // useEffect(()=>{
+    //     console.log('colorid: ',selectedColorId)
+    //     console.log('data: ', availSizes);
+    //     console.log('product: ', product);
+    //     console.log('img id: ',product_img_id);
+    // })
 
     return (
         <div className="container" id="product-look">
             <div className="row">
                 <div className="col">
-                {product.map((product, index) => (
+                {product.slice(0, 1).map((product, index) => (
                     <div className="container" key={product.product_id} >
                         <div className="row row-cols-2">
-                            <div className="col" >
+                            <div className="col">
                                 <div className="container d-flex flex-column justify-content-center align-items-center" id="product-color-container">
                                     <div className="col mb-4">
-                                        <div className="product-image-container d-flex justify-content-center align-items-center">
-                                        {colorImg
-                                        .filter(cImg => cImg.color === colors) // Filter images by selected color
-                                        .map((cImg, index) => (
+                                        <div className="product-image-container d-flex justify-content-center align-items-center">              
                                             <img 
-                                                key={index} 
-                                                src={`http://localhost/hurb/${cImg.product_img}`} 
-                                                alt="" 
-                                                id="product_image"
-                                            />
-                                        ))}
+                                                    src={`http://localhost/hurb/${selected_img}`} 
+                                                    alt="" 
+                                                    id="product_image"
+                                                />
+                                       
                                         </div>
                                     </div>
                                     <div className="col" id="color-container">
                                      <span>Color:</span>
-                                     <div className="container d-flex  justify-content-center" >
-                                     {availSizes.map((availColors, index) => (
-                                        <div className="col d-flex gap-3" key={availColors.product_scq_id}>
-                                            <input 
-                                                type="radio" 
-                                                className="btn-check" 
-                                                name="options-base" 
-                                                id={`option${availColors.product_scq_id}`} 
-                                                autoComplete="off"
-                                                checked={selected_img === availColors.color_id} // Check if it matches selected_img
-                                                onChange={() => { 
-                                                    ColorChange(availColors.color);
-                                                    setSelectedImg(availColors.color_id); // Update selected_img when changed
-                                                }} 
-                                            />
-                                            <label htmlFor={`option${availColors.product_scq_id}`} className="btn color-radio">
-                                                <img src={availColors.color === 'Black' ? Black : availColors.color === 'Red' ? Red : availColors.color === 'White' ? White : Grey} alt="" id="color-radio-img"/>{availColors.color}
-                                            </label>
-                                        </div>
-                                    ))}
-                                     </div>      
+                                        <div className="col-auto d-flex gap-3" >
+                                        {uniqueColors.map((color, index) => (
+                                                <div key={index}>
+                                                    <input       
+                                                        type="radio" 
+                                                        className="btn-check" 
+                                                        name="options-base" 
+                                                        id={`option-${color}`} 
+                                                        autoComplete="off"
+                                                        checked={selectedColor === color}
+                                                        onChange={() => handleColorChange(color, availSizes.find(size => size.color === color)?.color_id)}
+                                                    />
+                                                    <label htmlFor={`option-${color}`} className="btn color-radio" 
+                                                            style={{ 
+                                                            backgroundColor: colorBgMap[color],
+                                                            border: selectedColor === color ? '3px solid #A6A6A6' : ''
+                                                            }}>
+                                                    </label>    
+                                                </div>                                
+                                            ))}
+                                         </div>     
                                     </div>
                                 </div>
                             </div>
@@ -233,12 +255,12 @@ export default function ProductLook() {
                                         </div>
                                     </div>
                                     <div className="row row-cols-1 mb-4">
-                                        <div className="col mb-2">
+                                        <div className="col-lg-12 mb-2">
                                             <span id="details-title">Size</span>
                                         </div>
-                                        <div className="col-lg-10 col-md-8 d-flex gap-3">
+                                        <div className="col d-flex flex-1 gap-3">
                                         {availSizes.map((size, index) => (
-                                                <div key={size.product_scq_id}>
+                                                <div key={size.product_scq_id} className="d-flex">
                                                     <input 
                                                         type="radio" 
                                                         className="btn-check" 
@@ -246,11 +268,11 @@ export default function ProductLook() {
                                                         id={size.size} 
                                                         autoComplete="off" 
                                                         value={size.size} 
-                                                        onChange={() => handleSizeChange(size.size)} 
+                                                        onChange={() => handleSizeChange(size.size, size.size_id)} 
                                                         checked={selectedSize === size.size}
                                                     />
                                                     <label 
-                                                        className="btn btn-outline-dark" 
+                                                        className="btn btn-outline-dark d-flex align-items-center" 
                                                         htmlFor={size.size} 
                                                         id={size.size}
                                                     >
