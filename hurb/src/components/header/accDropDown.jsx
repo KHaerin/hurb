@@ -58,7 +58,6 @@ export default function accDropDown(){
     }
 
     const sellerDashBoard = () => {
-        localStorage.setItem('onSeller', true);
         window.location.href="/seller";
     }
     

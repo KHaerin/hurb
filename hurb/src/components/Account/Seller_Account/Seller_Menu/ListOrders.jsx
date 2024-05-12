@@ -4,6 +4,10 @@ function ListOrders() {
     
     const[orders, setOrders] = useState([]);
 
+    useEffect(() => {
+        setOrders('xd');
+    })
+
   return (
     <div className="container-fluid" id="account-container">
         <div className="row gap-5">
@@ -17,13 +21,25 @@ function ListOrders() {
                 <thead>
                     <tr>
                         <th scope="col">Product ID</th>
-                        <th scope="col">Product Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Stock</th>
-                        <th scope="col">Sales</th>
+                        <th scope="col">Customer ID</th>
+                        <th scope="col">Size ID</th>
+                        <th scope="col">Color ID</th>
+                        <th scope="col">Quantity</th>
                         <th scope="col">Action</th>
                     </tr>
-                </thead> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><span>1</span></th>
+                        <td>1</td>    
+                        <td>1</td>    
+                        <td>1</td>    
+                        <td>2</td>    
+                        <td>
+                            <span className='btn btn-dark'>three dots for options :O</span>
+                        </td>   
+                    </tr>                 
+                </tbody> 
             </table> 
             </>
             }

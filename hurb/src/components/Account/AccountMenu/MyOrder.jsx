@@ -86,8 +86,7 @@ function MyOrder() {
                         <div key={order.order_item_id} style={order_container}>
                             <Row className='px-4 pt-4'>
                             {order.deliver_status === 'ship' && 
-                                <span>Seller is preparing to ship.</span>
-                                
+                                <span>Seller is preparing to ship.</span>       
                             }
                             {order.deliver_status === 'received' && 
                                 <span>Delivered</span>

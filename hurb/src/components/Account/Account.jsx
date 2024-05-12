@@ -1,5 +1,6 @@
 import './Account.css';
 import React, { useState, useEffect } from "react";
+// import {useLocation} from 'react-router-dom';
 import axios from 'axios';
 import AccMenu from './accMenu';
 import Profile from './AccountMenu/Profile';
@@ -22,7 +23,13 @@ export default function Account(){
     const[isSeller, setIsSeller] = useState('');
     const userId = localStorage.getItem('userId');
 
-    const [activeLink, setActiveLink] = useState('#profile');
+    const [activeLink, setActiveLink] = useState(() => {
+        return localStorage.getItem('activeLink') || '#profile';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('activeLink', activeLink);
+    }, [activeLink]);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
  
@@ -59,19 +66,11 @@ export default function Account(){
             console.error('Error fetch: ', error);
         }
     }
-
-   
-    useEffect(() => {
-        const storedActiveLink = localStorage.getItem('activeLink');
-        setActiveLink(storedActiveLink || '#profile');
-    }, []);
-    
+ 
     const handleLinkClick = (link) => {
         setActiveLink(link);
-        localStorage.setItem('activeLink', link); 
     };
-
-    
+  
     return(
     <>
     {isLoggedIn && 

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Container, Row, Col, Button} from 'react-bootstrap';
-import * as Hi2Icons from 'react-icons/hi2';
 import * as FaIcons from 'react-icons/fa';
 
 
@@ -35,7 +34,7 @@ export default function Dashboard() {
                                 <Container fluid>
                                     <Row className='d-flex mb-2'>
                                         <Col id="dashIcon-container">
-                                            <span id="dashIcon"><Hi2Icons.HiShoppingBag></Hi2Icons.HiShoppingBag></span>
+                                            <span id="dashIcon"><FaIcons.FaShoppingBag/></span>
                                         </Col>
                                     </Row>
                                     <Row>
@@ -70,7 +69,7 @@ export default function Dashboard() {
                                 <Container fluid>
                                     <Row className='d-flex mb-2'>
                                         <Col id="dashIcon-container">
-                                            <span id="dashIcon"><Hi2Icons.HiShoppingBag></Hi2Icons.HiShoppingBag></span>
+                                            <span id="dashIcon"><FaIcons.FaShoppingBag/></span>
                                         </Col>
                                     </Row>
                                     <Row>
@@ -89,7 +88,7 @@ export default function Dashboard() {
                                 <Container fluid>
                                     <Row className='d-flex mb-2'>
                                         <Col id="dashIcon-container">
-                                            <span id="dashIcon"><Hi2Icons.HiShoppingBag></Hi2Icons.HiShoppingBag></span>
+                                            <span id="dashIcon"><FaIcons.FaShoppingBag/></span>
                                         </Col>
                                     </Row>
                                     <Row>
@@ -131,11 +130,9 @@ export default function Dashboard() {
                                 <tbody>
                                     <tr>
                                         <th scope="row">
-                                            <span>
-                                                <h2 className='d-flex mt-4'>1</h2>
-                                            </span>                     
+                                                <h2 className='d-flex mt-4'>1</h2>                  
                                         </th>
-                                        <td><img src='' alt="" id="product-seller-image"/> Name</td>
+                                        <td><img src='' alt="" id="product-seller-image"/><span>Name</span></td>
                                         <td><span className='d-flex mt-4'>50.00</span></td>
                                         <td><span className='d-flex mt-4'>53 pcs</span></td>
                                         <td><span className='d-flex mt-4'>In Stocks</span></td>

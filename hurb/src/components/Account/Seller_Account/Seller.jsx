@@ -43,7 +43,6 @@ export default function Seller(){
 
     const goHome = () => {
         setActiveLink('#dashboard');
-        localStorage.removeItem('onSeller');
         window.location.href="/";
     }
 

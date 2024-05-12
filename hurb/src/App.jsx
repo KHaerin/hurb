@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route, Link, useLocation} from 'react-router-dom';
+import {BrowserRouter, Routes, Route, useLocation} from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import RegSeller from './components/Account/Seller_Account/regSeller/regSeller';
 import About from "./components/About/About";
@@ -36,10 +36,10 @@ import "./App.css";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setAdmin] = useState(false);
-    const [onSeller, setOnSeller] = useState(false);
+
+
     useEffect(() => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
-        setOnSeller(localStorage.getItem('onSeller'));
         const admin_id = localStorage.getItem('userId');
         if(admin_id === '1'){
             setAdmin(true);
@@ -51,17 +51,28 @@ function App() {
         }
     }, []);
 
+    let loc = useLocation();
+    useEffect(() => {
+        if(loc.pathname !== '/account'){
+            localStorage.removeItem('activeLink');
+        }
+    })
+
     const handleLoginStatus = (status) => {
         setIsLoggedIn(status);
         localStorage.setItem('isLoggedIn', status);
     }
 
     const isAdminRoute = () => {
-        return location.pathname.includes("/login/admin");
+        return loc.pathname.includes("/login/admin");
+    }
+
+    const isSellerRoute = () => {
+        return loc.pathname.includes("/seller");
     }
 
     const renderHeader = () => {
-        if (isAdminRoute() || onSeller) {
+        if (isAdminRoute() || isSellerRoute()) {
             return null; 
         }
         return (
@@ -72,7 +83,7 @@ function App() {
     };
     
     const renderFooter = () => {
-        if (isAdminRoute() || onSeller) {
+        if (isAdminRoute() || isSellerRoute()) {
             return null; 
         }
         return (
@@ -82,11 +93,12 @@ function App() {
         );
     }
 
+  
+
 
   return (
     <>
     <CartProvider>
-        <BrowserRouter>
                 {renderHeader()}
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -114,7 +126,6 @@ function App() {
                 </Routes>
                 {renderFooter()}
                 <ToastContainer position="top-center" autoClose={1000} limit={1}/>
-        </BrowserRouter>
     </CartProvider>
       
     </>
