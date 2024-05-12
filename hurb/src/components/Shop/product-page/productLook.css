@@ -98,6 +98,8 @@
 
 #productName-text{
     font-size: clamp(1.375rem, 0.125rem + 1.6667vw, 2.125rem);
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 600;
 }
 
 #flush-collapseOne{

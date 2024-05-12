@@ -98,7 +98,7 @@ export default function Cart(){
             const formData = new FormData();
             formData.append('track_id', track_id);
 
-            const response = await axios.post("http://localhost/hurb/removeProduct.php", formData);
+            const response = await axios.post("http://localhost/hurb/remove_copy.php", formData);
             fetchCartProducts();
             window.location.reload();
             toast(response.data);
@@ -209,7 +209,7 @@ export default function Cart(){
                                             <span id="sizetext">
                                             Size: {track.size}
                                             </span>
-                                            <button className="btn btn-danger" type="button" onClick={() => removeFromCart(track.track_id)}>Remove</button>
+                                            <button className="btn btn-danger" id="removeButton" type="button" onClick={() => removeFromCart(track.track_id)}>Remove</button>
                                      </div>
                                      <div className="col">
                                         <div className="container-fluid">

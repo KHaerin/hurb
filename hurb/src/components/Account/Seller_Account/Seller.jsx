@@ -7,6 +7,7 @@ import { Container, Row, Col} from 'react-bootstrap';
 import MyProducts from './Seller_Menu/Products';
 import AddProduct from './Seller_Menu/addproduct/addproduct';
 import Orders from './Seller_Menu/ListOrders';
+import Dashboard from './Seller_Menu/Dashboard';
 export default function Seller(){
 
  const [isOpen, setIsOpen] = useState(false);
@@ -111,7 +112,7 @@ export default function Seller(){
         <Row>
             <Col>
                     {activeLink === '#dashboard' && 
-                       <h1>Under Construction...</h1>
+                       <Dashboard/>
                     }
                     {activeLink === '#myProducts' && 
                        <MyProducts/>

@@ -1,0 +1,14 @@
+#contactMsg{
+    max-width: 60rem;
+    width: 60rem;
+    max-height: 40rem;
+    height: 20rem;
+}
+
+#contactBtn{
+    width: 20rem;
+}
+
+#contact-area{
+    margin: 0px 100px;
+}

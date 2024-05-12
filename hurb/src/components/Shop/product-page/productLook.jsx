@@ -177,17 +177,15 @@ export default function ProductLook() {
         Green: 'green',
         Yellow: 'yellow',
         Orange: 'orange'
-
-        // Add more color mappings here as needed
     };
     const uniqueColors = [...new Set(availSizes.map(size => size.color))];
 
-    // useEffect(()=>{
-    //     console.log('colorid: ',selectedColorId)
-    //     console.log('data: ', availSizes);
-    //     console.log('product: ', product);
-    //     console.log('img id: ',product_img_id);
-    // })
+    useEffect(()=>{
+        console.log('colorid: ',selectedColorId)
+        console.log('data: ', availSizes);
+        console.log('product: ', product);
+        console.log('img id: ',product_img_id);
+    })
 
     return (
         <div className="container" id="product-look">

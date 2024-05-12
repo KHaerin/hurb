@@ -1,45 +1,83 @@
+import { Container, Row, Col, Button} from 'react-bootstrap';
+import * as FaIcons6 from 'react-icons/fa6';
+
 export default function Footer(){
+
+    const textStyle = {
+        fontFamily: 'Times New Roman, Times, serif',
+        fontSize: '1.3rem',
+    }
+
     return(
         <>
-        <hr className="border border-secondary border-2 opacity-100"/>
-        <footer>
-            <div className="container-fluid mb-5">
-                <div className="row d-flex justify-content-evenly">
-                    <div className="col-auto d-flex flex-column">
-                        <span className="mb-5 mt-4"> Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.</span>
-                        <span> Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.</span>
-                    </div>
-
-                    <div className="col-auto mt-3">
-                        <div className="details mb-2">
-                            <label htmlFor="">Email: </label>
-                            <a href="#"> BCC1@gmail.com</a>
-                        </div>
-
-                        <div className="details mb-2">
-                            <label htmlFor="">Instagram: </label>
-                            <span> Lorem ipsum dolor sit amet consectetur.</span>
-                        </div>
-
-                        <div className="details mb-2">
-                            <label htmlFor="">Facebook: </label>
-                            <span> Lorem ipsum dolor sit amet consectetur.</span>
-                        </div>
-
-                        <div className="details mb-2">
-                            <label htmlFor="">WhatsApp: </label>
-                            <span> Lorem ipsum dolor sit amet consectetur.</span>
-                        </div>
-                    </div>
-
-                    <div className="col-auto d-flex  flex-column justify-content-center align-items-center">
-                            <h1>Business Name</h1>
-                            <button className="btn btn-primary">contact us</button>
-                    </div>
-                </div>
-               
-            </div>
-        </footer>
+            <Container fluid className='mt-5' id="footerContainer">
+                <Row>
+                    <Col lg={4} id="social-icons-container">
+                        <Container fluid>
+                            <Row>
+                                <Col>
+                                    <span style={textStyle}>Connect with us</span>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col className='d-flex gap-3'>
+                                    <span id="social-icons"><FaIcons6.FaFacebook></FaIcons6.FaFacebook></span>
+                                    <span id='social-icons'><FaIcons6.FaSquareInstagram></FaIcons6.FaSquareInstagram></span>
+                                    <span id='social-icons'><FaIcons6.FaSquareXTwitter></FaIcons6.FaSquareXTwitter></span>
+                                    <span id='social-icons'><FaIcons6.FaLinkedin></FaIcons6.FaLinkedin></span>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                    <Col lg={4}>
+                        <Container fluid className='d-flex flex-column justify-content-center align-items-center mt-4'>
+                            <Row>
+                                <Col className='d-flex gap-5 mb-5' >
+                                    <span style={textStyle}>About</span>
+                                    <span style={textStyle}>Contacts</span>
+                                    <span style={textStyle}>Our Team</span>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col className='mb-5'>
+                                    <a href="#" style={textStyle}>hurb@gmail.com</a>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <span style={textStyle}>2024 hurb. All Rights Reserved</span>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                    <Col lg={4} id="newsletter-area">
+                        <Container fluid>
+                            <Row>
+                                <Col><span style={textStyle}>Subscribe to our newsletter</span></Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <div className="form-floating mb-3">
+                                        <input 
+                                            type="text" 
+                                            className="form-control form-control-sm" 
+                                            placeholder="Enter Email"
+                                            name="footerEmail" 
+                                            id="footerInput"
+                                            />
+                                        <label htmlFor="Enter Email" style={textStyle}>Enter Email</label>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Button variant='dark' id="footerbtn" style={textStyle}>Subscribe</Button>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                </Row>
+            </Container>
         </>
     )
 }

@@ -47,7 +47,7 @@ body{
 #hurb-logo{
   width: 100%;
   max-width: 10.25rem;
-  height: 9.25rem;
+  height: 11.25rem;
   object-fit: cover;
 }
 
@@ -55,7 +55,32 @@ body{
   color: black;
 }
 
+#footerContainer{
+  background-color: rgb(238, 238, 238);
+  height: 25vh;
+}
 
+#social-icons-container{
+  padding-left: 3rem;
+  margin-top: 5rem;
+}
+
+#newsletter-area{
+  margin-top: 3rem;
+  padding-right: 3rem;
+}
+
+#footerInput{
+  width: 20rem;
+}
+
+#social-icons{
+  font-size: 2rem;
+}
+
+#footerbtn{
+  width: 20rem;
+}
 
 
 
