@@ -44,7 +44,7 @@ export default function Products(){
             formData.append('product_id', productId);
 
             const response = await axios.post("http://localhost/hurb/Seller/removeProduct.php", formData);
-            alert(response.data);
+            console.log(response.data);
             window.location.reload();
         }catch(error){
             console.error(error);

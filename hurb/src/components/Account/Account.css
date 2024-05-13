@@ -116,3 +116,17 @@
     padding: 5px 10px;
     font-size: 1.4rem;
 }
+
+#colorDrop{
+    width: 10rem;
+}
+
+#sizeColorContainer{
+    width: 20rem;
+}
+
+#quantityField{
+    width: 8rem;
+    font-size: 15px;
+    height: 2rem;
+}

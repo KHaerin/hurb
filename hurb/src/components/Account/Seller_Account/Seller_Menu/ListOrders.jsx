@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as SlIcons from 'react-icons/sl';
 
 function ListOrders() {
     
@@ -36,7 +37,7 @@ function ListOrders() {
                         <td>1</td>    
                         <td>2</td>    
                         <td>
-                            <span className='btn btn-dark'>three dots for options :O</span>
+                            <span className='btn btn-dark'><SlIcons.SlOptionsVertical></SlIcons.SlOptionsVertical></span>
                         </td>   
                     </tr>                 
                 </tbody> 

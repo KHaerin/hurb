@@ -15,29 +15,30 @@ export default function addproduct(){
     const[colors, setColors] = useState('');
     const[product_price, setProductPrice] = useState('');
     const[product_stock, setProductStock] = useState('');
-    const[product_img, setProductImg] = useState('');
+    const[product_img, setProductImg] = useState(null);
     const[seller_id, setSellerID] = useState('');
     const[sizes, setSizes] = useState(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']);
     const [selectedSizes, setSelectedSizes] = useState([]);
-    const [selectedColors, setSelectedColors] = useState([]);
+    // const [selectedColors, setSelectedColors] = useState([]);
     const [selectedQuantities, setSelectedQuantities] = useState([]);
     const [sizeData, setSizeData] = useState({});
+    const [selectedColor, setSelectedColor] = useState('');
+    const [sectionCount, setSectionCount] = useState(1); // State variable to track the number of sections
 
-    const handleSizeChange = (size, color) => {
+    const handleSizeChange = (size) => {
         setSelectedSizes((prevSelectedSizes) => {
             if (prevSelectedSizes.includes(size)) {
-                setProductImg('');
+                const newSizeData = { ...sizeData };
+                delete newSizeData[size];
+                setSizeData(newSizeData);
                 return prevSelectedSizes.filter((s) => s !== size);
             } else {
+                const initialColor = selectedColor || '';
+                setSizeData((prevSizeData) => ({
+                    ...prevSizeData,
+                    [size]: { ...prevSizeData[size], color: initialColor, img: '' }
+                }));
                 return [...prevSelectedSizes, size];
-            }
-        });
-        setSizeData((prevSizeData) => {
-            if (prevSizeData[size]) {
-                const { [size]: removedSize, ...newSizeData } = prevSizeData;
-                return newSizeData;
-            } else {
-                return { ...prevSizeData, [size]: { quantity: '', color, img: '' } };
             }
         });
     };
@@ -49,25 +50,48 @@ export default function addproduct(){
         }));
     };
 
-    const handleColorChange = (size, color) => {
-        // Check if this is the first size selecting this color
-        const isFirstSizeWithColor = !Object.keys(sizeData).some(s => sizeData[s].color === color);
-    
-        // Get the image from the first size with this color
-        const img = isFirstSizeWithColor ? sizeData[size].img : sizeData[Object.keys(sizeData).find(s => sizeData[s].color === color)].img;
-    
-        // Update the color selection for the current size
-        setSizeData(prevSizeData => ({
-            ...prevSizeData,
-            [size]: { ...prevSizeData[size], color, img }
-        }));
+    const handleColorChange = (color) => {
+        setSelectedColor(color);
+        setSelectedSizes((prevSelectedSizes) => {
+            const updatedSizeData = {};
+            prevSelectedSizes.forEach((size) => {
+                updatedSizeData[size] = { ...sizeData[size], color: color };
+            });
+            setSizeData(updatedSizeData);
+            return prevSelectedSizes;
+        });
     };
 
-    const handleImgChange = (size, img) => {
-        setSizeData(prevSizeData => ({
-            ...prevSizeData,
-            [size]: { ...prevSizeData[size], img}
-        }));
+    // const handleColorChange = (size, color) => {
+    //     // Check if this is the first size selecting this color
+    //     const isFirstSizeWithColor = !Object.keys(sizeData).some(s => sizeData[s].color === color);
+    
+    //     // Get the image from the first size with this color
+    //     const img = isFirstSizeWithColor ? sizeData[size].img : sizeData[Object.keys(sizeData).find(s => sizeData[s].color === color)].img;
+    
+    //     // Update the color selection for the current size
+    //     setSizeData(prevSizeData => ({
+    //         ...prevSizeData,
+    //         [size]: { ...prevSizeData[size], color, img }
+    //     }));
+    // };
+
+    const handleImgChange = (img) => {
+        const updatedSizeData = { ...sizeData };
+    
+        // Check if there's a selected size and color
+        if (selectedSizes.length > 0 && selectedColor !== '') {
+            // Associate the image with each selected size and color combination
+            selectedSizes.forEach(size => {
+                updatedSizeData[size] = { ...updatedSizeData[size], color: selectedColor, img: img };
+            });
+    
+            // Update the state with the new size data
+            setSizeData(updatedSizeData);
+        } else {
+            // Handle the case where no size or color is selected
+            console.log('Please select a size and color first.');
+        }
     };
 
     const getSellerID = async () => {
@@ -162,6 +186,10 @@ export default function addproduct(){
         setProductCategory(e.target.value);
     }
 
+    const handleAddMore = () => {
+        setSectionCount(sectionCount + 1); // Increment section count when adding more sections
+    }
+
     const containerStyle = {
         backgroundColor: "#F6F6F6",
         marginBottom: "10%",
@@ -170,7 +198,7 @@ export default function addproduct(){
     }
 
     const sizeColors ={
-        backgroundColor: "#EBEBEB",
+        backgroundColor: "#FFFFFF",
     }
    
     return(
@@ -239,18 +267,25 @@ export default function addproduct(){
                     </div>
                 </div>
                 <div className="row mb-3">
-                    <div className="container">
+                    <div className="container" >
                         <div className="row">
                             <span>Size & Colors</span>
                         </div>
-                        <div className="row p-4" style={sizeColors}>
+                        {[...Array(sectionCount)].map((_, index) => ( 
+                        <div className="row p-4 w-50 mb-3" style={sizeColors} key={index} id="size-color">
                             <div className="container-fluid">
-                                <div className="row mb-3">
-                                    <div className="col-lg-2">
-                                        <span>Size</span>
-                                    </div>
-                                    <div className="col-lg-3">
-                                        <span>Quantity</span>
+                                <div className="row">
+                                    <div className="col-auto">
+                                        <div className="input-group mb-3">
+                                            <select
+                                                className="form-select"
+                                                value={selectedColor}
+                                                onChange={(e) => handleColorChange(e.target.value)}
+                                                >
+                                                <option value="">Select a color</option>
+                                                <ColorsDrop onSelectColors={setSelectedColor} />
+                                            </select>
+                                        </div>  
                                     </div>
                                 </div>
                                 {sizes.map((size,index) => (
@@ -288,37 +323,30 @@ export default function addproduct(){
                                                         />
                                                         <label htmlFor={`quantity-${size}`}>Stock</label>
                                                     </div>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <div className="input-group mb-3">
-                                                        <select 
-                                                            className="form-select" 
-                                                            value={sizeData[size].color || 'DEFAULT'} 
-                                                            onChange={(e) => handleColorChange(size, e.target.value)} 
-                                                        >
-                                                            <option value="DEFAULT">Select a color</option>
-                                                            <ColorsDrop onSelectColors={setColors}/>
-                                                        </select>
-                                                    </div>  
-                                                </div>
-                                                <div className="col mt-5">
-                                                    <input 
-                                                        className="form-control mb-3" 
-                                                        onChange={(e) => handleImgChange(size, e.target.files[0])} 
-                                                        name="product_img" 
-                                                        type="file" 
-                                                        id={`formFile-${size}`}
-                                                    />
-                                                    {sizeData[size].color !== 'DEFAULT' && (
-                                                        <p className="text-muted">Note: Choosing the same color applies the same image for all sizes with that color.</p>
-                                                    )}
-                                                </div>
+                                                </div>     
                                             </>
                                         )}
                                     </div>
                                 ))}
+                                <div className="row">
+                                    <div className="col mt-5">
+                                        <input 
+                                            className="form-control mb-3" 
+                                            onChange={(e) => handleImgChange(e.target.files[0])} 
+                                            name="product_img" 
+                                            type="file" 
+                                            id="formFile"
+                                        />
+                                     </div>
+                                </div>
                             </div>
                         </div>
+                         ))}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <button className="btn btn-outline-dark" onClick={handleAddMore}>+ Add more</button>
                     </div>
                 </div>
                 <div className="row d-flex justify-content-end align-items-end">
