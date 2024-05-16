@@ -1,8 +1,3 @@
-import Black from '../../color-images/black.jpg';
-import Red from '../../color-images/red.jpg';
-import Grey from '../../color-images/grey.jpeg';
-import Navy from '../../color-images/navy blue.jpg';
-import White from '../../color-images/white.jpg';
 import './filter.css';
 
 export default function Filter({ isVisible, products, onCategorySelect }){

@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import './header.css';
 import * as VscIcons from 'react-icons/vsc';
 import HeaderAcc from './accDropDown';
@@ -13,6 +15,20 @@ import HurbLogo4 from '../hurb-logo/hurb logo files-04.png';
 export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [products, setProducts] = useState([]);
+
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get('http://localhost/hurb/products.php');
+            setProducts(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []); 
 
     useEffect(() => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
@@ -27,6 +43,20 @@ export default function Header() {
             setIsLoggedIn(true);
         }
     }, []);
+
+    const uniqueSubCategories = [...new Set(products.map(product => product.product_sub_category))];
+
+    const loc = useLocation();
+
+    const subCateg = (category) => {
+        console.log(category);
+         const path = '/shop';
+         const hash = category.hash;
+        const pathhash = path + hash;
+        console.log(pathhash);
+        window.location.href= (pathhash);
+    
+    }
 
     const goMain = () => {
         window.location.href = "/shop";
@@ -45,7 +75,7 @@ export default function Header() {
                             <li className="nav-item">
                                 <Link to="/" className="nav-link" id="headerLinks">Home</Link>
                             </li>
-                            <li className="nav-item">
+                            <li className="nav-item dropdown">
                                 <Link
                                     onClick={goMain}
                                     className="nav-link active dropdown-toggle"
@@ -54,6 +84,11 @@ export default function Header() {
                                 >
                                     Shop
                                 </Link>
+                                <ul className="dropdown-menu dropdown-menu-hover">
+                                    {uniqueSubCategories.map((categ, index) => (
+                                        <li className="dropdown-item" key={index}><Link to={`#${categ}`} onClick={(e) => subCateg(loc)}  className='nav-link' style={linkStyle}>{categ}</Link></li>
+                                    ))}
+                                </ul>
                             </li>
                             <li className="nav-item">
                                 <Link to="/about" className="nav-link" id="headerLinks">About</Link>
@@ -90,9 +125,7 @@ export default function Header() {
                         </ul>
                     </div>
                 </div>
-            </div>
-
-          
+            </div>   
         </>
     )
 }

@@ -287,6 +287,9 @@ export default function addproduct(){
                                             </select>
                                         </div>  
                                     </div>
+                                    <div className="col d-flex justify-content-end align-items-center">
+                                        <div className="btn btn-danger">Remove</div>
+                                    </div>
                                 </div>
                                 {sizes.map((size,index) => (
                                     <div className="row d-flex align-items-center" id="color-size-fields" key={index}>
