@@ -35,19 +35,30 @@ export default function addproduct(){
     };
 
     const [sectionsData, setSectionsData] = useState([
-        { color: '', sizes: [], quantities: {}, img: null }
+        { color: '', sizes: [], quantities: {}, product_img: '' }
     ]);
 
-    const handleColorChange = (color) => {
-        const newSectionsData = [...sectionsData];
-        const currentIndex = newSectionsData.length - 1;
-        newSectionsData[currentIndex].color = color;
-        setSectionsData(newSectionsData);
-    }
+    const [selectedSectionColors, setSelectedSectionColors] = useState([]);
 
-    const handleSizeChange = (size) => {
+    // Modify handleColorChange to update selected colors for each section
+    const handleColorChange = (color, index) => {
+        setSectionsData(prevSections => {
+            const newSectionsData = [...prevSections];
+            newSectionsData[index].color = color;
+            return newSectionsData;
+        });
+    
+        // Update selected colors for the current section
+        setSelectedSectionColors(prevColors => {
+            const newColors = [...prevColors];
+            newColors[index] = color;
+            return newColors;
+        });
+    };
+
+    const handleSizeChange = (size, sectionIndex) => { // Accept sectionIndex parameter
         const newSectionsData = [...sectionsData];
-        const currentIndex = newSectionsData.length - 1;
+        const currentIndex = sectionIndex; // Use sectionIndex instead of newSectionsData.length - 1
         let sizes = [...newSectionsData[currentIndex].sizes];
         const index = sizeIndices[size];
         if (sizes.includes(size)) {
@@ -64,9 +75,9 @@ export default function addproduct(){
     }
     
 
-    const handleQuantityChange = (size, quantity) => {
+    const handleQuantityChange = (size, quantity, sectionIndex) => { // Accept sectionIndex parameter
         const newSectionsData = [...sectionsData];
-        const currentIndex = newSectionsData.length - 1;
+        const currentIndex = sectionIndex; // Use sectionIndex instead of newSectionsData.length - 1
         const quantities = { ...newSectionsData[currentIndex].quantities };
         quantities[size] = quantity; // Use size as the key
         newSectionsData[currentIndex].quantities = quantities;
@@ -74,17 +85,20 @@ export default function addproduct(){
     }
     
     
-    const handleImgChange = (file) => {
+    const handleImgChange = (file, index) => { // Accept index parameter
         const newSectionsData = [...sectionsData];
-        const currentIndex = newSectionsData.length - 1;
-        newSectionsData[currentIndex].img = file;
+        const currentIndex = index; // Use index instead of newSectionsData.length - 1
+        // Extract only the file name
+        const fileName = file ? file: ''; // Check if file exists to prevent errors
+        // Update state with the file name
+        newSectionsData[currentIndex].product_img = fileName;
         setSectionsData(newSectionsData);
     }
 
     const handleAddMore = () => {
         setSectionsData([
             ...sectionsData,
-            { color: '', sizes: [], quantities: {}, img: null }
+            { color: '', sizes: [], quantities: {}, product_img: '' }
         ]);
     }
 
@@ -98,7 +112,7 @@ export default function addproduct(){
                     ...section,
                     sizes: section.sizes,
                     quantities: section.quantities,
-                    img: section.img,
+                    product_img: section.img,
                     color: section.color
                 };
             });
@@ -126,40 +140,39 @@ export default function addproduct(){
     }, []);
 
     const handleSubmit = async () => {
-        if(product_name.length === 0){
-            alert('Product name empty!');
-        } else if(product_details.length === 0){
-            alert('Product details empty!'); 
-        } else if(product_price.length === 0){
-            alert('Product price empty!');
+        if (product_name.length === 0 || product_details.length === 0 || product_price.length === 0) {
+            alert('Please fill in all required fields.');
         } else {
             try {
-                const sections = sectionsData.map(section => ({
-                    color: section.color,
-                    selectedSizes: section.sizes,
-                    quantities: section.quantities,
-                    img: section.img
-                }));
-        
-                const formData = {
-                    product_name,
-                    product_sex,
-                    product_category,
-                    product_sub_category,
-                    product_details,
-                    product_price,
-                    seller_id,
-                    sections
-                };
-                console.log('FORM DATA: ', formData)
-                const response = await axios.post('http://localhost/hurb/add_product.php', formData);
+                const formData = new FormData();
+                formData.append('product_name', product_name);
+                formData.append('product_sex', product_sex);
+                formData.append('product_category', product_category);
+                formData.append('product_sub_category', product_sub_category);
+                formData.append('product_details', product_details);
+                formData.append('product_price', product_price);
+                formData.append('seller_id', seller_id);
+                formData.append('sections', JSON.stringify(sectionsData));
+    
+                // Append product images to FormData
+                sectionsData.forEach((section, index) => {
+                    if (section.product_img) {
+                        formData.append(`product_img_${index}`, section.product_img);
+                    }
+                });
+    
+                const response = await axios.post('http://localhost/hurb/add_product.php', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
                 console.log('success: ', response.data);
-                // window.location.reload();
+                window.location.reload();
             } catch (error) {
                 console.error('Error submitting form:', error);
-                // Handle error here
+                
             }
-        }   
+        }  
     };
 
     const handleSex = (e) =>{
@@ -260,10 +273,14 @@ export default function addproduct(){
                                                 <select
                                                     className="form-select"
                                                     value={section.color}
-                                                    onChange={(e) => handleColorChange(e.target.value)}
+                                                    onChange={(e) => handleColorChange(e.target.value, index)}
                                                     >
                                                     <option value="">Select a color</option>
-                                                    <ColorsDrop onSelectColors={setSelectedColor} />
+                                                    <ColorsDrop 
+                                                        onSelectColors={color => handleColorChange(color, index)} 
+                                                        selectedColors={selectedSectionColors[index]} 
+                                                        allSelectedColors={sectionsData.map(section => section.color)} 
+                                                    />
                                                 </select>
                                             </div>  
                                         </div>
@@ -271,18 +288,18 @@ export default function addproduct(){
                                             <div className="btn btn-danger"  onClick={() => handleRemoveSection(index)}>Remove</div>
                                         </div>
                                     </div>
-                                    {sizes.map((size,index) => (
-                                        <div className="row d-flex align-items-center" id="color-size-fields" key={index}>
+                                    {sizes.map((size, sizeindex) => (
+                                        <div className="row d-flex align-items-center" id={`color-size-fields-${sizeindex}-${index}`} key={`${sizeindex}-${index}`}>
                                             <div className="col-lg-2">
                                                 <div className="form-check d-flex gap-2">
                                                     <input 
-                                                        type="checkbox" 
-                                                        className="form-check-input" 
-                                                        onChange={() => handleSizeChange(size)}  
-                                                        id={size}
-                                                        checked={!!section.sizes.includes(size)}
-                                                    />
-                                                    <label htmlFor={size} className="form-check-label">
+                                                            type="checkbox" 
+                                                            className="form-check-input" 
+                                                            onChange={() => handleSizeChange(size, index)}  
+                                                            id={`${size}-${index}`} 
+                                                            checked={!!section.sizes.includes(size)}
+                                                        />
+                                                    <label htmlFor={`${size}-${index}`} className="form-check-label">
                                                         {size === 'XS' && 'Extra Small'}
                                                         {size === 'S' && 'Small'}
                                                         {size === 'M' && 'Medium'}
@@ -301,7 +318,7 @@ export default function addproduct(){
                                                                 type="number" 
                                                                 className="form-control form-control-sm" 
                                                                 value={section.quantities[size] || ''} 
-                                                                onChange={(e) => handleQuantityChange(size, e.target.value)} 
+                                                                onChange={(e) => handleQuantityChange(size, e.target.value, index)}  
                                                                 placeholder="Quantity" 
                                                             />
                                                             <label htmlFor={`quantity-${size}`}>Stock</label>
@@ -313,12 +330,12 @@ export default function addproduct(){
                                     ))}
                                     <div className="row">
                                         <div className="col mt-5">
-                                            <input 
+                                           <input 
                                                 className="form-control mb-3" 
-                                                onChange={(e) => handleImgChange(e.target.files[0])} 
-                                                name="product_img" 
+                                                name={`product_img_${index}`}
                                                 type="file" 
-                                                id="formFile"
+                                                id={`formFile-${index}`} 
+                                                onChange={(e) => handleImgChange(e.target.files[0], index)}  
                                             />
                                         </div>
                                     </div>

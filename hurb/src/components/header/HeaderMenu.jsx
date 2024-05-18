@@ -85,9 +85,14 @@ export default function Header() {
                                     Shop
                                 </Link>
                                 <ul className="dropdown-menu dropdown-menu-hover">
-                                    {uniqueSubCategories.map((categ, index) => (
-                                        <li className="dropdown-item" key={index}><Link to={`#${categ}`} onClick={(e) => subCateg(loc)}  className='nav-link' style={linkStyle}>{categ}</Link></li>
-                                    ))}
+                                    {uniqueSubCategories.length === 0 ? '' : 
+                                        <>
+                                        {uniqueSubCategories.map((categ, index) => (
+                                            <li className="dropdown-item" key={index}><Link to={`#${categ}`} onClick={(e) => subCateg(loc)}  className='nav-link' style={linkStyle}>{categ}</Link></li>
+                                         ))}
+                                        </>
+                                    }
+                                    
                                 </ul>
                             </li>
                             <li className="nav-item">

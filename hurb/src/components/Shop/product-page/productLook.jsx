@@ -7,11 +7,7 @@ import Red from '../../color-images/red.jpg';
 import Grey from '../../color-images/grey.jpeg';
 import Navy from '../../color-images/navy blue.jpg';
 import White from '../../color-images/white.jpg';
-import Star from '../../icons/star.png/';
 import EStar from '../../icons/emptystar.png';
-import RedShirt from '../../icons/shirt-test/b5.png'
-import BlackShirt from '../../icons/shirt-test/b6.png'
-import WhiteShirt from '../../icons/shirt-test/b7.png'
 import { toast } from 'react-toastify';
 
 import {CartContext} from '../../CartContext';
@@ -55,8 +51,8 @@ export default function ProductLook() {
             setSizeQty(firstSize.quantity);
             setSelectedSize(firstSize.size);
             setSelectedColor(firstSize.color);
-            setSelectedSizeID(firstSize.size_id); 
-
+            setSelectedSizeID(firstSize.size_id);
+    
             const defaultColorImage = firstSize.images.find(img => img.color_id === firstSize.color_id);
             if (defaultColorImage) {
                 setSelectedImg(defaultColorImage.product_img);
@@ -66,15 +62,34 @@ export default function ProductLook() {
         }
     }, [availSizes]);
 
+    useEffect(() => {
+        const selectedSizeInfo = availSizes.find(size => size.size === selectedSize && size.color === selectedColor);
+        if (selectedSizeInfo) {
+            const defaultColorImage = selectedSizeInfo.images.find(img => img.color_id === selectedSizeInfo.color_id);
+            if (defaultColorImage) {
+                setSelectedImg(defaultColorImage.product_img);
+                setSelectedColorId(defaultColorImage.color_id);
+                setImgID(defaultColorImage.product_img_id);
+            }
+        }
+    }, [selectedColor, selectedSize]);
+    
+    useEffect(() => {
+        const selectedSizeInfo = availSizes.find(s => s.size === selectedSize && s.color === selectedColor);
+        if (selectedSizeInfo) {
+            setSizeQty(selectedSizeInfo.quantity);
+        }
+    }, [selectedColor, selectedSize, availSizes]);
+
    
     const handleSizeChange = (size, size_id) => {
         setProdSize(size);
         setSelectedSizeID(size_id);
-        const selectedSizeInfo = availSizes.find(s => s.size === size);
+        const selectedSizeInfo = availSizes.find(s => s.size === size && s.color === selectedColor);
         if (selectedSizeInfo) {
             setSizeQty(selectedSizeInfo.quantity);
             setSelectedSize(size);
-            
+            setQtyField(1); // Reset quantity field to 1 when size changes
         }
     };
 
@@ -105,7 +120,7 @@ export default function ProductLook() {
     
     const handleAddQtyField = () => {
         const currentQty = parseInt(qtyField);
-        if (!isNaN(currentQty) && currentQty < productStock) {
+        if (!isNaN(currentQty) && currentQty < size_Qty) {
             setQtyField(currentQty + 1);
             setProdQty(currentQty + 1);
         } else {
@@ -157,12 +172,34 @@ export default function ProductLook() {
     }
 
     const handleColorChange = (color, colorId) => {
+        console.log('Before update - selected color:', selectedColor);
+    
         setSelectedColor(color); // Update selected color
         setSelectedColorId(colorId); // Update selected color's ID
-        const selectedColorImages = colorImg.filter(cImg => cImg.color === color);
-        if (selectedColorImages.length > 0) {
-            setSelectedImg(selectedColorImages[0].product_img);
-            setImgID(selectedColorImages[0].product_img_id);
+    
+        console.log('After update - selected color:', color);
+    
+        // Find the default color image for the new color
+        const defaultColorImage = availSizes.find(size => size.color === color)?.images.find(img => img.color_id === colorId);
+        
+        if (defaultColorImage) {
+            setSelectedImg(defaultColorImage.product_img); // Update selected image
+            setImgID(defaultColorImage.product_img_id); // Update selected image ID
+        }
+    
+        console.log('Selected image:', defaultColorImage?.product_img); // Log selected image
+    
+        // Check if the currently selected size is available in the new color
+        const currentSizeInfo = availSizes.find(size => size.size === selectedSize && size.color === color);
+        
+        if (!currentSizeInfo) {
+            // If the current size is not available, select the first size of the new color
+            const filteredSizes = availSizes.filter(size => size.color === color);
+            if (filteredSizes.length > 0) {
+                setSelectedSize(filteredSizes[0].size); // Set the selected size to the first size for the new color
+                setSelectedSizeID(filteredSizes[0].size_id); // Set the selected size ID to the first size's ID for the new color
+                setSizeQty(filteredSizes[0].quantity); // Set the quantity for the first size of the new color
+            }
         }
     };
 
@@ -178,17 +215,20 @@ export default function ProductLook() {
         Yellow: 'yellow',
         Orange: 'orange'
     };
-    const uniqueColors = [...new Set(availSizes.map(size => size.color))];
 
-    useEffect(()=>{
-        console.log('colorid: ',selectedColorId)
-        console.log('data: ', availSizes);
-        console.log('product: ', product);
-        console.log('img id: ',product_img_id);
-    })
+    const uniqueColors = [...new Set(availSizes.map(size => size.color))];
+    const filteredSizes = availSizes.filter(size => size.color === selectedColor);
+
+    // useEffect(()=>{
+    //     // console.log('colors: ', uniqueColors);
+    //     console.log('selected color: ', selectedColor);
+    //     console.log('colorid: ',selectedColorId)
+    //     // console.log('product: ', product);
+    //     // console.log('img id: ',product_img_id);
+    // })
 
     return (
-        <div className="container" id="product-look">
+          <div className="container" id="product-look">
             <div className="row">
                 <div className="col">
                 {product.slice(0, 1).map((product, index) => (
@@ -203,13 +243,12 @@ export default function ProductLook() {
                                                     alt="" 
                                                     id="product_image"
                                                 />
-                                       
                                         </div>
                                     </div>
                                     <div className="col" id="color-container">
-                                     <span>Color:</span>
+                                        <span>Color:</span>
                                         <div className="col-auto d-flex gap-3" >
-                                        {uniqueColors.map((color, index) => (
+                                            {uniqueColors.map((color, index) => (
                                                 <div key={index}>
                                                     <input       
                                                         type="radio" 
@@ -219,16 +258,17 @@ export default function ProductLook() {
                                                         autoComplete="off"
                                                         checked={selectedColor === color}
                                                         onChange={() => handleColorChange(color, availSizes.find(size => size.color === color)?.color_id)}
+                                                        key={color} // Add key attribute here
                                                     />
                                                     <label htmlFor={`option-${color}`} className="btn color-radio" 
                                                             style={{ 
-                                                            backgroundColor: colorBgMap[color],
-                                                            border: selectedColor === color ? '3px solid #A6A6A6' : ''
-                                                            }}>
-                                                    </label>    
+                                                                backgroundColor: colorBgMap[color],
+                                                                border: selectedColor === color ? '3px solid #A6A6A6' : ''
+                                                            }}
+                                                    ></label>    
                                                 </div>                                
                                             ))}
-                                         </div>     
+                                        </div>     
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +276,7 @@ export default function ProductLook() {
                                 <div className="container">
                                     <div className="row row-cols-1 mb-5">
                                         <div className="col d-flex mb-2">
-                                         <span value={product_name} name="product_name" id="productName-text"  onChange={(e) => setProdName(e.target.value)}>{product.product_name}</span>
+                                        <span value={product_name} name="product_name" id="productName-text"  onChange={(e) => setProdName(e.target.value)}>{product.product_name}</span>
                                         </div>
                                         <div className="col d-flex gap-1 mb-5">
                                             <img src={EStar} alt=""  id="star"  />
@@ -257,7 +297,7 @@ export default function ProductLook() {
                                             <span id="details-title">Size</span>
                                         </div>
                                         <div className="col d-flex flex-1 gap-3">
-                                        {availSizes.map((size, index) => (
+                                            {filteredSizes.map((size, index) => (
                                                 <div key={size.product_scq_id} className="d-flex">
                                                     <input 
                                                         type="radio" 

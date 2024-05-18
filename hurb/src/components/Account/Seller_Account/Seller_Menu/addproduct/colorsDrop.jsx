@@ -1,20 +1,28 @@
-export default function colorsDrop({onSelectColors}){
+export default function colorsDrop({ onSelectColors, selectedColors, allSelectedColors }){
 
     const handleColorChange = (e) => {
         onSelectColors(e.target.value);
     };
 
+    const colorOptions = ["Blue", "Purple", "Black", "White", "Pink", "Green", "Yellow", "Red", "Orange"];
+    const defaultStyle = {
+        color: '#000000',
+    };
+    const disabledStyle = {
+        color: '#808080', 
+    };
     return(
         <>
-                   <option value="Blue">Blue</option>
-                   <option value="Purple">Purple</option>
-                   <option value="Black">Black</option>
-                   <option value="White">White</option>
-                   <option value="Pink">Pink</option>
-                   <option value="Green">Green</option>
-                   <option value="Yellow">Yellow</option>
-                   <option value="Red">Red</option>
-                   <option value="Orange">Orange</option>
-        </>
+        {colorOptions.map((color, index) => (
+                <option 
+                    key={index} 
+                    value={color} 
+                    style={allSelectedColors.includes(color) && selectedColors !== color ? disabledStyle : defaultStyle}
+                    disabled={allSelectedColors.includes(color) && selectedColors !== color} 
+                >
+                    {color}
+                </option>
+            ))}
+    </>
     )
 }
