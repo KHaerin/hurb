@@ -137,7 +137,6 @@ export default function ProductLook() {
 
     const { toggleReloadContact } = useContext(CartContext);
 
-
      const handleAddCart = () => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
         if(parseInt(qtyField) > productStock){
@@ -173,11 +172,13 @@ export default function ProductLook() {
 
     const handleColorChange = (color, colorId) => {
         console.log('Before update - selected color:', selectedColor);
+        console.log('Before update - selected color:', selectedColorId);
     
         setSelectedColor(color); // Update selected color
         setSelectedColorId(colorId); // Update selected color's ID
     
         console.log('After update - selected color:', color);
+        console.log('After update - selected colorID:', colorId);
     
         // Find the default color image for the new color
         const defaultColorImage = availSizes.find(size => size.color === color)?.images.find(img => img.color_id === colorId);

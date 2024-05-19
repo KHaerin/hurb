@@ -32,9 +32,6 @@ export default function Shop() {
         fetchProducts();
     }, []); 
 
-    useEffect(() => {
-        console.log(products);
-    })
 
     useEffect(() => {
         localStorage.setItem('filterVisible', filterVisible);
@@ -161,8 +158,7 @@ export default function Shop() {
         }));
     }
 
-    console.log(heartStates);
-    
+
     return (
         <>
             <Container fluid className="mt-5" id="shop-section">

@@ -27,7 +27,11 @@ export default function Products(){
         fetchProducts();
     }, []);
 
+    
 
+    useEffect(() => {
+        console.log(products);
+    })
 
 
     const editBtn = (productId) => {
@@ -88,7 +92,11 @@ export default function Products(){
                                     <h2 className='d-flex mt-4'>{product.product_id}</h2>
                                 </span>                     
                              </th>
-                             <td><img src={`http://localhost/hurb/${product.product_img}`} alt="" id="product-seller-image"/>{product.product_name}</td>
+                             <td> {product.colors.length > 0 && (
+                                        <img src={`http://localhost/hurb/${product.colors[0].product_img}`} alt="" id="product-seller-image"/>
+                                    )}
+                                    {product.product_name}
+                            </td>
                              <td><span className='d-flex mt-4'>{product.product_price}</span></td>
                              <td><span className='d-flex mt-4'>{product.product_stock}</span></td>
                              <td><span className='d-flex mt-4'>0</span></td>

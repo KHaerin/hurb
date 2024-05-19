@@ -31,7 +31,6 @@ export default function checkout(){
             const selectedItems = location.state.selectedItems;
             const totalAmount = location.state.totalAmount;
             setTrack(selectedItems);
-            console.log('tracks: ',tracks);
             setSubTotal(totalAmount);
             setTotalAmount(totalAmount);
         } else {
@@ -203,6 +202,12 @@ export default function checkout(){
             orderData.append('quantity[]', product.product_qty);
             orderData.append('size[]', product.size);
             orderData.append('product_price[]', product.product_price);
+            orderData.append('product_img_id[]', product.product_img_id);
+            orderData.append('color_id[]', product.color_id);
+            orderData.append('size_id[]', product.size_id);
+            orderData.append('track_id[]', product.track_id);
+            orderData.append('track_id[]', product.track_id);
+            orderData.append('product_qty[]', product.product_qty);
         });
         orderData.append('totalPayable', totalAmount);
         orderData.append('date_bought', todayDate);
@@ -212,6 +217,7 @@ export default function checkout(){
         axios.post(orderUrl, orderData)
         .then(response=>{
             toast.success(response.data);
+            console.log(response.data);
 
             tracks.forEach(track => {
                 removeProduct(track.track_id);
