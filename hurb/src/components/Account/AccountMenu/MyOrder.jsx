@@ -173,7 +173,7 @@ function MyOrder() {
                                </Row>
                                <Row>
                                    <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
-                                        <span>{`Total Order: ${groupTotal.toLocaleString()}`}</span>
+                                        <span>{`Total Order: ${groupTotal}`}</span>
                                    </Col>
                                </Row>
                            </div>
