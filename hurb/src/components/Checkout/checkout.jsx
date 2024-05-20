@@ -222,7 +222,7 @@ export default function checkout(){
             tracks.forEach(track => {
                 removeProduct(track.track_id);
             });
-            // window.location.href="/shop";
+            window.location.href="/shop";
         })
         .catch(error=>alert(error));
 
@@ -234,6 +234,7 @@ export default function checkout(){
             formData.append('track_id', track_id);
     
             const response = await axios.post("http://localhost/hurb/remove_copy.php", formData);
+            setTrack(prevTracks => prevTracks.filter(track => track.track_id !== track_id));
             fetchCartProducts();
             toast(response.data);
         } catch (error) {

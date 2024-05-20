@@ -44,8 +44,8 @@ function MyOrder() {
             fData.append('product_id', productId)
 
             const response = await axios.post("http://localhost/hurb/CustomerOrder/CancelOrder.php", fData);
+            console.log(response.data);
             window.location.reload();
-            console.log(response);
         }catch(error){
             console.error(error);
         }
@@ -109,7 +109,7 @@ function MyOrder() {
                        }
                        return acc;
                    }, []).map((orderGroup, groupIndex) => {
-                       const groupTotal = orderGroup.reduce((total, order) => order.totalPayable);
+                    const groupTotal = parseFloat(orderGroup.reduce((total, order) => total + order.totalPayable, 0)).toFixed(2);
                        return (
                            <div key={groupIndex} style={order_container}>
                                {orderGroup.map((order, index) => (

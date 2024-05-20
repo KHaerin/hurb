@@ -171,14 +171,8 @@ export default function ProductLook() {
     }
 
     const handleColorChange = (color, colorId) => {
-        console.log('Before update - selected color:', selectedColor);
-        console.log('Before update - selected color:', selectedColorId);
-    
         setSelectedColor(color); // Update selected color
         setSelectedColorId(colorId); // Update selected color's ID
-    
-        console.log('After update - selected color:', color);
-        console.log('After update - selected colorID:', colorId);
     
         // Find the default color image for the new color
         const defaultColorImage = availSizes.find(size => size.color === color)?.images.find(img => img.color_id === colorId);
@@ -188,18 +182,15 @@ export default function ProductLook() {
             setImgID(defaultColorImage.product_img_id); // Update selected image ID
         }
     
-        console.log('Selected image:', defaultColorImage?.product_img); // Log selected image
-    
-        // Check if the currently selected size is available in the new color
+        // Update the selected size ID based on the new selected color
         const currentSizeInfo = availSizes.find(size => size.size === selectedSize && size.color === color);
-        
-        if (!currentSizeInfo) {
-            // If the current size is not available, select the first size of the new color
+        if (currentSizeInfo) {
+            setSelectedSizeID(currentSizeInfo.size_id);
+        } else {
+            // If the selected size for the current color is not available, update to the first available size ID for the new color
             const filteredSizes = availSizes.filter(size => size.color === color);
             if (filteredSizes.length > 0) {
-                setSelectedSize(filteredSizes[0].size); // Set the selected size to the first size for the new color
-                setSelectedSizeID(filteredSizes[0].size_id); // Set the selected size ID to the first size's ID for the new color
-                setSizeQty(filteredSizes[0].quantity); // Set the quantity for the first size of the new color
+                setSelectedSizeID(filteredSizes[0].size_id);
             }
         }
     };
