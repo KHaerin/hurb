@@ -1,7 +1,27 @@
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
+import NotAdmin from '../../NotAdmin'
+
+
 export default function listSellers(){
+
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        setIsAdmin(localStorage.getItem('userId'));
+    });
+
+
     return(
         <>
-            <h1>Seller</h1>
+            <>  
+        {isAdmin === 1 ? 
+            <>
+                <h1>Seller</h1>
+            </> 
+        :
+         <NotAdmin/>}
+        </>
         </>
     )
 }

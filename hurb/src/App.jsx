@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route, useLocation} from 'react-router-dom';
+import {BrowserRouter, Routes, Route, useLocation, Navigate} from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 import RegSeller from './components/Account/Seller_Account/regSeller/regSeller';
 import About from "./components/About/About";
@@ -30,6 +30,7 @@ import ListSellers from './components/admin/admin-menu/listSellers';
 import SettingsAdmin from './components/admin/admin-menu/settings';
 import {CartProvider} from './components/CartContext';
 import { ToastContainer, toast } from 'react-toastify';
+import NotAdmin from './components/NotAdmin';
 import "./App.css";
 
 
@@ -55,6 +56,10 @@ function App() {
     useEffect(() => {
         if(loc.pathname !== '/account'){
             localStorage.removeItem('activeLink');
+        }
+
+        if(loc.pathname !== '/seller'){
+            localStorage.removeItem('activeLinkSeller')
         }
     })
 
@@ -92,9 +97,6 @@ function App() {
             </>
         );
     }
-
-  
-
 
   return (
     <>

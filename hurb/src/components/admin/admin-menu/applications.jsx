@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-
+import NotAdmin from '../../NotAdmin'
 export default function Applications() {
     const [applicants, setApplicants] = useState([]);
     const [selectedApplicant, setSelectedApplicant] = useState(null);
@@ -49,9 +49,17 @@ export default function Applications() {
         window.location.reload();
     };
 
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        setIsAdmin(localStorage.getItem('userId'));
+    });
+
     return (
         <>
-            <div className="container">
+            {isAdmin === 1 ? 
+            <>
+                <div className="container">
                 <div className="row">
                     <div className="col">
                         <h1>Seller Application</h1>
@@ -125,6 +133,10 @@ export default function Applications() {
                     </div>
                 </div>
             )}
+            </> 
+            : 
+            <NotAdmin></NotAdmin>}
+            
         </>
     )
 }

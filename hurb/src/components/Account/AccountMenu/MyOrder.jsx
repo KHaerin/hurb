@@ -30,7 +30,7 @@ function MyOrder() {
         getAddressBook();
     }, [])
 
-    const handleCancelOrder = async (order_item_id, price, qty, total, orderId) => {
+    const handleCancelOrder = async (order_item_id, price, qty, total, orderId, sizeId, colorId, productId) => {
         try{
             const fData = new FormData();
             console.log(order_item_id);
@@ -39,6 +39,9 @@ function MyOrder() {
             fData.append('qty', qty);
             fData.append('total', total);
             fData.append('order_id', orderId)
+            fData.append('color_id', colorId)
+            fData.append('size_id', sizeId)
+            fData.append('product_id', productId)
 
             const response = await axios.post("http://localhost/hurb/CustomerOrder/CancelOrder.php", fData);
             window.location.reload();
@@ -148,7 +151,7 @@ function MyOrder() {
                                        <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
                                            {order.deliver_status === "ship" &&
                                            <>
-                                            <Button variant="danger" style={ratebuyBtn} onClick={() => handleCancelOrder(order.order_item_id, order.unit_price, order.quantity, order.totalPayable, order.order_id)}>
+                                            <Button variant="danger" style={ratebuyBtn} onClick={() => handleCancelOrder(order.order_item_id, order.unit_price, order.quantity, order.totalPayable, order.order_id, order.size_id, order.color_id, order.product_id)}>
                                                     <FaTrashCan style={trashIcon}></FaTrashCan>
                                             </Button> 
                                            </>

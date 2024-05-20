@@ -222,7 +222,7 @@ export default function checkout(){
             tracks.forEach(track => {
                 removeProduct(track.track_id);
             });
-            window.location.href="/shop";
+            // window.location.href="/shop";
         })
         .catch(error=>alert(error));
 

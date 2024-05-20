@@ -4,7 +4,7 @@ import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { sideBarData } from './sidebarData';
 import './admin.css';
-import { Container, Row, Col} from 'react-bootstrap';
+import { Container, Row, Col, Button} from 'react-bootstrap';
 import Dashboard from './admin-menu/dashboard';
 import Application from './admin-menu/applications';
 import ListAccounts from './admin-menu/listAccounts';
@@ -40,14 +40,27 @@ const Admin = () => {
         window.location.href="/"
   }
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(localStorage.getItem('userId'));
+  });
+
+
     const[sidebar, setSidebar] = useState(false);
 
     const showSidebar = () => setSidebar(!sidebar);
 
+    const goBack = () => {
+        window.location.href="/"
+    }
+
 
   return (
-    <>
-    <Container fluid className="navbar-admin">
+    <> 
+    {isAdmin === 1 ? 
+        <>
+             <Container fluid className="navbar-admin">
             <Link to="#" className="menu-bars">
                 <FaIcons.FaBars id="burger" onClick={showSidebar}/>
             </Link>
@@ -96,6 +109,22 @@ const Admin = () => {
             </Col>
         </Row>
     </Container>
+        </>
+     : 
+        <>
+            <Container fluid>
+                <Row >
+                    <Col lg={12} className='d-flex justify-content-center align-items-center'>
+                        <h1>di ka admin ulol</h1>
+                    </Col>
+                    <Col className='d-flex justify-content-center align-items-center'>
+                        <Button variant='dark' onClick={goBack}>Go back pls</Button>
+                    </Col>
+                </Row>
+            </Container>
+        </>
+     }
+   
     </>
   );
 };
