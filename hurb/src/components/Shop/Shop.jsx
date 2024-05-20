@@ -173,7 +173,7 @@ export default function Shop() {
                     <Col className="d-flex gap-5 align-items-center justify-content-end">
                        <Container fluid className='d-flex justify-content-end align-items-center'>
                             <Row>
-                                <Col lg={8}>
+                                <Col lg={8} className=''>
                                     <InputGroup className="mb-3">
                                         <Form.Control
                                             placeholder="Search"
