@@ -10,7 +10,7 @@
   "Documentation": "Leonardo Cabondocan <leonardocabondocanIII@gmail.com>",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host --port 3000",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
