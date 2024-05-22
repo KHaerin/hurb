@@ -112,17 +112,17 @@ export default function checkout(){
     };
 
 
-    const increaseQuantity = (track_id, currentQuantity) => {
-        const newQuantity = parseInt(currentQuantity) + 1;
-        handleQuantityChange(track_id, newQuantity);
-    };
+    // const increaseQuantity = (track_id, currentQuantity) => {
+    //     const newQuantity = parseInt(currentQuantity) + 1;
+    //     handleQuantityChange(track_id, newQuantity);
+    // };
     
-    const decreaseQuantity = (track_id, currentQuantity) => {
-        if (parseInt(currentQuantity) > 1) {
-            const newQuantity = parseInt(currentQuantity) - 1;
-            handleQuantityChange(track_id, newQuantity);
-        }
-    };
+    // const decreaseQuantity = (track_id, currentQuantity) => {
+    //     if (parseInt(currentQuantity) > 1) {
+    //         const newQuantity = parseInt(currentQuantity) - 1;
+    //         handleQuantityChange(track_id, newQuantity);
+    //     }
+    // };
     
     const calculateSubTotal = () => {
         const subtotal = tracks.reduce((total, item) => total + (item.product_price * item.product_qty), 0);
@@ -215,17 +215,22 @@ export default function checkout(){
         console.log('today date: ', todayDate);
 
         axios.post(orderUrl, orderData)
-        .then(response=>{
-            toast.success(response.data);
-            console.log(response.data);
+            .then(response => {
+                toast.success(response.data);
 
-            tracks.forEach(track => {
-                removeProduct(track.track_id);
-            });
-            window.location.href="/shop";
-        })
-        .catch(error=>alert(error));
+                // Create an array of promises for removeProduct calls
+                const removePromises = tracks.map(track => removeProduct(track.track_id));
 
+                // Wait for all removeProduct calls to complete
+                Promise.all(removePromises)
+                    .then(() => {
+                        // Once all removals are complete, navigate away
+                        window.location.href = "/shop";
+                    })
+                    .catch(error => console.error('Error removing products:', error));
+            })
+            .catch(error => alert(error));
+       
     }
 
     const removeProduct = async (track_id) => {
@@ -233,7 +238,7 @@ export default function checkout(){
             const formData = new FormData();
             formData.append('track_id', track_id);
     
-            const response = await axios.post("http://localhost/hurb/remove_copy.php", formData);
+            const response = await axios.post("http://localhost/hurb/removeProduct.php", formData);
             setTrack(prevTracks => prevTracks.filter(track => track.track_id !== track_id));
             fetchCartProducts();
             toast(response.data);
@@ -345,9 +350,9 @@ export default function checkout(){
                                     <span>{track.size}</span>
                                     <span id="price-text">₱{track.product_price}.00</span>
                                     <InputGroup className="input-group mb-3 d-flex justify-content-center align-items-center" id="qtybox">
-                                        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button"  onClick={() => decreaseQuantity(track.track_id, track.product_qty)} id="minusBtn-cart">-</Button>
+                                        {/* <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button"  onClick={() => decreaseQuantity(track.track_id, track.product_qty)} id="minusBtn-cart">-</Button> */}
                                         <Form.Control type="text" value={track.product_qty} readOnly aria-label="Example text with two button addons" id="qtyField-cart"/>
-                                        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button" onClick={() => increaseQuantity(track.track_id, track.product_qty)} id="plusBtn-cart">+</Button>
+                                        {/* <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center" type="button" onClick={() => increaseQuantity(track.track_id, track.product_qty)} id="plusBtn-cart">+</Button> */}
                                     </InputGroup>
                                 </Col>
                             </Row>

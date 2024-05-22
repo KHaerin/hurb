@@ -99,9 +99,8 @@ export default function Cart(){
             const formData = new FormData();
             formData.append('track_id', track_id);
 
-            const response = await axios.post("http://localhost/hurb/remove_copy.php", formData);
+            const response = await axios.post("http://localhost/hurb/removeProduct.php", formData);
             fetchCartProducts();
-            window.location.reload();
             toast(response.data);
         } catch (error) {
             toast.error(error);

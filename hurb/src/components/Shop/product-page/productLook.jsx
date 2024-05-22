@@ -99,22 +99,32 @@ export default function ProductLook() {
 
     useEffect(() => {
         setUser(localStorage.getItem('userId'))
-        console.log('cart: ', cartProd);
-        console.log('test qty: ', productQty);
+       
     })
 
     useEffect(() => {
-        fetchCartProducts(user);
-    }, [user])
-
-   const fetchCartProducts = async(userId) => {
-
-        const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${userId}`);
-        const cartFetch = response.data[0];
-        setCartProd(cartFetch);
-        const productQuantities = cartFetch.product_qty;
-        setProductQty(productQuantities);
-   }
+        fetchCartProducts();
+    }, [user, size_Qty]);
+    
+    // useEffect(() => {
+    //     console.log('cart: ', cartProd);
+    //     console.log('test qty: ', productQty);
+    //     console.log('userid : ', user);
+    // }, [cartProd, productQty]); // Make sure to include cartProd and productQty in the dependency array
+    
+    const fetchCartProducts = async () => {
+        try {
+            const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${user}`);
+            const cartData = response.data;
+            setCartProd(cartData);
+    
+            // Map through the cart data to extract product quantities
+            const productQuantities = cartData.map(item => item.product_qty);
+            setProductQty(productQuantities);
+        } catch (error) {
+            console.error('Error fetching cart products: ', error);
+        }
+    }
 
     const fetchSizes = async(productId) => {
         try {
@@ -162,11 +172,10 @@ export default function ProductLook() {
 
      const handleAddCart = () => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
-        console.log('stock on cart: ', (parseInt(qtyField) + parseInt(productQty)));
-        console.log('stock: ', productStock);
-        if(parseInt(qtyField) > productStock || (parseInt(qtyField) + parseInt(productQty)) > size_Qty){
+        if(parseInt(qtyField) > size_Qty  || (parseInt(qtyField) + parseInt(productQty)) > size_Qty){
           
-            toast.warning(`Exceed Stock, Stock Left: ${productStock}`);
+            toast.warning(`Exceed Stock, Stock Left: ${size_Qty}`);
+            setQtyField(1);
             return;
         }
         if(storedLoginStatus){
@@ -183,7 +192,9 @@ export default function ProductLook() {
     
             axios.post(url, fData)
             .then(response=>{
-                toast.success(response.data);     
+                toast.success(response.data);
+                setQtyField(1);     
+                fetchCartProducts();
                 toggleReloadContact(true);
             })
             .catch(error=>alert(error));
@@ -212,6 +223,7 @@ export default function ProductLook() {
         const currentSizeInfo = availSizes.find(size => size.size === selectedSize && size.color === color);
         if (currentSizeInfo) {
             setSelectedSizeID(currentSizeInfo.size_id);
+            setQtyField(1);
         } else {
             // If the selected size for the current color is not available, update to the first available size ID for the new color
             const filteredSizes = availSizes.filter(size => size.color === color);
