@@ -18,7 +18,7 @@ export default function Home(){
         <>
             <div className="container-fluid" id="home-page">
                 <div className="row pt-5 row-cols-2">
-                    <div className="col d-flex flex-column justify-content-center align-items-center" id="text-home">
+                    <div className="col-lg-6 d-flex flex-column justify-content-center align-items-center" id="text-home">
                         <span id="spice-txt">
                             Spice Up Your Style,
                             Shop with Confidence!
@@ -30,7 +30,7 @@ export default function Home(){
                             <button className='btn btn-dark' id="exploreBtn" onClick={goShop}>Start Exploring</button>
                         </div>
                     </div>
-                    <div className="col" id="home-img-container">
+                    <div className="col-lg-6 col-sm-10" id="home-img-container">
                         <img src={Nature} alt="" id="home-first-img"/>
                     </div>
                 </div>

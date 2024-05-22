@@ -102,7 +102,8 @@ export default function Products(){
                              <td><span className='d-flex mt-4'>0</span></td>
                              <td className=''>
                                 <div className="d-flex mt-3 gap-3">
-                                    <button className='btn' onClick={() => editBtn(product.product_id)} data-bs-toggle="modal" data-bs-target="#staticBackdrop"><FaIcons.FaRegEdit style={actionBtn}></FaIcons.FaRegEdit></button>
+                                    {/* onClick={() => editBtn(product.product_id)} */}
+                                    <button className='btn'  data-bs-toggle="modal" data-bs-target="#EditProduct"><FaIcons.FaRegEdit style={actionBtn}></FaIcons.FaRegEdit></button>
                                     <button className='btn' onClick={() => removeItem(product.product_id)}><GoIcons.GoTrash style={actionBtn}></GoIcons.GoTrash></button>
                                 </div> 
                             </td>
@@ -119,7 +120,8 @@ export default function Products(){
                </div>
             </div>
        </div>
-       <EditProduct productData={handleProductData} product={selectedProduct}></EditProduct>
+       <EditProduct ></EditProduct>
+       {/* productData={handleProductData} product={selectedProduct} */}
         </>
     )
 }

@@ -93,6 +93,41 @@ export default function ProductLook() {
         }
     };
 
+    useEffect(() => {
+        fetchCart();
+    }, [])
+
+    const [userId, setUser] = useState('');
+
+    useEffect(() => {
+        setUser(localStorage.getItem('userId'))
+       
+    })
+
+    const [cartfetch, setcartfetch] = useState([]);
+    const [productQty, setProductQty] = useState('');
+
+    const fetchCart = async() => {
+        try {
+
+            const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${userId}`);
+
+            const stockFetch = response.data[0];
+            setcartfetch(stockFetch);
+
+            setProductQty(stockFetch.product_qty);
+            console.log('test: ',response.data)
+     
+        } catch (error) {
+            console.error('Error fetching : ', error);
+        }
+    }
+
+    useEffect(() => {
+        console.log('xd qty ',productQty);
+        console.log('cart: ', cartfetch)
+    })
+
     const fetchSizes = async(productId) => {
         try {
             const response = await axios.get(`http://localhost/hurb/selectSizes.php?product_id=${productId}`);
@@ -139,7 +174,9 @@ export default function ProductLook() {
 
      const handleAddCart = () => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
-        if(parseInt(qtyField) > productStock){
+        console.log('QTy: ', (parseInt(qtyField) + parseInt(productQty)));
+        console.log('stock: ', productStock)
+        if(parseInt(qtyField) > productStock || (parseInt(qtyField) + parseInt(productQty)) > productStock){
             toast.warning(`Exceed Stock, Stock Left: ${productStock}`);
             return;
         }
