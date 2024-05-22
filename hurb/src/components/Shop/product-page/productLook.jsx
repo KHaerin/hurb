@@ -93,40 +93,28 @@ export default function ProductLook() {
         }
     };
 
-    useEffect(() => {
-        fetchCart();
-    }, [])
-
-    const [userId, setUser] = useState('');
+    const [user, setUser] = useState('');
+    const [productQty, setProductQty] = useState('');
+    const [cartProd, setCartProd] = useState([]);
 
     useEffect(() => {
         setUser(localStorage.getItem('userId'))
-       
+        console.log('cart: ', cartProd);
+        console.log('test qty: ', productQty);
     })
-
-    const [cartfetch, setcartfetch] = useState([]);
-    const [productQty, setProductQty] = useState('');
-
-    const fetchCart = async() => {
-        try {
-
-            const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${userId}`);
-
-            const stockFetch = response.data[0];
-            setcartfetch(stockFetch);
-
-            setProductQty(stockFetch.product_qty);
-            console.log('test: ',response.data)
-     
-        } catch (error) {
-            console.error('Error fetching : ', error);
-        }
-    }
 
     useEffect(() => {
-        console.log('xd qty ',productQty);
-        console.log('cart: ', cartfetch)
-    })
+        fetchCartProducts(user);
+    }, [user])
+
+   const fetchCartProducts = async(userId) => {
+
+        const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${userId}`);
+        const cartFetch = response.data[0];
+        setCartProd(cartFetch);
+        const productQuantities = cartFetch.product_qty;
+        setProductQty(productQuantities);
+   }
 
     const fetchSizes = async(productId) => {
         try {
@@ -174,9 +162,10 @@ export default function ProductLook() {
 
      const handleAddCart = () => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
-        console.log('QTy: ', (parseInt(qtyField) + parseInt(productQty)));
-        console.log('stock: ', productStock)
-        if(parseInt(qtyField) > productStock || (parseInt(qtyField) + parseInt(productQty)) > productStock){
+        console.log('stock on cart: ', (parseInt(qtyField) + parseInt(productQty)));
+        console.log('stock: ', productStock);
+        if(parseInt(qtyField) > productStock || (parseInt(qtyField) + parseInt(productQty)) > size_Qty){
+          
             toast.warning(`Exceed Stock, Stock Left: ${productStock}`);
             return;
         }

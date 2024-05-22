@@ -89,7 +89,7 @@ export default function Seller(){
             <Col>
             <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
                 <ul className="nav-menu-items">
-                    <li className="navbar-toggle" id="toggle" onClick={showSidebar}>
+                    <li className="navbar-toggle mt-3" id="toggle" onClick={showSidebar}>
                         <Link to="#" id="burger" className='menu-bars'>
                             <AiIcons.AiOutlineClose/>
                         </Link>

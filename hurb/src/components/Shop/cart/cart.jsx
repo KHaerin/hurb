@@ -70,8 +70,9 @@ export default function Cart(){
 
     const handleQuantityChange = (track_id, newQuantity) => {
         const existingTrack = tracks.find(track => track.track_id === track_id);
-        const currentStock = existingTrack.product_stock;
-    
+        const currentStock = existingTrack.product_qty;
+        console.log('new qty: ', newQuantity);
+        console.log('currentstock: ', currentStock);
         if (newQuantity > currentStock) {
             toast.warning(`Exceed stocks, Stock left ${currentStock}`);
         } else {
