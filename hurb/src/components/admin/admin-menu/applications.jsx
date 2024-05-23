@@ -49,7 +49,7 @@ export default function Applications() {
         window.location.reload();
     };
 
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState('');
 
     useEffect(() => {
         setIsAdmin(localStorage.getItem('userId'));
@@ -57,7 +57,7 @@ export default function Applications() {
 
     return (
         <>
-            {isAdmin === 1 ? 
+            {isAdmin === '1' ? 
             <>
                 <div className="container">
                 <div className="row">

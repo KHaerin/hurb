@@ -5,7 +5,7 @@ import NotAdmin from '../../NotAdmin'
 
 export default function settings(){
 
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState('');
 
     useEffect(() => {
         setIsAdmin(localStorage.getItem('userId'));
@@ -15,7 +15,7 @@ export default function settings(){
     return(
         <>
             <>  
-        {isAdmin === 1 ? 
+        {isAdmin === '1'? 
             <>
                 <h1>Settings</h1>
             </> 

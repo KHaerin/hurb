@@ -139,18 +139,24 @@ function AllOrders({ myOrders, handleCancelOrder }) {
                         {orderGroup.map((order, index) => (
                             <React.Fragment key={order.order_item_id}>
                                 <Row className='px-4 pt-4'>
-                                    {order.deliver_status === 'ship' &&
-                                        <span>Seller is preparing to ship.</span>
-                                    }
-                                    {order.deliver_status === 'received' &&
-                                        <span>Delivered</span>
-                                    }
-                                    {order.deliver_status === 'onDeliver' &&
-                                        <span>To Receive</span>
-                                    }
-                                    {order.payed_status === 'COMPLETED' &&
-                                        <span>{`(Payed)`}</span>
-                                    }
+                                    <Col>
+                                        {order.deliver_status === 'ship' &&
+                                            <span>Seller is preparing to ship.</span>
+                                        }
+                                        {order.deliver_status === 'received' &&
+                                            <span>Delivered</span>
+                                        }
+                                        {order.deliver_status === 'onDeliver' &&
+                                            <span>To Receive</span>
+                                        }
+                                        {order.payed_status === 'COMPLETED' &&
+                                            <span>{`(Payed)`}</span>
+                                        }
+                                    </Col>
+                                    <Col className='d-flex justify-content-end'>
+                                    <span>Date ordered: {order.date_bought}</span>
+                                    </Col>
+                                    
                                 </Row>
                                 <Row className='p-5'>
                                     <Col className='col-auto'>
@@ -199,6 +205,9 @@ function AllOrders({ myOrders, handleCancelOrder }) {
                             </Col>
                         </Row>
                         <Row>
+                            {/* <Col>
+                                <span>{`${dateOrdered}`}</span>
+                            </Col> */}
                             <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
                                 <span>{`Total Order: ${groupTotal}`}</span>
                             </Col>

@@ -5,7 +5,7 @@ import NotAdmin from '../../NotAdmin'
 
 export default function listSellers(){
 
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState('');
 
     useEffect(() => {
         setIsAdmin(localStorage.getItem('userId'));
@@ -15,7 +15,7 @@ export default function listSellers(){
     return(
         <>
             <>  
-        {isAdmin === 1 ? 
+        {isAdmin === '1' ? 
             <>
                 <h1>Seller</h1>
             </> 

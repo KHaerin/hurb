@@ -97,13 +97,25 @@
 
 @keyframes moveInput {
     0% {
-        transform: translateX(0);
+        transform: translateX(-500px) translateY(-100px) transl;
+    }
+
+    25%{
+        transform: translateX(-100px) translateY(-30px);
+    }
+
+    50%{
+        transform: translateX(100px) translateY(100px);
+    }
+
+    75%{
+        transform: translateX(150px) translateY(150px);
     }
     100% {
-        transform: translateX(100px); /* Move the input field 100px to the right */
+        transform: translateX(300px) translateY(300px); /* Move the input field 100px to the right */
     }
 }
 
 .moving-input {
-    animation: moveInput 4s linear infinite alternate; /* Apply the animation to the input field */
+    animation: moveInput 2s linear infinite alternate; /* Apply the animation to the input field */
 }

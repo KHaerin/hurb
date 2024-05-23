@@ -58,9 +58,9 @@ const Admin = () => {
 
   return (
     <> 
-    {isAdmin === 1 ? 
+    {isAdmin ? 
         <>
-             <Container fluid className="navbar-admin">
+             <Container fluid className="navbar-admin p-4">
             <Link to="#" className="menu-bars">
                 <FaIcons.FaBars id="burger" onClick={showSidebar}/>
             </Link>
