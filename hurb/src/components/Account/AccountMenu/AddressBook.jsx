@@ -57,6 +57,19 @@ export default function AddressBook({handleLinkClick}){
         handleLinkClick('#account/addAddress');
     }
 
+    const handleDeleteBtn = async(addBook_id) => {
+        try{
+            const formData = new FormData();
+            formData.append('addbook_id', addBook_id);
+
+            const response = await axios.post("http://localhost/hurb/deleteAddress.php", formData);
+            console.log(response.data);
+            window.location.reload();
+        }catch(error){
+            console.error(error);
+        }
+    }
+
 
     return(
         <>
@@ -89,6 +102,7 @@ export default function AddressBook({handleLinkClick}){
                                          <td>{add.zipcode}</td>
                                          <td>{add.mobile_number}</td>
                                          <td><button className='btn btn-primary' onClick={() => handleEditBtn(add.addBook_id)}>Edit</button></td>
+                                         <td><button className='btn btn-danger' onClick={() => handleDeleteBtn(add.addBook_id)}>Delete Address</button></td>
                                      </tr>
                                     ))}
                                 </tbody> 

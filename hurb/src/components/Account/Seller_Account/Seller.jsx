@@ -10,7 +10,7 @@ import Orders from './Seller_Menu/ListOrders';
 import Dashboard from './Seller_Menu/Dashboard';
 export default function Seller(){
 
- const [isOpen, setIsOpen] = useState(false);
+const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(() => {
     return localStorage.getItem('activeLinkSeller') || '#dashboard';
   });

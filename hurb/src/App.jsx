@@ -30,6 +30,7 @@ import ListSellers from './components/admin/admin-menu/listSellers';
 import SettingsAdmin from './components/admin/admin-menu/settings';
 import {CartProvider} from './components/CartContext';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 import NotAdmin from './components/NotAdmin';
 import "./App.css";
 
@@ -37,11 +38,37 @@ import "./App.css";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setAdmin] = useState(false);
+    const [isSeller, setIsSeller] = useState(false);
 
+    const checkSeller = async() => {
+        const admin_id = localStorage.getItem('userId');
+
+        try {
+            const response = await axios.get(`http://localhost/hurb/Seller/isSeller.php?user_id=${admin_id}`);
+            const responsedata = response.data;
+            console.log(responsedata);
+            if(responsedata.user_id === null){
+                setIsSeller(false);
+            }else{
+                setIsSeller(true);
+                
+                if(isSellerRoute()){
+                    localStorage.setItem('sellerId', responsedata.seller_id);
+                    console.log(responsedata.seller_id)
+                }
+            }
+        
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
     useEffect(() => {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
         const admin_id = localStorage.getItem('userId');
+
+        checkSeller();
+        
         if(admin_id === '1'){
             setAdmin(true);
         }else{
@@ -60,6 +87,7 @@ function App() {
 
         if(loc.pathname !== '/seller'){
             localStorage.removeItem('activeLinkSeller')
+            localStorage.removeItem('sellerId');
         }
     })
 
@@ -110,15 +138,28 @@ function App() {
                     <Route path="/top" element={<Top />} />
                     <Route path="/bottom" element={<Bottom />} />
                     <Route path="/account" element={<Account />} />
-                    <Route path="/seller" element={<Seller />} />
-                    <Route path="/seller/products" element={<Products />} />
-                    <Route path="/seller/products/addproducts" element={<AddProduct />} />
+                    
+                    {isSeller ? 
+                    <>
+                        <Route path="/seller" element={<Seller />} />
+                        <Route path="/seller/products" element={<Products />} />
+                        <Route path="/seller/products/addproducts" element={<AddProduct />} />
+                    </>
+                    :
+                    <>
+                        <Route path="/seller" element={<NotAdmin />} />
+                        <Route path="/seller/products" element={<NotAdmin />} />
+                        <Route path="/seller/products/addproducts" element={<NotAdmin />} />
+                    </>
+                    }
+                   
                     <Route path="/shop/productLook/:productId" element={<ProductLook />} />
                     <Route path="/login" element={<Login updateLoginStatus={handleLoginStatus} />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/shop/cart" element={<Cart />} />
                     <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/regSeller" element={<RegSeller />} />
+                    {isLoggedIn && <Route path="/regSeller" element={<RegSeller />} />}
+                    {/* <Route path="/regSeller" element={<RegSeller />} /> */}
                     <Route path="/login/admin" element={<Admin />} />
                     <Route path="/admin/dashboard" element={<Dashboard />} />
                     <Route path="/admin/listAccounts" element={<ListAccounts />} />

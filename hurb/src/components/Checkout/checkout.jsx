@@ -14,17 +14,24 @@ export default function checkout(){
 
     const location = useLocation();
     const navigate = useNavigate();
-    const[tracks, setTrack] = useState([]);
-    const[qtyField, setQtyField] = useState('');
+    const [tracks, setTrack] = useState([]);
+    const [qtyField, setQtyField] = useState('');
     const runningBarRef = useRef(null);
-    const[totalAmount, setTotalAmount] = useState('');
-    const[subTotal, setSubTotal] = useState('');
-    const[serviceFee, setServiceFee] = useState(15);
-    const[shippingFee, setShipFee] = useState('');
-    const[estimatedArrival, setEstimatedArrival] = useState('');
-    const[trackProduct, setTrackProduct] = useState('');
-    const[payed, setPayed] = useState('');
-    const[isPayed, setIsPayed] = useState(false);
+    const [totalAmount, setTotalAmount] = useState('');
+    const [subTotal, setSubTotal] = useState('');
+    const [serviceFee, setServiceFee] = useState(15);
+    const [shippingFee, setShipFee] = useState('');
+    const [estimatedArrival, setEstimatedArrival] = useState('');
+    const [trackProduct, setTrackProduct] = useState('');
+    const [payed, setPayed] = useState('');
+    const [isPayed, setIsPayed] = useState(false);
+    const [todayDate, setToday] = useState('');
+    const [addressBook, setAddressBook] = useState([]);
+    const [addressData, setAddressData] = useState([]);
+    const [local, setLocal] = useState(false);
+    const [noItems, setNoItems] = useState('');
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Cash On Delivery');
+    const [showPay, setShowPay] = useState(false);
 
     useEffect(() => {
         if (location.state && location.state.selectedItems) {
@@ -46,31 +53,61 @@ export default function checkout(){
     }, [location.state, navigate]);
 
     useEffect(() => {
-        console.log('tracks: ',tracks);
-    })
+        const today = new Date();
+        const formattedDate = formatDate(today);
+        setToday(formattedDate);
+    }, []);
 
+    useEffect(() => { 
+        getAddressBook();
+    }, []);
 
-    const[todayDate, setToday] = useState('');
+    useEffect(() => {
+        console.log('address book: ',addressBook);
+        console.log('address data: ',addressData);
+    }, [addressBook, addressData])
 
-        useEffect(() => {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-            setToday(formattedDate);
-        }, []);
+    useEffect(() => {
+        calculateSubTotal();
+        calculateTotalAmount();
+    }, [tracks, shippingFee]);
+
+    useEffect(() => {
+        if(local){
+            setShipFee(80);
+        }else{
+            setShipFee(120);
+        }
+    }, [addressData]);
+
+    useEffect(() => {
+        const total = subTotal + shippingFee + serviceFee;
+        setTotalAmount(total);
+        setNoItems(tracks.length);
+    }, [subTotal, shippingFee, serviceFee]);
+
+    useEffect(() => {
+        if (isPayed && payed) {
+            handleOrder();
+        }
+    }, [isPayed, payed]);
 
     const calculateEstimatedArrival = () => {
         const today = new Date();
         const estimatedArrivalDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000); 
         
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedToday = today.toLocaleDateString(undefined, options);
-        const formattedEstimatedArrival = estimatedArrivalDate.toLocaleDateString(undefined, options);
+        const formattedToday = formatDate(today);
+        const formattedEstimatedArrival = formatDate(estimatedArrivalDate);
     
         const arrivalRange = `${formattedToday} - ${formattedEstimatedArrival}`;
         setEstimatedArrival(arrivalRange);
+    };
+
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     };
 
     const updateQuantity = async (track_id, newQuantity) => {
@@ -96,7 +133,6 @@ export default function checkout(){
         }
     };
 
-
     const handleQuantityChange = (track_id, newQuantity) => {
         const existingTrack = tracks.find(track => track.track_id === track_id);
         const currentStock = existingTrack.product_qty;
@@ -111,19 +147,6 @@ export default function checkout(){
         }
     };
 
-
-    // const increaseQuantity = (track_id, currentQuantity) => {
-    //     const newQuantity = parseInt(currentQuantity) + 1;
-    //     handleQuantityChange(track_id, newQuantity);
-    // };
-    
-    // const decreaseQuantity = (track_id, currentQuantity) => {
-    //     if (parseInt(currentQuantity) > 1) {
-    //         const newQuantity = parseInt(currentQuantity) - 1;
-    //         handleQuantityChange(track_id, newQuantity);
-    //     }
-    // };
-    
     const calculateSubTotal = () => {
         const subtotal = tracks.reduce((total, item) => total + (item.product_price * item.product_qty), 0);
         setSubTotal(subtotal);
@@ -133,11 +156,6 @@ export default function checkout(){
         const total = subTotal + serviceFee + shippingFee;
         setTotalAmount(total);
     };
-    
-    useEffect(() => {
-        calculateSubTotal();
-        calculateTotalAmount();
-    }, [tracks, shippingFee]);
 
     const handleScroll = () => {
         const runningBar = runningBarRef.current;
@@ -154,35 +172,22 @@ export default function checkout(){
         }
     };
 
-    const[addressBook, setAddressBook] = useState([]);
-
-    useEffect(() => {
-        const getAddressBook = async () => {
-            try{
-                const userID = localStorage.getItem('userId');
-                const url = await axios.get(`http://localhost/hurb/AddressBook/getAddress.php?user_id=${userID}`);
-                if (Array.isArray(url.data) && url.data.length > 0) {
-                    setAddressData([url.data[0]]);
-                    setAddressBook(url.data[0]);
-                } else {
-                    setAddressBook([]);
-                    console.log('failed sa address');
-                }
-            }catch(error){
-                console.error(error);
-
+    const getAddressBook = async () => {
+        try {
+            const userID = localStorage.getItem('userId');
+            const response = await axios.get(`http://localhost/hurb/AddressBook/getAddress.php?user_id=${userID}`);
+            if (Array.isArray(response.data) && response.data.length > 0) {
+                setAddressBook(response.data[0]); // Update addressBook state immediately
+                setAddressData([response.data[0]]); // Update addressData state
+            } else {
+                setAddressBook([]); // Set empty array if no data
+                console.log('No address found.');
             }
+        } catch(error) {
+            console.error(error);
         }
-        getAddressBook();
+    }
 
-    }, [])
-
-    const[addressData, setAddressData] = useState([]);
-    const[local, setLocal] = useState(false);
-    const[noItems, setNoItems] = useState('');
-
-    const [showPaypal, setShowPaypal] = useState(false);
- 
     const handleOrder = () => {
         if(addressData.length === 0){
            toast.warning('Please set your address');
@@ -196,7 +201,7 @@ export default function checkout(){
         orderData.append('user_id', user_id);
         orderData.append('payed_id', payed.id);
         orderData.append('payed_status', payed.status);
-        orderData.append('addBook_id', addressBook.addBook_id);
+        orderData.append('addBook_id', addressData.map(data => data.bookID));
         tracks.forEach(product => {
             orderData.append('product_id[]', product.product_id);
             orderData.append('quantity[]', product.product_qty);
@@ -206,7 +211,7 @@ export default function checkout(){
             orderData.append('color_id[]', product.color_id);
             orderData.append('size_id[]', product.size_id);
             orderData.append('track_id[]', product.track_id);
-            orderData.append('track_id[]', product.track_id);
+            orderData.append('seller_id[]', product.seller_id);
             orderData.append('product_qty[]', product.product_qty);
         });
         orderData.append('totalPayable', totalAmount);
@@ -247,44 +252,22 @@ export default function checkout(){
         }
     };
     
-
     const handleAddressData = (data) => {
         setAddressData([data]);
+        setAddressBook(data);
         if(data.province === 'Cebu'){
             setLocal(true);
+        } else {
+            setLocal(false); 
         }
     }
 
-    useEffect(() => {
-        if(local){
-            setShipFee(80);
-        }else{
-            setShipFee(120);
-        }
-    }, [addressData]);
-
-    useEffect(() => {
-        const total = subTotal + shippingFee + serviceFee;
-        setTotalAmount(total);
-        setNoItems(tracks.length);
-    }, [subTotal, shippingFee, serviceFee]);
-
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Cash On Delivery');
-
-    
     const handleCheckboxChange = (method) => {
         setSelectedPaymentMethod(method);
     };
 
-    const [showPay, setShowPay] = useState(false);
     const handleClosePay = () => setShowPay(false);
     const handleOpenPay = () => setShowPay(true);
-
-    useEffect(() => {
-        if (isPayed && payed) {
-            handleOrder();
-        }
-    }, [isPayed, payed]);
 
     const handlePaypalOrder = (orderData) => {
         setPayed(orderData);
@@ -295,7 +278,6 @@ export default function checkout(){
             toast.error('Payment pending...');
         }
     };
-
     return(
         <>
         <Container>

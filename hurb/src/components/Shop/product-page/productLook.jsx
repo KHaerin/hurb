@@ -24,6 +24,7 @@ export default function ProductLook() {
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedColorId, setSelectedColorId] = useState(null); 
 
+    const[seller_id, setSellerId] = useState('');
     const [product_id, setProdId] = useState('');
     const [product_name, setProdName] = useState('');
     const [product_size, setProdSize] = useState('');
@@ -106,11 +107,11 @@ export default function ProductLook() {
         fetchCartProducts();
     }, [user, size_Qty]);
     
-    // useEffect(() => {
-    //     console.log('cart: ', cartProd);
-    //     console.log('test qty: ', productQty);
-    //     console.log('userid : ', user);
-    // }, [cartProd, productQty]); // Make sure to include cartProd and productQty in the dependency array
+    useEffect(() => {
+        console.log('test qty: ', productQty);
+        console.log('userid : ', user);
+        console.log(product);
+    }, [ productQty]); 
     
     const fetchCartProducts = async () => {
         try {
@@ -137,12 +138,14 @@ export default function ProductLook() {
             const idFetch = stockFetch.product_id;
             const nameFetch = stockFetch.product_name;
             const priceFetch = stockFetch.product_price;
+            const sellerID = stockFetch.seller_id;
     
             setShowDetails(stockFetch.product_details);
             setProdId(idFetch);
             setProdName(nameFetch);
             setProdPrice(priceFetch);
             setProductStock(qtyFetch);
+            setSellerId(sellerID);
             setImgID()
      
         } catch (error) {
@@ -183,6 +186,7 @@ export default function ProductLook() {
             const url = "http://localhost/hurb/track_bought.php";
             const getID = localStorage.getItem('userId');
             let fData = new FormData();
+            fData.append('seller_id' , seller_id);
             fData.append('product_id', product_id);
             fData.append('user_id', getID);
             fData.append('size_id', selectedSizeID);
@@ -208,15 +212,15 @@ export default function ProductLook() {
     }
 
     const handleColorChange = (color, colorId) => {
-        setSelectedColor(color); // Update selected color
-        setSelectedColorId(colorId); // Update selected color's ID
+        setSelectedColor(color); 
+        setSelectedColorId(colorId); 
     
-        // Find the default color image for the new color
+       
         const defaultColorImage = availSizes.find(size => size.color === color)?.images.find(img => img.color_id === colorId);
         
         if (defaultColorImage) {
-            setSelectedImg(defaultColorImage.product_img); // Update selected image
-            setImgID(defaultColorImage.product_img_id); // Update selected image ID
+            setSelectedImg(defaultColorImage.product_img); 
+            setImgID(defaultColorImage.product_img_id); 
         }
     
         // Update the selected size ID based on the new selected color
@@ -224,8 +228,9 @@ export default function ProductLook() {
         if (currentSizeInfo) {
             setSelectedSizeID(currentSizeInfo.size_id);
             setQtyField(1);
+            setProdQty(1);
         } else {
-            // If the selected size for the current color is not available, update to the first available size ID for the new color
+           
             const filteredSizes = availSizes.filter(size => size.color === color);
             if (filteredSizes.length > 0) {
                 setSelectedSizeID(filteredSizes[0].size_id);
