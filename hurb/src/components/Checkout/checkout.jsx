@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruck, faCreditCard, faWallet, faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col, Button, Image, InputGroup, Form, Modal} from 'react-bootstrap';
 import EditAddress from './EditAdd';
-import 'bootstrap/dist/js/bootstrap.min.js';
 import Paypal from './Paypal';
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -201,7 +200,7 @@ export default function checkout(){
         orderData.append('user_id', user_id);
         orderData.append('payed_id', payed.id);
         orderData.append('payed_status', payed.status);
-        orderData.append('addBook_id', addressData.map(data => data.bookID));
+        orderData.append('addBook_id', addressData.map(data => data.addBook_id));
         tracks.forEach(product => {
             orderData.append('product_id[]', product.product_id);
             orderData.append('quantity[]', product.product_qty);
@@ -223,7 +222,7 @@ export default function checkout(){
             .then(response => {
                 toast.success(response.data);
 
-                // Create an array of promises for removeProduct calls
+                
                 const removePromises = tracks.map(track => removeProduct(track.track_id));
 
                 // Wait for all removeProduct calls to complete

@@ -5,6 +5,7 @@ import * as FaIcons from 'react-icons/fa';
 import * as GoIcons from 'react-icons/go';
 import './Products.css';
 import EditProduct from './EditProduct/EditProduct';
+import 'bootstrap/dist/js/bootstrap.min.js';
 
 export default function Products(){
 
@@ -103,7 +104,7 @@ export default function Products(){
                              <td className=''>
                                 <div className="d-flex mt-3 gap-3">
                                     {/* onClick={() => editBtn(product.product_id)} */}
-                                    <button className='btn'  data-bs-toggle="modal" data-bs-target="#staticBackdrop"><FaIcons.FaRegEdit style={actionBtn}></FaIcons.FaRegEdit></button>
+                                    <button className='btn'  data-bs-toggle="modal" data-bs-target="#editProduct"><FaIcons.FaRegEdit style={actionBtn}></FaIcons.FaRegEdit></button>
                                     <button className='btn' onClick={() => removeItem(product.product_id)}><GoIcons.GoTrash style={actionBtn}></GoIcons.GoTrash></button>
                                 </div> 
                             </td>

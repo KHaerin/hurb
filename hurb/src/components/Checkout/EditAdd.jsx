@@ -186,7 +186,7 @@ export default function EditAdd({addressData}){
   const[region, setRegion] = useState('');
   const[street, setStreet] = useState('');
   const[zipcode, setZipCode] = useState('');
-  const[bookID, setBookID] = useState('');
+  const[addBook_id, setBookID] = useState('');
 
   const handleName = () => {
     setRecName(document.getElementById('recipientName').value);
@@ -217,10 +217,10 @@ export default function EditAdd({addressData}){
   }
   
  const handlePlaceAddress =  async () => {
-    if(bookID !== ''){
+    if(addBook_id !== ''){
         try{
             const form = new FormData();
-            form.append('addBook_id', bookID);
+            form.append('addBook_id', addBook_id);
             form.append('recipient_name', rec_name);
             form.append('mobile_number', mobile_number);
             form.append('address', myAddress);
@@ -233,7 +233,7 @@ export default function EditAdd({addressData}){
             console.log('upodate')
             await axios.post("http://localhost/hurb/AddressBook/updateAddress.php", form);
             const addData = {
-                bookID,
+                addBook_id,
                 rec_name,
                 mobile_number,
                 myAddress,
