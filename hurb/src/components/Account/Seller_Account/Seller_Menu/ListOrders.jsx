@@ -44,6 +44,22 @@ function ListOrders() {
     useEffect(() => {
         console.log(orders);
     })
+    
+    const updateOrderStatus = async (orderItemIds, newStatus) => {
+        try {
+            await axios.post(`http://localhost/hurb/Seller/updateStatus.php`, {
+                order_item_ids: orderItemIds, // Ensure correct key name here
+                new_status: newStatus
+            });
+            fetchCustomer();
+        } catch (error) {
+            console.error('Error updating order status:', error);
+        }
+    };
+
+    const handleStatusUpdate = (orderItemIds, newStatus) => {
+        updateOrderStatus(orderItemIds, newStatus);
+    };
 
     const imgStyle = {
         width: '80px',
@@ -81,9 +97,9 @@ function ListOrders() {
                                                 <div className="btn-group dropend">
                                                     <button className='btn btn-dark dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false"><SlIcons.SlOptionsVertical></SlIcons.SlOptionsVertical></button>
                                                     <ul className='dropdown-menu'>
-                                                        <li><a href="" className='dropdown-item'>To Receive</a></li>
-                                                        <li><a href="" className='dropdown-item'>On Deliver</a></li>
-                                                        <li><a href="" className='dropdown-item'>Cancel</a></li> 
+                                                        <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'To Receive')}>To Receive</a></li>
+                                                        <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'On Deliver')}>On Deliver</a></li>
+                                                        <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'Cancel')}>Cancel</a></li> 
                                                     </ul>
                                                 </div>
                                             </td>

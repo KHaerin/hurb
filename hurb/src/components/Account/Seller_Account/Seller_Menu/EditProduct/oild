@@ -155,6 +155,47 @@ function EditProduct({ showPay, handleClosePay, product }) {
 
     const [colorExist, setColorExist] = useState('');
 
+    const handleExistingProductSizeChange = (size, index, color) => {
+        const updatedSelectedProduct = [...selectedProduct];
+        const updatedProduct = { ...updatedSelectedProduct[index] };
+        setColorExist(color);
+    
+        if (color !== colorExist) {
+            setColorExist(color); // Update colorExist if color is different
+            console.log('haha: ', color);
+        }
+    
+        if (!updatedProduct.variants) {
+            updatedProduct.variants = [];
+        }
+    
+        const variantIndex = updatedProduct.variants.findIndex(variant => variant.color === updatedProduct.color);
+    
+        if (variantIndex !== -1) {
+            const updatedVariant = { ...updatedProduct.variants[variantIndex] };
+            const sizeIndex = updatedVariant.sizes.indexOf(size);
+    
+            if (sizeIndex !== -1) {
+                updatedVariant.sizes.splice(sizeIndex, 1);
+                updatedVariant.quantities[size] = undefined;
+            } else {
+                updatedVariant.sizes.push(size);
+            }
+    
+            updatedProduct.variants[variantIndex] = updatedVariant;
+        } else {
+            const newVariant = {
+                color: color,
+                sizes: [size],
+                quantities: { [size]: undefined }
+            };
+    
+            updatedProduct.variants.push(newVariant);
+        }
+    
+        updatedSelectedProduct[index] = updatedProduct;
+        setSelectedProduct(updatedSelectedProduct);
+    };
     
     const handleVariantSizeChange = (size, index) => {
         const updatedVariants = [...variants];
@@ -171,6 +212,26 @@ function EditProduct({ showPay, handleClosePay, product }) {
     
         updatedVariants[index] = updatedVariant;
         setVariants(updatedVariants);
+    };
+    
+    const handleExistingProductQuantityChange = (size, quantity, index) => {
+        const updatedSelectedProduct = [...selectedProduct];
+        const updatedProduct = { ...updatedSelectedProduct[index] };
+    
+        if (!updatedProduct.variants) {
+            updatedProduct.variants = [];
+        }
+    
+        const variantIndex = updatedProduct.variants.findIndex(variant => variant.color === updatedProduct.color);
+    
+        if (variantIndex !== -1) {
+            const updatedVariant = { ...updatedProduct.variants[variantIndex] };
+            updatedVariant.quantities[size] = quantity;
+            updatedProduct.variants[variantIndex] = updatedVariant;
+        }
+    
+        updatedSelectedProduct[index] = updatedProduct;
+        setSelectedProduct(updatedSelectedProduct);
     };
     
     const handleVariantQuantityChange = (size, quantity, index) => {
@@ -278,6 +339,8 @@ function EditProduct({ showPay, handleClosePay, product }) {
                                                             <input
                                                                 type="checkbox"
                                                                 className="form-check-input"
+                                                                onChange={() => handleExistingProductSizeChange(size, index, product.color)}
+                                                                checked={colorData[product.color_id].sizes.includes(size)}
                                                             />
                                                             <label className="form-check-label">{size}</label>
                                                         </div>
@@ -288,6 +351,8 @@ function EditProduct({ showPay, handleClosePay, product }) {
                                                          <input
                                                                     type="number"
                                                                     className="form-control form-control-sm"
+                                                                    value={colorData[product.color_id].quantities[sizeindex] || ''}
+                                                                    onChange={(e) => handleExistingProductQuantityChange(size, e.target.value, index)}
                                                                     placeholder="Quantity"
                                                                 />
                                                             <label>Stock</label>
@@ -298,10 +363,9 @@ function EditProduct({ showPay, handleClosePay, product }) {
                                             ))}
                                             <Card.Text>
                                             Sizes: {colorData[product.color_id].sizes.map((size, sizeIndex) => (
-                                            <span key={sizeIndex}>
-                                                {size} ({colorData[product.color_id].quantities[sizeIndex]}), 
-                                            </span>
-                                            ))}
+                                                        <span key={sizeIndex}>{size}</span>
+                                                    ))}<br />
+                                                Stock: {colorData[product.color_id].quantities.join(', ')}
                                             </Card.Text>
                                             {/* <Button variant="primary">Go somewhere</Button> */}
                                         </Card.Body>

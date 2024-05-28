@@ -109,8 +109,10 @@ export default function ProductLook() {
     
     useEffect(() => {
         console.log('test qty: ', productQty);
-        console.log('userid : ', user);
-        console.log(product);
+        console.log('cart: ',cartProd)
+        // console.log('userid : ', user);
+        // console.log('PRODUCTS NI: ',product);
+        // console.log('AVAIL SIZES: ', availSizes);
     }, [ productQty]); 
     
     const fetchCartProducts = async () => {
@@ -119,8 +121,11 @@ export default function ProductLook() {
             const cartData = response.data;
             setCartProd(cartData);
     
-            // Map through the cart data to extract product quantities
-            const productQuantities = cartData.map(item => item.product_qty);
+            
+            const filteredCartData = cartData.filter(item => item.product_id === product_id && item.color_id === selectedColorId);
+    
+           
+            const productQuantities = filteredCartData.map(item => item.product_qty);
             setProductQty(productQuantities);
         } catch (error) {
             console.error('Error fetching cart products: ', error);
@@ -132,6 +137,7 @@ export default function ProductLook() {
             const response = await axios.get(`http://localhost/hurb/selectSizes.php?product_id=${productId}`);
             setAvailSize(response.data);
             setProduct(response.data);
+            console.log('testing: ',response.data);
 
             const stockFetch = response.data[0];
             const qtyFetch = stockFetch.product_stock;
@@ -178,6 +184,9 @@ export default function ProductLook() {
         if(parseInt(qtyField) > size_Qty  || (parseInt(qtyField) + parseInt(productQty)) > size_Qty){
           
             toast.warning(`Exceed Stock, Stock Left: ${size_Qty}`);
+            console.log('qtyfield: ',qtyField)
+            console.log('producctfield: ',productQty)
+            console.log('psize: ',size_Qty)
             setQtyField(1);
             return;
         }

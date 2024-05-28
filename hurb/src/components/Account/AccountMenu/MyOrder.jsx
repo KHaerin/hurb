@@ -146,7 +146,7 @@ function AllOrders({ myOrders, handleCancelOrder }) {
                                         {order.deliver_status === 'received' &&
                                             <span>Delivered</span>
                                         }
-                                        {order.deliver_status === 'onDeliver' &&
+                                        {order.deliver_status === 'On Deliver' &&
                                             <span>To Receive</span>
                                         }
                                         {order.payed_status === 'COMPLETED' &&
@@ -356,7 +356,7 @@ function OnDeliver({myOrders}){
     return (
         <Container fluid className='d-flex flex-column gap-4'>
             {myOrders
-                .filter(order => order.deliver_status === 'onDeliver')
+                .filter(order => order.deliver_status === 'On Deliver')
                 .reduce((acc, order, index) => {
                     const lastIndex = acc.length - 1;
                     if (lastIndex < 0 || acc[lastIndex][0].order_id !== order.order_id) {

@@ -46,7 +46,7 @@ function App() {
         try {
             const response = await axios.get(`http://localhost/hurb/Seller/isSeller.php?user_id=${admin_id}`);
             const responsedata = response.data;
-            console.log(responsedata);
+            // console.log(responsedata);
             if(responsedata.user_id === null){
                 setIsSeller(false);
             }else{
@@ -54,7 +54,7 @@ function App() {
                 
                 if(isSellerRoute()){
                     localStorage.setItem('sellerId', responsedata.seller_id);
-                    console.log(responsedata.seller_id)
+                    // console.log(responsedata.seller_id)
                 }
             }
         

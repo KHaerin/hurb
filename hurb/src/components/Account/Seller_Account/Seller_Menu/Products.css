@@ -27,5 +27,10 @@
         height: 80px;
         object-fit: contain;
     }
-    
+/* 
+    #editProduct{
+        position: fixed;
+        z-index: 10000;
+    }
+     */
     

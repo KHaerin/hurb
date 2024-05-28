@@ -5,7 +5,7 @@ import * as FaIcons from 'react-icons/fa';
 import * as GoIcons from 'react-icons/go';
 import './Products.css';
 import EditProduct from './EditProduct/EditProduct';
-import 'bootstrap/dist/js/bootstrap.min.js';
+import { Modal, Button} from 'react-bootstrap';
 
 export default function Products(){
 
@@ -28,19 +28,9 @@ export default function Products(){
         fetchProducts();
     }, []);
 
-    
-
-    useEffect(() => {
-        console.log(products);
-    })
-
-
     const editBtn = (productId) => {
         setSelectedProduct(productId);
-    }
-
-    const handleProductData = (data) => {
-
+        handleOpenPay();
     }
 
     const removeItem = async(productId) => {
@@ -49,7 +39,6 @@ export default function Products(){
             formData.append('product_id', productId);
 
             const response = await axios.post("http://localhost/hurb/Seller/removeProduct.php", formData);
-            console.log(response.data);
             window.location.reload();
         }catch(error){
             console.error(error);
@@ -61,6 +50,9 @@ export default function Products(){
         width: '25px',
         height: '25px'
     }
+    const [showPay, setShowPay] = useState(false);
+    const handleClosePay = () => setShowPay(false);
+    const handleOpenPay = () => setShowPay(true);
 
 
     return(
@@ -102,9 +94,8 @@ export default function Products(){
                              <td><span className='d-flex mt-4'>{product.product_stock}</span></td>
                              <td><span className='d-flex mt-4'>0</span></td>
                              <td className=''>
-                                <div className="d-flex mt-3 gap-3">
-                                    {/* onClick={() => editBtn(product.product_id)} */}
-                                    <button className='btn'  data-bs-toggle="modal" data-bs-target="#editProduct"><FaIcons.FaRegEdit style={actionBtn}></FaIcons.FaRegEdit></button>
+                                <div className="d-flex mt-3 gap-3">       
+                                    <button className='btn' onClick={() => editBtn(product.product_id)}><FaIcons.FaRegEdit style={actionBtn}></FaIcons.FaRegEdit></button>
                                     <button className='btn' onClick={() => removeItem(product.product_id)}><GoIcons.GoTrash style={actionBtn}></GoIcons.GoTrash></button>
                                 </div> 
                             </td>
@@ -121,8 +112,13 @@ export default function Products(){
                </div>
             </div>
        </div>
-       <EditProduct ></EditProduct>
-       {/* productData={handleProductData} product={selectedProduct} */}
+       <EditProduct
+            product={selectedProduct}
+            showPay={showPay}
+            handleOpenPay={handleOpenPay}
+            handleClosePay={handleClosePay}
+        />
+
         </>
     )
 }
