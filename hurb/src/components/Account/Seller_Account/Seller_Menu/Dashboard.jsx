@@ -4,13 +4,21 @@ import axios from 'axios';
 
 export default function Dashboard() {
     const [myOrders, setOrder] = useState([]);
+    const [orders, setOrders] = useState([]);
+    const [myProducts, setProducts] = useState([]);
 
     useEffect(() => {
         const getSales = async () => {
             try {
                 const seller_id = localStorage.getItem('sellerId');
                 const url = await axios.get(`http://localhost/hurb/Seller/getSales.php?seller_id=${seller_id}`);
+                const getOrders = await axios.get(`http://localhost/hurb/Seller/GetOrders.php?seller_id=${seller_id}`);
+                const response = await axios.get(`http://localhost/hurb/products.php?seller_id=${seller_id}`);
+
+                setProducts(response.data);
                 const orders = url.data;
+                const urlOrder = getOrders.data;
+                setOrders(urlOrder);
                 setOrder(orders);
             } catch (error) {
                 console.error('myOrder error: ', error);
@@ -19,17 +27,18 @@ export default function Dashboard() {
         getSales();
     }, [])
 
+
     useEffect(() => {
         console.log(myOrders);
     }, [myOrders])
 
-    const uniqueProducts = myOrders.reduce((acc, current) => {
+    const uniqueProducts = Array.isArray(myOrders) ? myOrders.reduce((acc, current) => {
         const existing = acc.find(item => item.product_id === current.product_id);
         if (!existing) {
             acc.push(current);
         }
         return acc;
-    }, []);
+    }, []) : [];
 
     const countReceivedOrdersForProduct = (productId) => {
         return myOrders.filter(order => order.deliver_status === 'Received' && order.product_id === productId).length;
@@ -38,6 +47,8 @@ export default function Dashboard() {
     return (
         <>
             <Container fluid>
+                {orders.length > 0 ? 
+                <>
                 <Row className='mb-5'>
                     <Col lg={12}>
                         <Container fluid>
@@ -78,22 +89,58 @@ export default function Dashboard() {
                                 </Col>
                             </Row>
                         </Container>
-                    </Col>
-                    <Col lg={4} id="sales-container" className=''>
-                        <Container fluid id="sales-container-inside">
-                            <Row className='p-3'>
-                                <Col>
-                                    Number of Sales wow xd
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <h1>{myOrders.length}</h1>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Col>
+                    </Col>  
                 </Row>
+                </> 
+                : 
+                <>
+                    <Container>
+                        <Row className="d-flex gap-5">
+                        <Col lg={4} id="sales-container" className='rounded'>
+                            <Container fluid id="sales-container-inside">
+                                <Row className='p-3'>
+                                    <Col>
+                                        <h4>Number of Sales</h4>
+                                    </Col>
+                                </Row>
+                                <Row className='px-3'>
+                                    <Col>
+                                        <h1>{myOrders.length >= 1 ? myOrders.length : '0'}</h1>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Col>
+                        <Col lg={4} id="sales-container" className='rounded'>
+                            <Container fluid id="sales-container-inside">
+                                <Row className='p-3'>
+                                    <Col>
+                                        <h4>Number of Orders</h4>
+                                    </Col>
+                                </Row>
+                                <Row className='px-3'>
+                                    <Col>
+                                        <h1>{orders.length}</h1>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Col>
+                        <Col lg={4} id="sales-container" className='rounded'>
+                            <Container fluid id="sales-container-inside">
+                                <Row className='p-3'>
+                                    <Col>
+                                        <h4>Number of Products</h4>
+                                    </Col>
+                                </Row>
+                                <Row className='px-3'>
+                                    <Col>
+                                        <h1>{myProducts.length}</h1>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Col>
+                        </Row>
+                    </Container>
+                </>}
             </Container>
         </>
     )

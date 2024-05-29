@@ -99,9 +99,9 @@ export default function Profile( { handleLinkClick } ){
                                     <label htmlFor="floatingPhone">Phone Number</label>
                                 </div>
 
-                                <div className="">
+                                {/* <div className="">
                                     <Link to="#changePassword" onClick={() => handleLinkClick('#changePassword')}>Change Password</Link>
-                                </div>
+                                </div> */}
                                 
                                 <div className="d-flex justify-content-end align-items-end">
                                     <button type="button" className="btn btn-dark" onClick={handleChangeProfile}>Save</button>

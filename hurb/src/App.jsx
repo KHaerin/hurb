@@ -117,7 +117,7 @@ function App() {
     };
     
     const renderFooter = () => {
-        if (isAdminRoute() || isSellerRoute()) {
+        if (isAdminRoute() || isSellerRoute() ) {
             return null; 
         }
         return (

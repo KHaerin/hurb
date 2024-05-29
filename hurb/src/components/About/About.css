@@ -8,9 +8,14 @@
 }
 
 .img{
-    background-color: grey;
-    width: 108rem;
+    /* background-color: grey; */
+    width: 80rem;
     height: 47.313rem;
+    transition: transform 0.3s ease;
+}
+
+.img:hover{
+    transform: scale(1.2);
 }
 
 .about-text{
@@ -81,7 +86,21 @@
     font-weight: 600;
 }
 
-#cardGoal{
+#cardGoal {
+    width: 20rem;
+    position: relative; 
+    overflow: visible; 
+    min-height: 18rem;
+    
+}
+
+#card-layout{
+    min-width: 18rem;
+    width: 100%;
+    max-width: 18rem;
+}
+
+.card-body{
     width: 18rem;
 }
 
@@ -89,16 +108,69 @@
     margin-bottom: 15%;
 }
 
-/* .carousel-control-prev{
-    color: black;
+#profile_about{
+    width: 110px;
     background-color: black;
+    height: 110px;
 }
 
-.carousel-control-prev-icon{
-    color: black;
+.carousel-inner{
+    padding-top: 3rem;
 }
 
-.visually{
-    color: black
-} */
+#profile_img_about {
+    position: absolute;
+    bottom: 225px; /* Adjust top positioning if needed */
+    right: -80px; /* Adjust right positioning to position outside the container */
+}
+
+.team-card{
+    width: 450px;
+    height: 597px;
+    background-color: rgb(0, 0, 0, 76%);
+    box-shadow: -10px 5px 4px rgba(0, 0, 0, 25%);
+}
+
+#team-image-container{
+    transition: transform 0.3s ease;
+}
+
+#team-image{
+    width: 450px;
+    height: 573px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    transition: transform 0.3s ease;
+    z-index: 9999;
+}
+
+#team-image:hover{
+    border-radius: 20%;
+    transform: scale(1.2);
+}
+
+
+#roleText{
+    margin-top: 2%;
+    font-family: "Jura", sans-serif;
+    font-size: 36px;
+    color: white;
+}
+
+#barcodetext{
+    font-family: "Libre Barcode 39", system-ui;
+    color: white;
+    font-size: 96px;
+    height: 80px;
+}
+
+#bruhBack{
+    font-family: "Londrina Shadow", sans-serif;
+    font-size: 110px;
+    color: rgb(255, 255, 255, 30%)
+}
+
 

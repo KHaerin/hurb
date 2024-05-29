@@ -54,11 +54,11 @@ export default function AddAddress({handleLinkClick}){
                     newData.append('street', street);
                     newData.append('zipcode', zipcode);
     
-                    await axios.post("http://localhost/hurb/AddressBook/updateAddress.php", newData);
+                    const res = await axios.post("http://localhost/hurb/AddressBook/updateAddress.php", newData);
                     localStorage.removeItem('addBook_id');
-                    handleLinkClick('addressBook');
-                
-            }catch(error){
+                    handleLinkClick('#account/addressBook');
+                    window.location.reload();
+            }catch(error){  
                 console.error(error);
             }
             return;

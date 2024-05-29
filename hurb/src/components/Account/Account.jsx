@@ -1,6 +1,4 @@
-import './Account.css';
 import React, { useState, useEffect } from "react";
-// import {useLocation} from 'react-router-dom';
 import axios from 'axios';
 import AccMenu from './accMenu';
 import Profile from './AccountMenu/Profile';
@@ -10,21 +8,21 @@ import MyOrder from './AccountMenu/MyOrder';
 import ChangePassword from './AccountMenu/ChangePassword';
 import Vouchers from './AccountMenu/Vouchers';
 
-
 export default function Account(){
 
-    const[fName, setFirstName] = useState('');
-    const[lName, setLastName] = useState('');
-    const[userName, setUserName] = useState('');
-    const[email, setEmail] = useState('');
-    const[phoneNum, setPhoneNum] = useState('');
-    const[password, setPassword] = useState('');
-    const[profile_picture, setProfilePic] = useState('');
-    const[isSeller, setIsSeller] = useState('');
+    const [fName, setFirstName] = useState('');
+    const [lName, setLastName] = useState('');
+    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNum, setPhoneNum] = useState('');
+    const [password, setPassword] = useState('');
+    const [profile_picture, setProfilePic] = useState('');
+    const [isSeller, setIsSeller] = useState('');
     const userId = localStorage.getItem('userId');
 
     const [activeLink, setActiveLink] = useState(() => {
-        return localStorage.getItem('activeLink') || '#profile';
+        const storedActiveLink = localStorage.getItem('activeLink');
+        return storedActiveLink || '#profile';
     });
 
     useEffect(() => {
@@ -38,6 +36,14 @@ export default function Account(){
         fetchAccount();
         if (storedLoginStatus === 'true') {
             setIsLoggedIn(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const activeLinkFromUrl = url.searchParams.get('activeLink');
+        if (activeLinkFromUrl) {
+            setActiveLink(activeLinkFromUrl);
         }
     }, []);
 
@@ -62,7 +68,7 @@ export default function Account(){
             setProfilePic(profile_picture);
             setIsSeller(userDBFetch.isSeller);
 
-        }catch(error){
+        } catch(error) {
             console.error('Error fetch: ', error);
         }
     }
@@ -72,32 +78,31 @@ export default function Account(){
     };
   
     return(
-    <>
-    {isLoggedIn && 
-        <div className="container mt-5 mb-5" id="account-container">
-            <div className="row">
-                <div className="col-auto" id="dashboard-container"> 
-                    <div className="container dashboard">
-                        <div className="d-flex align-items-center gap-3 mb-4">
-                            <img src={`http://localhost/hurb/${profile_picture}`} alt="profile" className="d-flex" id="profile-picture" />
-                            <span>{lName}, {fName}</span>
+        <>
+            {isLoggedIn && 
+                <div className="container mt-5 mb-5" id="account-container">
+                    <div className="row">
+                        <div className="col-auto" id="dashboard-container"> 
+                            <div className="container dashboard">
+                                <div className="d-flex align-items-center gap-3 mb-4">
+                                    <img src={`http://localhost/hurb/${profile_picture}`} alt="profile" className="d-flex" id="profile-picture" />
+                                    <span>{lName}, {fName}</span>
+                                </div>
+                                <hr className="border border-dark border-1 opacity-40" id="hr"/>
+                                <AccMenu handleLinkClick={handleLinkClick} activeLink={activeLink} isSeller={isSeller}></AccMenu>
+                            </div>
                         </div>
-                        <hr className="border border-dark border-1 opacity-40" id="hr"/>
-                            <AccMenu handleLinkClick={handleLinkClick} activeLink={activeLink} isSeller={isSeller}></AccMenu>
+                        <div className="col" id="middle-container">
+                            {activeLink === '#profile' && <Profile handleLinkClick={handleLinkClick} />}
+                            {activeLink === '#account/addressBook' && <AddressBook  handleLinkClick={handleLinkClick} />}
+                            {activeLink === '#account/addAddress' && <AddAddress handleLinkClick={handleLinkClick}/>}                
+                            {activeLink === '#changePassword' && <ChangePassword />}
+                            {activeLink === '#account/myOrder' && <MyOrder />}
+                            {activeLink === '#myVouchers' && <Vouchers />}
+                        </div>
                     </div>
                 </div>
-            <div className="col" id="middle-container">
-                {activeLink === '#profile' && <Profile handleLinkClick={handleLinkClick} />}
-                {activeLink === '#account/addressBook' && <AddressBook  handleLinkClick={handleLinkClick} />}
-                {activeLink === '#account/addAddress' && <AddAddress handleLinkClick={handleLinkClick}/>}                
-                {activeLink === '#changePassword' && <ChangePassword />}
-                {activeLink === '#account/myOrder' && <MyOrder />}
-                {activeLink === '#myVouchers' && <Vouchers />}
-            </div>
-        </div>
-   </div>
-    }
-       
-    </>
-    )
+            }       
+        </>
+    );
 }

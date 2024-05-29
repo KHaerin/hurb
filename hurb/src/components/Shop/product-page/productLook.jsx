@@ -37,6 +37,7 @@ export default function ProductLook() {
     const[size_Qty, setSizeQty] = useState('');
     const [selectedSize, setSelectedSize] = useState('');
     const [firstImg, setFirstImg] = useState([]);
+    
 
     useEffect(() => {
         fetchSizes(productId);
@@ -333,7 +334,7 @@ export default function ProductLook() {
                                             <span id="priceTXT" value={product_price}>${product.product_price}.00</span>
                                         </div>
                                         <div className="col">
-                                            <span>Stock Available: {size_Qty}</span>
+                                            <span>Stock Available: {size_Qty === '0' ? 'Out of Stock' : size_Qty}</span>
                                         </div>
                                     </div>
                                     <div className="row row-cols-1 mb-4">

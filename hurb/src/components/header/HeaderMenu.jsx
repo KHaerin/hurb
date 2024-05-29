@@ -62,6 +62,10 @@ export default function Header() {
         window.location.href = "/shop";
     }
 
+    const goAbout = () => {
+        window.location.href="/about";
+    }
+
     const linkStyle = {
         color: '#000000',
     }
@@ -96,7 +100,7 @@ export default function Header() {
                                 </ul>
                             </li>
                             <li className="nav-item">
-                                <Link to="/about" className="nav-link" id="headerLinks">About</Link>
+                                <Link onClick={goAbout} className="nav-link" id="headerLinks">About</Link>
                             </li>
                             <li className="nav-item">
                                 <Link to="/contact" className="nav-link" id="headerLinks">Contact</Link>

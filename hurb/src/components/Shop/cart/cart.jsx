@@ -20,21 +20,29 @@ export default function Cart(){
         calculateTotalAmount();
     }, [tracks]);
 
-
+    const [thisQty, setThisQty] = useState();
     const fetchCartProducts = async () => {
         try {
             const user_id = localStorage.getItem('userId');
             const response = await axios.get(`http://localhost/hurb/track_select.php?user_id=${user_id}`);
-            const dataFetch = response.data;
-            let total = 0;
-            const processedData = dataFetch.map(item => {
-                const totalAmount = item.product_qty * item.product_price;
-                total += totalAmount;
-                return { ...item, totalAmount };
+            const cartData = response.data;
+    
+            // Fetch available stock for each product size
+            const sizePromises = cartData.map(async item => {
+                const sizeResponse = await axios.get(`http://localhost/hurb/selectSizes.php?product_id=${item.product_id}`);
+                const availableSizes = sizeResponse.data;
+                const selectedSize = availableSizes.find(size => size.size_id === item.size_id);
+                const sizeQty = selectedSize ? selectedSize.quantity : 0;
+                return { ...item, sizeQty };
             });
-            setTracks(processedData.map(item => ({ ...item, selected: false })));
+    
+            // Resolve all promises
+            const processedCartData = await Promise.all(sizePromises);
+    
+            // Update state with cart data including sizeQty
+            setTracks(processedCartData.map(item => ({ ...item, selected: false })));
         } catch (error) {
-            console.log('Error fetching data:', error);
+            console.log('Error fetching cart products:', error);
         }
     };
 
@@ -70,7 +78,7 @@ export default function Cart(){
 
     const handleQuantityChange = (track_id, newQuantity) => {
         const existingTrack = tracks.find(track => track.track_id === track_id);
-        const currentStock = existingTrack.product_qty;
+        const currentStock = existingTrack.sizeQty; // Use sizeQty instead of thisQty
         console.log('new qty: ', newQuantity);
         console.log('currentstock: ', currentStock);
         if (newQuantity > currentStock) {
@@ -101,7 +109,12 @@ export default function Cart(){
 
             const response = await axios.post("http://localhost/hurb/removeProduct.php", formData);
             fetchCartProducts();
-            toast(response.data);
+            const ToastId = toast(response.data, {
+                onClose: () => {
+                    window.location.href = "/shop/cart";
+                }
+            });
+            
         } catch (error) {
             toast.error(error);
         }

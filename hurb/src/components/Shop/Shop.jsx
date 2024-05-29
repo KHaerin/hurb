@@ -32,13 +32,10 @@ export default function Shop() {
         fetchProducts();
     }, []); 
 
+    const [sortingOrder, setSortingOrder] = useState(null);
 
-    useEffect(() => {
-        localStorage.setItem('filterVisible', filterVisible);
-    }, [filterVisible]);
-
-    useEffect(() => {
-        let filtered = products;
+    const filterProducts = (searchQuery, selectedSubCategory, products) => {
+        let filtered = [...products]; // Create a copy of products array
     
         if (searchQuery) {
             filtered = filtered.filter(product =>
@@ -52,8 +49,28 @@ export default function Shop() {
             );
         }
     
-        setFilteredProducts(filtered);
-    }, [searchQuery, selectedSubCategory, products]);
+        return filtered;
+    };
+
+    const handleSortingChange = (order) => {
+        setSortingOrder(order);
+    };
+
+    useEffect(() => {
+        let sorted = [...filterProducts(searchQuery, selectedSubCategory, products)]; // Apply filtering first
+    
+        if (sortingOrder === 'highest') {
+            sorted.sort((a, b) => b.product_price - a.product_price);
+        } else if (sortingOrder === 'lowest') {
+            sorted.sort((a, b) => a.product_price - b.product_price);
+        }
+    
+        setFilteredProducts(sorted);
+    }, [sortingOrder, searchQuery, selectedSubCategory, products]);
+
+    useEffect(() => {
+        localStorage.setItem('filterVisible', filterVisible);
+    }, [filterVisible]);
 
 
     const fetchProducts = async () => {
@@ -203,10 +220,12 @@ export default function Shop() {
                 </Row>
                 <Row>
                     <Col className='col-auto'>
-                        <Filter 
-                            isVisible={filterVisible} 
-                            products={products} 
-                            onCategorySelect={handleCategorySelect} 
+                        <Filter
+                            isVisible={filterVisible}
+                            products={products}
+                            onCategorySelect={handleCategorySelect}
+                            sortingOrder={sortingOrder}
+                            onSortingChange={handleSortingChange}
                         />
                     </Col>
                     <Col className="mt-4">

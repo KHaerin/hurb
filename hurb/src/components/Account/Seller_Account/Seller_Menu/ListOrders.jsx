@@ -74,7 +74,7 @@ function ListOrders() {
                 <div className="col">
                     <div className="container-fluid">
                         {orders.length === 0 ? 
-                            <h1>No Order Available sabi ni idol karl</h1>
+                            <h1>There are no order at the moment...</h1>
                         : 
                         <div className="table-container" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
                             <table className="table accordion accordion-flush" id="accordionFlushExample">
