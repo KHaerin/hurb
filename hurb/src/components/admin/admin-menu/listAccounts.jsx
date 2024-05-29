@@ -35,35 +35,32 @@ export default function listAccounts(){
         {isAdmin === '1' ? 
             <>
                 <div className="container">
+                    <div className="row mb-3">
+                        <div className="col">
+                            <h1>List of Accounts</h1>
+                        </div>
+                    </div>
                     <div className="row">
                         <div className="col">
                         <table className="table">
                             <thead>
                                 <tr>
-                                <th scope="col">User ID</th>
-                                <th scope="col">User</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Email</th>
+                                    <th scope="col">User ID</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Email</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">3</th>
-                                <td colSpan="2">Larry the Bird</td>
-                                <td>@twitter</td>
-                                </tr>
+                                {accounts.map((acc, index) => (
+                                     <tr key={acc.users_id}>
+                                     <th scope="row">{acc.users_id}</th>
+                                     <td>{acc.firstname}</td>
+                                     <td>{acc.userName}</td>
+                                     <td>{acc.email}</td>
+                                     </tr>                            
+                                ))}
+                               
                             </tbody>
                             </table>
                         </div>

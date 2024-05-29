@@ -37,7 +37,7 @@ export const sideBarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Logout',
+        title: 'Back',
         path: '#logout',
         icon: <RiIcons.RiLogoutBoxFill/>,
         cName: 'nav-text'
