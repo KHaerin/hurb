@@ -52,11 +52,6 @@ function MyOrder() {
         console.log(order_item_id);
     }
 
-
-   
-
-   
-
   return (
     <>
          <Container fluid>
@@ -122,6 +117,19 @@ function AllOrders({ myOrders, handleCancelOrder }) {
         fontSize: '1.2rem'
     }
 
+    const handleOrderReceived = async (orderId, newStatus) => {
+        try {
+            const response = await axios.post('http://localhost/hurb/Seller/updateStatus.php', {
+                order_item_ids: [orderId],
+                new_status: newStatus
+            });
+            window.location.reload();
+        } catch (error) {
+            console.error('Error updating order status:', error);
+        }
+    };
+    
+
     return (
         <Container fluid className='d-flex flex-column gap-4'>
             {myOrders.reduce((acc, order, index) => {
@@ -144,7 +152,7 @@ function AllOrders({ myOrders, handleCancelOrder }) {
                                             <span>Seller is preparing to ship.</span>
                                         }
                                         {order.deliver_status === 'Received' &&
-                                            <span>Delivered</span>
+                                            <span>Received</span>
                                         }
                                         {order.deliver_status === 'To Receive' &&
                                             <span>To Receive</span>
@@ -181,13 +189,13 @@ function AllOrders({ myOrders, handleCancelOrder }) {
                                     <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
                                         {order.deliver_status === "ship" &&
                                             <>
-                                                <Button variant="danger" style={ratebuyBtn} onClick={() => handleCancelOrder(order.order_item_id, order.unit_price, order.quantity, order.totalPayable, order.order_id, order.size_id, order.color_id, order.product_id)}>
+                                                <Button variant="danger" style={ratebuyBtn}  disabled={order.payed_status === "COMPLETED"}  onClick={() => handleCancelOrder(order.order_item_id, order.unit_price, order.quantity, order.totalPayable, order.order_id, order.size_id, order.color_id, order.product_id)}>
                                                     <FaTrashCan style={trashIcon}></FaTrashCan>
                                                 </Button>
                                             </>
                                         }
-                                        {order.deliver_status === "onDeliver" &&
-                                            <Button variant="dark">Order Received</Button>
+                                        {order.deliver_status === "To Receive" &&
+                                            <Button variant="dark" onClick={() => handleOrderReceived(order.order_item_id, 'Received')}>Order Received</Button>
                                         }
                                         {order.deliver_status === "received" &&
                                             <>
@@ -199,11 +207,6 @@ function AllOrders({ myOrders, handleCancelOrder }) {
                                 </Row>
                             </React.Fragment>
                         ))}
-                        <Row>
-                            <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
-                                <Button variant="dark" style={ratebtn} disabled>Order Received</Button>
-                            </Col>
-                        </Row>
                         <Row>
                             {/* <Col>
                                 <span>{`${dateOrdered}`}</span>
@@ -297,7 +300,7 @@ function ToShip({myOrders, handleCancelOrder, activeKey}){
                                        <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
                                            {order.deliver_status === "ship" &&
                                            <>
-                                            <Button variant="danger" style={ratebuyBtn} onClick={() => handleCancelOrder(order.order_item_id, order.unit_price, order.quantity, order.totalPayable, order.order_id, order.size_id, order.color_id, order.product_id)}>
+                                            <Button variant="danger" style={ratebuyBtn}  disabled={order.payed_status === "COMPLETED"}  onClick={() => handleCancelOrder(order.order_item_id, order.unit_price, order.quantity, order.totalPayable, order.order_id, order.size_id, order.color_id, order.product_id)}>
                                                     <FaTrashCan style={trashIcon}></FaTrashCan>
                                             </Button> 
                                            </>
@@ -328,7 +331,7 @@ function ToShip({myOrders, handleCancelOrder, activeKey}){
                            </div>
                        );
                    })}
-                   {myOrders.filter(order => order.deliver_status === 'ship').length === 0 && <h1>Wala</h1>}
+                   {myOrders.filter(order => order.deliver_status === 'ship').length === 0 && <h1>No product as of the moment...</h1>}
 
                </Container>
                 }   
@@ -337,89 +340,57 @@ function ToShip({myOrders, handleCancelOrder, activeKey}){
     )
 }
 
-function OnDeliver({myOrders}){
-    const order_container = {
-        backgroundColor: '#F8F8F8'
-    }
+function OnDeliver({ myOrders }) {
+    const handleOrderReceived = async (orderId, newStatus) => {
+        try {
+            const response = await axios.post('http://localhost/hurb/Seller/updateStatus.php', {
+                order_item_ids: [orderId],
+                new_status: newStatus
+            });
+            window.location.reload();
+        } catch (error) {
+            console.error('Error updating order status:', error);
+        }
+    };
 
-    const product_size = {
-        width: '10rem'
-    }
-
-    const ratebuyBtn = {
-        width: '5rem'
-    }
-
-    const ratebtn = {
-        width: '10rem'
-    }
-
-    const trashIcon = {
-        fontSize: '1.2rem'
-    }
     return (
         <Container fluid className='d-flex flex-column gap-4'>
             {myOrders
                 .filter(order => order.deliver_status === 'To Receive')
-                .reduce((acc, order, index) => {
-                    const lastIndex = acc.length - 1;
-                    if (lastIndex < 0 || acc[lastIndex][0].order_id !== order.order_id) {
-                        acc.push([order]);
-                    } else {
-                        acc[lastIndex].push(order);
-                    }
-                    return acc;
-                }, [])
-                .map((orderGroup, groupIndex) => {
-                    return (
-                        <div key={groupIndex} style={order_container}>
-                            {orderGroup.map((order, index) => (
-                                <React.Fragment key={order.order_item_id}>
-                                    <Row className='px-4 pt-4'>
-                                        <span>To Receive</span>
-                                    </Row>
-                                    <Row className='p-5'>
-                                        <Col className='col-auto'>
-                                            <Image src={`http://localhost/hurb/${order.product_img}`} style={product_size} />
-                                        </Col>
-                                        <Col className='d-flex flex-column'>
-                                            <span>{order.product_name}</span>
-                                            <div className="below d-flex gap-3">
-                                                <span>{`Quantity: ${order.quantity}`}</span>
-                                                <span>{`Variation: Black, ${order.size}`}</span>
-                                                <span>{`P${order.unit_price}`}</span>
-                                            </div>
-                                            <span>Subtotal: {order.unit_price * order.quantity}</span>
-                                        </Col>
-                                    </Row>
-                                    <Row className='d-flex align-items-center justify-content-center'>
-                                        <Col lg={11}>
-                                            <hr className="border border-dark border-1 opacity-40" />
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
-                                            <Button variant="dark">Order Received</Button>
-                                        </Col>
-                                    </Row>
-                                </React.Fragment>
-                            ))}
-                            <Row>
-                                <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
-                                    <Button variant="dark" style={ratebtn} disabled>Order Received</Button>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
-                                    <span>{`Total Order: ${parseFloat(myOrders.reduce((total, order) => parseFloat(order.totalPayable), 0)).toFixed(2)}`}</span>
-                                </Col>
-                            </Row>
-                        </div>
-                    );
-                })}
-            {myOrders.filter(order => order.deliver_status === 'onDeliver').length === 0 && <h1>No Items to be delivered</h1>}
+                .map((order, index) => (
+                    <div key={order.order_id} style={{ backgroundColor: '#F8F8F8' }}>
+                        <Row className='px-4 pt-4'>
+                            <span>To Receive</span>
+                        </Row>
+                        <Row className='p-5'>
+                            <Col className='col-auto'>
+                                <Image src={`http://localhost/hurb/${order.product_img}`} style={{ width: '10rem' }} />
+                            </Col>
+                            <Col className='d-flex flex-column'>
+                                <span>{order.product_name}</span>
+                                <div className="below d-flex gap-3">
+                                    <span>{`Quantity: ${order.quantity}`}</span>
+                                    <span>{`Variation: Black, ${order.size}`}</span>
+                                    <span>{`P${order.unit_price}`}</span>
+                                </div>
+                                <span>Subtotal: {order.unit_price * order.quantity}</span>
+                            </Col>
+                        </Row>
+                        <Row className='d-flex align-items-center justify-content-center'>
+                            <Col lg={11}>
+                                <hr className="border border-dark border-1 opacity-40" />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
+                                <Button variant="dark" onClick={() => handleOrderReceived(order.order_item_id, 'Received')}>Order Received</Button>
+                            </Col>
+                        </Row>
+                    </div>
+                ))}
+            {myOrders.filter(order => order.deliver_status === 'To Receive').length === 0 && <h1>No Items to be delivered</h1>}
         </Container>
-    )
+    );
 }
 
 function Received({myOrders}){
@@ -484,14 +455,14 @@ function Received({myOrders}){
                                     </Row>
                                     <Row>
                                         <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
-                                            <Button variant="dark">Order Received</Button>
+                                            <Button variant="dark">Rate</Button>
                                         </Col>
                                     </Row>
                                 </React.Fragment>
                             ))}
                             <Row>
                                 <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
-                                    <Button variant="dark" style={ratebtn} disabled>Order Received</Button>
+                                    <Button variant="dark" style={ratebtn} disabled>Buy Again</Button>
                                 </Col>
                             </Row>
                             <Row>

@@ -6,10 +6,22 @@ import HurbLogo from '../hurb-logo/hurb logo files-04.png';
 import Bruh1 from '../hurb-logo/CCU02791.png';
 import Bruh2 from '../hurb-logo/CCU02789.png';
 import Bruh3 from '../hurb-logo/CCU02761.png';
-import Angeloy from '../hurb-logo/angeloy.png';
-import AngeloSmile from '../hurb-logo/angeloysmile.png';
-import RoliNoSmile from '../hurb-logo/rolinosmile.png';
-import RoliSalute from '../hurb-logo/rolisalute.png';
+import Angeloy from './TeamImage/angelu.png';
+import AngeloSmile from './TeamImage/angelosmile.png';
+import RoliNoSmile from './TeamImage/roli.png';
+import RoliSalute from './TeamImage/roli salute.png';
+import Kerry from './TeamImage/kerry.png';
+import KerrySmile from './TeamImage/kerrysmile.png';
+import Yoyo from './TeamImage/yoyo.png';
+import YoyoSh from './TeamImage/yoyoshh.png';
+import Leo from './TeamImage/leo.png';
+import LeoPeace from './TeamImage/leopeace.png';
+import Kol from './TeamImage/kol.png';
+import KolSmile from './TeamImage/kolsmile.png';
+import BruhCode1 from './TeamImage/bruhcode1logofinal.png';
+import BruhCode2 from './TeamImage/bruhcode2logofinal.png';
+import Chapter1BC from './TeamImage/bcc1.png';
+import Chapter1BC_2 from './TeamImage/bcc1-2.png';
 
 export default function About(){
 
@@ -20,6 +32,19 @@ export default function About(){
     }
 
     const [isHovered, setIsHovered] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+
+    const teamData = [
+        { role: "PROJECT MANAGER", name: "BRUHCODE", image: Kol, hoveredImage: KolSmile },
+        { role: "FULL STACK DEVELOPER", name: "BRUHCODE", image: Angeloy, hoveredImage: AngeloSmile },
+        { role: "BACK END DEVELOPER", name: "BRUHCODE", image: Yoyo, hoveredImage: YoyoSh },
+    ];
+
+    const teamData2 = [
+        { role: "UI/UX Designer", name: "BRUHCODE", image: Kerry, hoveredImage: KerrySmile },
+        { role: "FRONT END DEVELOPER", name: "BRUHCODE", image: RoliNoSmile, hoveredImage: RoliSalute},
+        { role: "DOCUMENTATION", name: "BRUHCODE", image: Leo, hoveredImage: LeoPeace },
+    ];
 
     return (
         <>
@@ -62,211 +87,89 @@ export default function About(){
             {/* data-bs-interval="1000" */}
             <div className="carousel-item active" > 
                 <div className="container-fluid mb-5">
-                    <div className="row d-flex justify-content-center gap-4 align-items-center">
-                        <div className="col-auto">
-                            <div className="team-card rounded p-4">
-                                <div className="container-fluid position-relative">
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center">
-                                            <h1 id="roleText">PROJECT MANAGER</h1>
-                                        </div>
+                <div className="row d-flex justify-content-center gap-4 align-items-center">
+                {teamData.map((member, index) => (
+                    <div className="col-auto" key={index}>
+                             <div
+                            className="team-card rounded p-4"
+                            onMouseEnter={() => setHoveredIndex(index)}
+                            onMouseLeave={() => setHoveredIndex(null)}
+                        >
+                            <div className="container-fluid position-relative">
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center">
+                                        <h1 id="roleText">{member.role}</h1>
                                     </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="barcodetext">BRUHCODE</h1>
-                                        </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center align-items-center">
+                                        <h1 id="barcodetext">{member.name}</h1>
                                     </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="bruhBack">BRUHCODE</h1>
-                                        </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center align-items-center">
+                                        <h1 id="bruhBack">{member.name}</h1>
                                     </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
+                                </div>
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
                                         <img
-                                            src={isHovered ? RoliSalute : RoliNoSmile} 
+                                            src={index === hoveredIndex ? member.hoveredImage : member.image}
                                             alt=""
-                                            
                                             id="team-image"
-                                            onMouseEnter={() => setIsHovered(true)} 
-                                            onMouseLeave={() => setIsHovered(false)}
+                                           
                                         />
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div> 
-                        <div className="col-auto">
-                            <div className="team-card rounded p-4">
-                                <div className="container-fluid position-relative">
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center">
-                                            <h1 id="roleText">FULL STACK DEVELOPER</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="barcodetext">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="bruhBack">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
-                                        <img
-                                            src={isHovered ? AngeloSmile : Angeloy} 
-                                            alt=""
-                                            
-                                            id="team-image"
-                                            onMouseEnter={() => setIsHovered(true)} 
-                                            onMouseLeave={() => setIsHovered(false)}
-                                        />
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div> 
-                        <div className="col-auto">
-                            <div className="team-card rounded p-4">
-                                <div className="container-fluid position-relative">
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center">
-                                            <h1 id="roleText">FULL STACK DEVELOPER</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="barcodetext">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="bruhBack">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
-                                        <img
-                                            src={isHovered ? RoliSalute : RoliNoSmile} 
-                                            alt=""
-                                            
-                                            id="team-image"
-                                            onMouseEnter={() => setIsHovered(true)} 
-                                            onMouseLeave={() => setIsHovered(false)}
-                                        />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
+                         ))} 
+                    </div>
+                    <div className="row d-flex justify-content-center gap-4 align-items-center">    
                     </div>
                 </div>
             </div>
-            <div className="carousel-item" > 
-                <div className="container mb-5">
-                    <div className="row d-flex justify-content-between align-items-center">
-                        <div className="col-auto">
-                            <div className="team-card rounded p-4">
-                                <div className="container-fluid position-relative">
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center">
-                                            <h1 id="roleText">FULL STACK DEVELOPER</h1>
-                                        </div>
+            <div className="carousel-item " > 
+                <div className="container-fluid mb-5">
+                <div className="row d-flex justify-content-center gap-4 align-items-center">
+                    {teamData2.map((member, index) => (
+                    <div className="col-auto" key={index}>
+                             <div
+                                className="team-card rounded p-4"
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                            >
+                            <div className="container-fluid position-relative">
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center">
+                                        <h1 id="roleText">{member.role}</h1>
                                     </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="barcodetext">BRUHCODE</h1>
-                                        </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center align-items-center">
+                                        <h1 id="barcodetext">{member.name}</h1>
                                     </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="bruhBack">BRUHCODE</h1>
-                                        </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center align-items-center">
+                                        <h1 id="bruhBack">{member.name}</h1>
                                     </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
+                                </div>
+                                <div className="row">
+                                    <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
                                         <img
-                                            src={isHovered ? RoliSalute : RoliNoSmile} 
+                                            src={index === hoveredIndex ? member.hoveredImage : member.image}
                                             alt=""
-                                            
                                             id="team-image"
-                                            onMouseEnter={() => setIsHovered(true)} 
-                                            onMouseLeave={() => setIsHovered(false)}
+                                           
                                         />
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div> 
-                        <div className="col-auto">
-                            <div className="team-card rounded p-4">
-                                <div className="container-fluid position-relative">
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center">
-                                            <h1 id="roleText">FULL STACK DEVELOPER</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="barcodetext">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="bruhBack">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
-                                        <img
-                                            src={isHovered ? RoliSalute : RoliNoSmile} 
-                                            alt=""
-                                            
-                                            id="team-image"
-                                            onMouseEnter={() => setIsHovered(true)} 
-                                            onMouseLeave={() => setIsHovered(false)}
-                                        />
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div> 
-                        <div className="col-auto">
-                            <div className="team-card rounded p-4">
-                                <div className="container-fluid position-relative">
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center">
-                                            <h1 id="roleText">FULL STACK DEVELOPER</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="barcodetext">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center">
-                                            <h1 id="bruhBack">BRUHCODE</h1>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col d-flex justify-content-center align-items-center" id="team-image-container">
-                                        <img
-                                            src={isHovered ? RoliSalute : RoliNoSmile} 
-                                            alt=""
-                                            
-                                            id="team-image"
-                                            onMouseEnter={() => setIsHovered(true)} 
-                                            onMouseLeave={() => setIsHovered(false)}
-                                        />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
+                         ))} 
                     </div>
                 </div>
             </div>
@@ -284,28 +187,40 @@ export default function About(){
         </div>
         {/* END OF TEAM CARD */}
 
-
-        <div className="goalsText text-wrap">
-            BruhCode Namba WAN!! 
-        </div>
-
-        <div className="container" id="goalContainer">
-            <div className="row d-flex justify-content-center">
-            <div id="carouselExampleSlidesOnly" className="carousel slide" data-bs-ride="carousel">
-                <div className="carousel-inner">
-                <div className="carousel-item active" data-bs-interval="3000">
-                    <img src={Bruh3} className="d-block w-100 rounded" alt="..."/>
-                    </div>
-                    <div className="carousel-item " data-bs-interval="2000">
-                        <img src={Bruh} className="d-block w-100 rounded" alt="..."/>
-                    </div>
-                    <div className="carousel-item" data-bs-interval="3000">
-                    <img src={Bruh1} className="d-block w-100 rounded" alt="..."/>
-                    </div>
-                    <div className="carousel-item" data-bs-interval="3000">
-                    <img src={Bruh2} className="d-block w-100 rounded" alt="..."/>
-                    </div>
+        <div className="container mb-5">
+            <div className="row">
+                <div className="col d-flex gap-3 justify-content-center align-items-center">
+                    <img src={BruhCode1} alt="" id="bruhcode"/>
+                    <h1><strong>The BruhCode Company</strong></h1>
+                    <img src={BruhCode2} alt="" id="bruhcode"/>
                 </div>
+            </div>
+        </div>
+        <div className="container" id="goalContainer">
+            <div className="row d-flex justify-content-center align-items-center" >
+                <div className="col-auto p-5 rounded" id="bruh-container">
+                    <div  className="carousel slide" data-bs-ride="carousel">
+                        <div className="carousel-inner">
+                            <div className="carousel-item active"  data-bs-interval="3000">
+                                <img src={Chapter1BC_2} className="d-block w-100 rounded" alt="..."/>
+                            </div>
+                            <div className="carousel-item "  data-bs-interval="3000">
+                                <img src={Bruh} className="d-block w-100 rounded" alt="..."/>
+                            </div>
+                            <div className="carousel-item"  data-bs-interval="3000">
+                                <img src={Bruh1} className="d-block w-100 rounded" alt="..."/>
+                            </div>
+                            <div className="carousel-item"  data-bs-interval="3000">
+                                <img src={Bruh2} className="d-block w-100 rounded" alt="..."/>
+                            </div>
+                            <div className="carousel-item "  data-bs-interval="3000">
+                                <img src={Chapter1BC} className="d-block w-100 rounded" alt="..."/>
+                            </div>  
+                            <div className="carousel-item "  data-bs-interval="3000">
+                                <img src={Bruh3} className="d-block w-100 rounded" alt="..."/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>   

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import NotAdmin from '../../NotAdmin'
 import axios from 'axios';
+import * as FaIcons from 'react-icons/fa';
+import * as AiIcons from 'react-icons/ai';
+import * as IoIcons from 'react-icons/io';
+import * as RiIcons from 'react-icons/ri';
+import * as BsIcons from 'react-icons/bs';
+import * as MdIcons from 'react-icons/md';
 import { Container, Row, Col } from 'react-bootstrap';
 
 export default function dashboard(){
@@ -39,6 +45,11 @@ export default function dashboard(){
     getSales();
 }, [])
 
+ const iconstyle ={
+    fontSize: '3rem',
+    color: 'green '
+ }
+
     return(
         <>
 
@@ -48,12 +59,11 @@ export default function dashboard(){
               <Col lg={4} id="sales-container" className='rounded'>
                   <Container fluid id="sales-container-inside">
                       <Row className='p-3'>
-                          <Col>
+                          <Col className='d-flex justify-content-center align-items-center gap-5'>
+                                <span style={iconstyle}><MdIcons.MdOutlineSupervisorAccount></MdIcons.MdOutlineSupervisorAccount></span>
                               <h4>Accounts Registered</h4>
                           </Col>
-                      </Row>
-                      <Row className='px-3'>
-                          <Col>
+                          <Col className='d-flex justify-content-center align-items-center'>
                               <h1>{accounts.length}</h1>
                           </Col>
                       </Row>
@@ -62,12 +72,11 @@ export default function dashboard(){
               <Col lg={4} id="sales-container" className='rounded'>
                   <Container fluid id="sales-container-inside">
                       <Row className='p-3'>
-                          <Col>
+                        <Col className='d-flex justify-content-center align-items-center gap-5'>
+                                <span style={iconstyle}><MdIcons.MdSell></MdIcons.MdSell></span>
                               <h4>Seller Applicants</h4>
                           </Col>
-                      </Row>
-                      <Row className='px-3'>
-                          <Col>
+                          <Col className='d-flex justify-content-center align-items-center'>
                               <h1>{applicants.length}</h1>
                           </Col>
                       </Row>
@@ -76,12 +85,11 @@ export default function dashboard(){
               <Col lg={4} id="sales-container" className='rounded'>
                   <Container fluid id="sales-container-inside">
                       <Row className='p-3'>
-                          <Col>
+                            <Col className='d-flex justify-content-center align-items-center gap-5'>
+                                <span style={iconstyle}><BsIcons.BsBagCheckFill></BsIcons.BsBagCheckFill></span>
                               <h4>Seller Registered</h4>
                           </Col>
-                      </Row>
-                      <Row className='px-3'>
-                          <Col>
+                          <Col className='d-flex justify-content-center align-items-center'>
                               <h1>{registered.length}</h1>
                           </Col>
                       </Row>

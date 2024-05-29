@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function AddAddress({handleLinkClick}){
 
@@ -81,7 +82,7 @@ export default function AddAddress({handleLinkClick}){
 
         axios.post(url, fData)
         .then(response=>{
-            alert(response.data);
+            toast(response.data);
             
             setFullName('');
             setAddress('');

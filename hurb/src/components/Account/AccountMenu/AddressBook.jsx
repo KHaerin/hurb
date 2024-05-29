@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import '../Account.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 export default function AddressBook({handleLinkClick}){
 
     const[fName, setFirstName] = useState('');
@@ -57,18 +59,28 @@ export default function AddressBook({handleLinkClick}){
         handleLinkClick('#account/addAddress');
     }
 
-    const handleDeleteBtn = async(addBook_id) => {
-        try{
+    const handleDeleteBtn = async (addBook_id) => {
+        try {
+           
+            const response = await axios.get(`http://localhost/hurb/AddressBook/checkAddOrder.php?addbook_id=${addBook_id}`);
+            const isAddressInOrders = response.data;
+    
+            if (isAddressInOrders) {
+                toast("This address cannot be deleted as it is associated with orders.");
+                return;
+            }
+    
+            
             const formData = new FormData();
             formData.append('addbook_id', addBook_id);
-
-            const response = await axios.post("http://localhost/hurb/deleteAddress.php", formData);
-            console.log(response.data);
+    
+            const deleteResponse = await axios.post("http://localhost/hurb/deleteAddress.php", formData);
+            console.log(deleteResponse.data);
             window.location.reload();
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
-    }
+    };
 
 
     return(

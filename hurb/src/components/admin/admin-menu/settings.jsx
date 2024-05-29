@@ -17,7 +17,7 @@ export default function settings(){
             <>  
         {isAdmin === '1'? 
             <>
-                <h1>Settings</h1>
+                <h1>Under Construction...</h1>
             </> 
         :
          <NotAdmin/>}

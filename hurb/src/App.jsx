@@ -73,7 +73,7 @@ function App() {
         if(admin_id === '1'){
             setAdmin(true);
         }else{
-            setAdmin('false');
+            setAdmin(false);
         }
         if (storedLoginStatus === 'true') {
             setIsLoggedIn(true);
@@ -127,6 +127,7 @@ function App() {
         );
     }
 
+
   return (
     <>
     <CartProvider>
@@ -161,17 +162,30 @@ function App() {
                     <Route path="/checkout" element={<Checkout />} />
                     {isLoggedIn && <Route path="/regSeller" element={<RegSeller />} />}
                     {/* <Route path="/regSeller" element={<RegSeller />} /> */}
-                    <Route path="/login/admin" element={<Admin />} />
-                    <Route path="/admin/dashboard" element={<Dashboard />} />
-                    <Route path="/admin/listAccounts" element={<ListAccounts />} />
-                    <Route path="/admin/listSellers" element={<ListSellers />} />
-                    <Route path="/admin/Settings" element={<SettingsAdmin />} />
-                    <Route path="/admin/application" element={<Application />} />
+                    {isAdmin ? 
+                    <>
+                        <Route path="/login/admin" element={<Admin />} />
+                        <Route path="/admin/dashboard" element={<Dashboard />} />
+                        <Route path="/admin/listAccounts" element={<ListAccounts />} />
+                        <Route path="/admin/listSellers" element={<ListSellers />} />
+                        <Route path="/admin/Settings" element={<SettingsAdmin />} />
+                        <Route path="/admin/application" element={<Application />} />
+                    </>
+                    :
+                    <>
+                        <Route path="/login/admin" element={<NotAdmin />}/>
+                        <Route path="/admin/dashboard" element={<NotAdmin />} />
+                        <Route path="/admin/listAccounts" element={<NotAdmin />} />
+                        <Route path="/admin/listSellers" element={<NotAdmin />} />
+                        <Route path="/admin/Settings" element={<NotAdmin />} />
+                        <Route path="/admin/application" element={<NotAdmin />} />
+                    </>}
+                   
                     <Route path="/TestAbout" element={<TestAbout />} />
                 </Routes>
                 {renderFooter()}
                 <ToastContainer
-                position="top-right"
+                position="top-center"
                 autoClose={2000}
                 newestOnTop={false}
                 closeOnClick

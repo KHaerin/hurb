@@ -56,6 +56,9 @@ body{
 }
 
 #footerContainer{
+  position: static;
+  bottom: 0;
+  width: 100%;
   background-color: rgb(238, 238, 238);
   height: 25vh;
 }

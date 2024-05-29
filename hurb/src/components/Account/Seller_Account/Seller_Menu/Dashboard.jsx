@@ -89,6 +89,52 @@ export default function Dashboard() {
                                 </Col>
                             </Row>
                         </Container>
+                        <Container>
+                        <Row className="d-flex gap-5">
+                        <Col lg={4} id="sales-container" className='rounded'>
+                            <Container fluid id="sales-container-inside">
+                                <Row className='p-3'>
+                                    <Col>
+                                        <h4>Number of Sales</h4>
+                                    </Col>
+                                </Row>
+                                <Row className='px-3'>
+                                    <Col>
+                                        <h1>{myOrders.length >= 1 ? myOrders.length : '0'}</h1>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Col>
+                        <Col lg={4} id="sales-container" className='rounded'>
+                            <Container fluid id="sales-container-inside">
+                                <Row className='p-3'>
+                                    <Col>
+                                        <h4>Number of Orders</h4>
+                                    </Col>
+                                </Row>
+                                <Row className='px-3'>
+                                    <Col>
+                                        <h1>{orders.length}</h1>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Col>
+                        <Col lg={4} id="sales-container" className='rounded'>
+                            <Container fluid id="sales-container-inside">
+                                <Row className='p-3'>
+                                    <Col>
+                                        <h4>Number of Products</h4>
+                                    </Col>
+                                </Row>
+                                <Row className='px-3'>
+                                    <Col>
+                                        <h1>{myProducts.length}</h1>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Col>
+                        </Row>
+                    </Container>
                     </Col>  
                 </Row>
                 </> 

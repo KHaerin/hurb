@@ -93,7 +93,7 @@ export default function Home(){
                     </div>
                 </div>
             </div>
-            <div className="container-fluid p-5" id="top-products-container">
+            {/* <div className="container-fluid p-5" id="top-products-container">
                 <div className="row pb-5">
                     <div className="col d-flex justify-content-center">
                         <h1>TOP PRODUCTS</h1>
@@ -138,7 +138,7 @@ export default function Home(){
                         </div>
                     </div>     
                 </div>
-            </div>
+            </div> */}
         </>
 
     )
