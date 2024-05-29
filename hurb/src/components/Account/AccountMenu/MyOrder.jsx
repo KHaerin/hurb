@@ -86,7 +86,7 @@ function MyOrder() {
                     {activeKey === 'All' && <AllOrders myOrders={myOrders} handleCancelOrder={handleCancelOrder} activeKey={activeKey} />}
                     {activeKey === 'ToShip' && <ToShip myOrders={myOrders} handleCancelOrder={handleCancelOrder} activeKey={activeKey} />}
                     {activeKey === 'onDeliver' &&  <OnDeliver myOrders={myOrders} />}
-                    {activeKey === 'received' && <AllOrders myOrders={myOrders} handleCancelOrder={handleCancelOrder} />}
+                    {activeKey === 'received' && <Received myOrders={myOrders} handleCancelOrder={handleCancelOrder} />}
                 </>
                 : 
                 <h1>You have yet to receive your first order.</h1>}
@@ -143,10 +143,10 @@ function AllOrders({ myOrders, handleCancelOrder }) {
                                         {order.deliver_status === 'ship' &&
                                             <span>Seller is preparing to ship.</span>
                                         }
-                                        {order.deliver_status === 'received' &&
+                                        {order.deliver_status === 'Received' &&
                                             <span>Delivered</span>
                                         }
-                                        {order.deliver_status === 'On Deliver' &&
+                                        {order.deliver_status === 'To Receive' &&
                                             <span>To Receive</span>
                                         }
                                         {order.payed_status === 'COMPLETED' &&
@@ -244,7 +244,9 @@ function ToShip({myOrders, handleCancelOrder, activeKey}){
         <>
             {activeKey === "ToShip" &&
                    <Container fluid className='d-flex flex-column gap-4'>
-                   {myOrders.reduce((acc, order, index) => {
+                   {myOrders
+                    .filter(order => order.deliver_status === 'ship')
+                   .reduce((acc, order, index) => {
                        const lastIndex = acc.length - 1;
                        if (lastIndex < 0 || acc[lastIndex][0].order_id !== order.order_id) {
                            acc.push([order]);
@@ -326,6 +328,8 @@ function ToShip({myOrders, handleCancelOrder, activeKey}){
                            </div>
                        );
                    })}
+                   {myOrders.filter(order => order.deliver_status === 'ship').length === 0 && <h1>Wala</h1>}
+
                </Container>
                 }   
         </>
@@ -356,7 +360,7 @@ function OnDeliver({myOrders}){
     return (
         <Container fluid className='d-flex flex-column gap-4'>
             {myOrders
-                .filter(order => order.deliver_status === 'On Deliver')
+                .filter(order => order.deliver_status === 'To Receive')
                 .reduce((acc, order, index) => {
                     const lastIndex = acc.length - 1;
                     if (lastIndex < 0 || acc[lastIndex][0].order_id !== order.order_id) {
@@ -417,5 +421,91 @@ function OnDeliver({myOrders}){
         </Container>
     )
 }
+
+function Received({myOrders}){
+    const order_container = {
+        backgroundColor: '#F8F8F8'
+    }
+
+    const product_size = {
+        width: '10rem'
+    }
+
+    const ratebuyBtn = {
+        width: '5rem'
+    }
+
+    const ratebtn = {
+        width: '10rem'
+    }
+
+    const trashIcon = {
+        fontSize: '1.2rem'
+    }
+    return (
+        <Container fluid className='d-flex flex-column gap-4'>
+            {myOrders
+                .filter(order => order.deliver_status === 'Received')
+                .reduce((acc, order, index) => {
+                    const lastIndex = acc.length - 1;
+                    if (lastIndex < 0 || acc[lastIndex][0].order_id !== order.order_id) {
+                        acc.push([order]);
+                    } else {
+                        acc[lastIndex].push(order);
+                    }
+                    return acc;
+                }, [])
+                .map((orderGroup, groupIndex) => {
+                    return (
+                        <div key={groupIndex} style={order_container}>
+                            {orderGroup.map((order, index) => (
+                                <React.Fragment key={order.order_item_id}>
+                                    <Row className='px-4 pt-4'>
+                                        <span>Received</span>
+                                    </Row>
+                                    <Row className='p-5'>
+                                        <Col className='col-auto'>
+                                            <Image src={`http://localhost/hurb/${order.product_img}`} style={product_size} />
+                                        </Col>
+                                        <Col className='d-flex flex-column'>
+                                            <span>{order.product_name}</span>
+                                            <div className="below d-flex gap-3">
+                                                <span>{`Quantity: ${order.quantity}`}</span>
+                                                <span>{`Variation: Black, ${order.size}`}</span>
+                                                <span>{`P${order.unit_price}`}</span>
+                                            </div>
+                                            <span>Subtotal: {order.unit_price * order.quantity}</span>
+                                        </Col>
+                                    </Row>
+                                    <Row className='d-flex align-items-center justify-content-center'>
+                                        <Col lg={11}>
+                                            <hr className="border border-dark border-1 opacity-40" />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
+                                            <Button variant="dark">Order Received</Button>
+                                        </Col>
+                                    </Row>
+                                </React.Fragment>
+                            ))}
+                            <Row>
+                                <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
+                                    <Button variant="dark" style={ratebtn} disabled>Order Received</Button>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col className='d-flex justify-content-end mx-5 mb-3 gap-3'>
+                                    <span>{`Total Order: ${parseFloat(myOrders.reduce((total, order) => parseFloat(order.totalPayable), 0)).toFixed(2)}`}</span>
+                                </Col>
+                            </Row>
+                        </div>
+                    );
+                })}
+            {myOrders.filter(order => order.deliver_status === 'Received').length === 0 && <h1>No Items to be delivered</h1>}
+        </Container>
+    )
+}
+
 
 export default MyOrder

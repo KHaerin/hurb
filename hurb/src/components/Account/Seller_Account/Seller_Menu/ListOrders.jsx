@@ -57,6 +57,8 @@ function ListOrders() {
         }
     };
 
+   
+
     const handleStatusUpdate = (orderItemIds, newStatus) => {
         updateOrderStatus(orderItemIds, newStatus);
     };
@@ -97,9 +99,21 @@ function ListOrders() {
                                                 <div className="btn-group dropend">
                                                     <button className='btn btn-dark dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false"><SlIcons.SlOptionsVertical></SlIcons.SlOptionsVertical></button>
                                                     <ul className='dropdown-menu'>
-                                                        <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'To Receive')}>To Receive</a></li>
-                                                        <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'On Deliver')}>On Deliver</a></li>
-                                                        <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'Cancel')}>Cancel</a></li> 
+                                                        {order.deliver_statuses[0] === 'Received' ? 
+                                                            <li>
+                                                                <a href="#" className='dropdown-item' onClick={(e) => e.preventDefault()} disabled>
+                                                                    To Receive
+                                                                </a>
+                                                            </li>
+                                                        : 
+                                                            <li>
+                                                                <a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'To Receive')}>
+                                                                    To Receive
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'Received')}>Received</a></li>
+                                                        {/* <li><a href="#" className='dropdown-item' onClick={() => handleStatusUpdate(order.order_item_ids, 'Cancel')}>Cancel</a></li>  */}
                                                     </ul>
                                                 </div>
                                             </td>
@@ -114,7 +128,7 @@ function ListOrders() {
                                                         <div className="row">
                                                             <div className="col">
                                                                 <h1>Products in this order:</h1>
-                                                                <ul>
+                                                                <ul id='list'>
                                                                     {order.order_item_ids.map((itemId, itemIndex) => (
                                                                         <li key={itemIndex}>
                                                                             <img  style={imgStyle} src={`http://localhost/hurb/${order.images[itemIndex]}`}  alt="" />

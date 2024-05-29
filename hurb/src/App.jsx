@@ -2,6 +2,7 @@ import {BrowserRouter, Routes, Route, useLocation, Navigate} from 'react-router-
 import React, { useState, useEffect } from "react";
 import RegSeller from './components/Account/Seller_Account/regSeller/regSeller';
 import About from "./components/About/About";
+import TestAbout from "./components/About/TestAbout";
 import Contact from './components/Contact/Contact';
 import Shop from './components/Shop/Shop';
 import Top from './components/Shop/products/Top';
@@ -166,6 +167,7 @@ function App() {
                     <Route path="/admin/listSellers" element={<ListSellers />} />
                     <Route path="/admin/Settings" element={<SettingsAdmin />} />
                     <Route path="/admin/application" element={<Application />} />
+                    <Route path="/TestAbout" element={<TestAbout />} />
                 </Routes>
                 {renderFooter()}
                 <ToastContainer

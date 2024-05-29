@@ -86,99 +86,27 @@ function EditProduct({ showPay, handleClosePay, product }) {
         if (image) {
             return `http://localhost/hurb/${image.product_img}`;
         } else {
-            return 'holder.js/100px180'; // or return '';
+            return 'holder.js/100px180'; 
         }
     };
 
-    const addVariant = () => {
-        setVariants([...variants, {
-            color: '',
-            sizes: [],
-            quantities: {},
-            product_img: ''
-        }]);
-    };
+   
+    const [existingData, setExistingData] = useState([
+        { color: '', sizes: [], quantities: {}, product_img: '' }
+    ]);
+    
 
-    const deleteVariant = (index) => {
-        const updatedVariants = [...variants];
-        updatedVariants.splice(index, 1);
-        setVariants(updatedVariants);
-    };
-
-    const handleColorChange = (color, index) => {
+    const handleExistColorChange = (color, index) => {
         const updatedVariants = [...variants];
         updatedVariants[index].color = color;
         setVariants(updatedVariants);
     };
 
-    // const handleSizeChange = (size, index) => {
-    //     const updatedSelectedProduct = [...selectedProduct];
-    //     const updatedProduct = { ...updatedSelectedProduct[index] };
-    
-    //     if (!updatedProduct.variants) {
-    //         updatedProduct.variants = [];
-    //     }
-    
-    //     const variantIndex = updatedProduct.variants.findIndex(variant => variant.color === updatedProduct.color);
-    
-    //     if (variantIndex !== -1) {
-    //         const updatedVariant = { ...updatedProduct.variants[variantIndex] };
-    //         const sizeIndex = updatedVariant.sizes.indexOf(size);
-    
-    //         if (sizeIndex !== -1) {
-    //             updatedVariant.sizes.splice(sizeIndex, 1);
-    //             updatedVariant.quantities[size] = undefined;
-    //         } else {
-    //             updatedVariant.sizes.push(size);
-    //         }
-    
-    //         updatedProduct.variants[variantIndex] = updatedVariant;
-    //     } else {
-    //         const newVariant = {
-    //             color: updatedProduct.color,
-    //             sizes: [size],
-    //             quantities: { [size]: undefined }
-    //         };
-    
-    //         updatedProduct.variants.push(newVariant);
-    //     }
-    
-    //     updatedSelectedProduct[index] = updatedProduct;
-    //     setSelectedProduct(updatedSelectedProduct);
-    // };
 
-    // const handleQuantityChange = (size, quantity, index) => {
-    //     const updatedVariants = [...variants];
-    //     updatedVariants[index].quantities[size] = quantity;
-    //     setVariants(updatedVariants);
-    // };
-
-    const [colorExist, setColorExist] = useState('');
+    const [colorExist, setColorExist] = useState([]);
 
     
-    const handleVariantSizeChange = (size, index) => {
-        const updatedVariants = [...variants];
-        const updatedVariant = { ...updatedVariants[index] };
     
-        const sizeIndex = updatedVariant.sizes.indexOf(size);
-    
-        if (sizeIndex !== -1) {
-            updatedVariant.sizes.splice(sizeIndex, 1);
-            updatedVariant.quantities[size] = undefined;
-        } else {
-            updatedVariant.sizes.push(size);
-        }
-    
-        updatedVariants[index] = updatedVariant;
-        setVariants(updatedVariants);
-    };
-    
-    const handleVariantQuantityChange = (size, quantity, index) => {
-        const updatedVariants = [...variants];
-        updatedVariants[index].quantities[size] = quantity;
-        setVariants(updatedVariants);
-    };
-
     const image_style = {
         width: "200px",
         height: "200px"
@@ -258,11 +186,18 @@ function EditProduct({ showPay, handleClosePay, product }) {
                                         </div>
                                         <Card.Body>
                                             <Card.Title>{product.color}</Card.Title>
+                                            <Card.Text>
+                                            Sizes: {colorData[product.color_id].sizes.map((size, sizeIndex) => (
+                                            <span key={sizeIndex}>
+                                                {size} ({colorData[product.color_id].quantities[sizeIndex]}), 
+                                            </span>
+                                            ))}
+                                            </Card.Text>
                                             <div className="input-group mb-3">
                                                 <select
                                                     className="form-select"
                                                     value={product.color}
-                                                    onChange={(e) => handleColorChange(e.target.value, index)}>
+                                                    onChange={(e) => handleExistColorChange(e.target.value, index)}>
                                                     <option value="">Select a color</option>
                                                     <ColorsDrop 
                                                         onSelectColors={color => handleColorChange(color, index)} 
@@ -282,97 +217,16 @@ function EditProduct({ showPay, handleClosePay, product }) {
                                                             <label className="form-check-label">{size}</label>
                                                         </div>
                                                     </div>
-                                                    {colorData[product.color_id].sizes.includes(size) && (
-                                                    <div className="col-auto">
-                                                        <div className="form-floating mb-3">
-                                                         <input
-                                                                    type="number"
-                                                                    className="form-control form-control-sm"
-                                                                    placeholder="Quantity"
-                                                                />
-                                                            <label>Stock</label>
-                                                        </div>
-                                                    </div>
-                                                )}
                                                 </div>
-                                            ))}
-                                            <Card.Text>
-                                            Sizes: {colorData[product.color_id].sizes.map((size, sizeIndex) => (
-                                            <span key={sizeIndex}>
-                                                {size} ({colorData[product.color_id].quantities[sizeIndex]}), 
-                                            </span>
-                                            ))}
-                                            </Card.Text>
+                                            ))}        
                                             {/* <Button variant="primary">Go somewhere</Button> */}
                                         </Card.Body>
                                     </Card>                                    
                                 </Col>
                             ))}
                         </Row>
-                        </section>
-                         
-                        {/* END OF EXISTING PRODUCT VARIANT */}
-
-                        {/* ADD NEW VARIANT */}
-                        <Row>
-                            {variants.map((variant, index) => (
-                                <Col lg={4} className='mb-5' key={index}>
-                                    <Card>
-                                        <Card.Body>
-                                            <div className="input-group mb-3">
-                                                <select
-                                                    className="form-select"
-                                                    value={variant.color}
-                                                    onChange={(e) => handleColorChange(e.target.value, index)}>
-                                                    <option value="">Select a color</option>
-                                                    <ColorsDrop 
-                                                        onSelectColors={color => handleColorChange(color, index)} 
-                                                        selectedColors={variant.color} 
-                                                        allSelectedColors={[...new Set([...filteredProducts.map(section => section.color), ...variants.map(section => section.color)])]}
-                                                    />
-                                                </select>
-                                            </div>
-                                            {sizes.map((size, sizeindex) => (
-                                                <div className="row d-flex align-items-center" key={`${sizeindex}-${index}`}>
-                                                    <div className="col-lg-2">
-                                                        <div className="form-check d-flex gap-2">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="form-check-input"
-                                                                onChange={() => handleVariantSizeChange(size, index)}
-                                                                checked={!!variant.sizes.includes(size)}
-                                                            />
-                                                            <label className="form-check-label">{size}</label>
-                                                        </div>
-                                                    </div>
-                                                    {variant.sizes.includes(size) && (
-                                                        <div className="col-auto">
-                                                            <div className="form-floating mb-3">
-                                                                <input
-                                                                    type="number"
-                                                                    className="form-control form-control-sm"
-                                                                    value={variant.quantities[size] || ''}
-                                                                    onChange={(e) => handleVariantQuantityChange(size, e.target.value, index)}
-                                                                    placeholder="Quantity"
-                                                                />
-                                                                <label>Stock</label>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
-                                            {/* Delete button for variants */}
-                                            <Button variant="danger" onClick={() => deleteVariant(index)}>Delete Variant</Button>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            ))}  
-                        </Row> 
-                        <Row>
-                            <Col className='d-flex justify-content-end align-items-center'>
-                                <Button variant="primary" onClick={addVariant}>+ Add Variant</Button>
-                            </Col>
-                        </Row>    
+                        </section> 
+                        {/* END OF EXISTING PRODUCT VARIANT */}                   
                     </Container>  
                             
                 </Modal.Body>

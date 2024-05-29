@@ -130,3 +130,8 @@
     font-size: 15px;
     height: 2rem;
 }
+
+
+#list{
+    list-style: none;
+}
