@@ -111,7 +111,7 @@ export default function Cart(){
             fetchCartProducts();
             const ToastId = toast(response.data, {
                 onClose: () => {
-                    window.location.href = "/shop/cart";
+                    // window.location.href = "/shop/cart";
                 }
             });
             

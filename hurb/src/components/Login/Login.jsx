@@ -118,10 +118,10 @@ export default function Login({updateLoginStatus}){
                     <div className="col mb-4 d-flex justify-content-center">
                             <button type="button" className="btn btn-dark" id="loginBtn" onClick={handleLogin}>Login</button>
                         </div>
-                    <div className="col d-flex gap-5 d-flex justify-content-center mb-5">
+                    {/* <div className="col d-flex gap-5 d-flex justify-content-center mb-5">
                         <button type="button" className="btn btn-secondary" id="loginGoogle">Continue with Gogel</button>
                         <button type="button" className="btn btn-secondary" id="loginFB">Peysbook?</button>
-                    </div>
+                    </div> */}
                 </div>               
         </div>
            

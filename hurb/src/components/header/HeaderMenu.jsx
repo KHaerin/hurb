@@ -79,16 +79,16 @@ export default function Header() {
                             <li className="nav-item">
                                 <Link to="/" className="nav-link" id="headerLinks">Home</Link>
                             </li>
-                            <li className="nav-item dropdown">
+                            <li className="nav-item">
                                 <Link
                                     onClick={goMain}
-                                    className="nav-link active dropdown-toggle"
+                                    className="nav-link active"
                                     id="headerLinks"
                                     role="button"
                                 >
                                     Shop
                                 </Link>
-                                <ul className="dropdown-menu dropdown-menu-hover">
+                                {/* <ul className="dropdown-menu dropdown-menu-hover">
                                     {uniqueSubCategories.length === 0 ? '' : 
                                         <>
                                         {uniqueSubCategories.map((categ, index) => (
@@ -97,7 +97,7 @@ export default function Header() {
                                         </>
                                     }
                                     
-                                </ul>
+                                </ul> */}
                             </li>
                             <li className="nav-item">
                                 <Link onClick={goAbout} className="nav-link" id="headerLinks">About</Link>

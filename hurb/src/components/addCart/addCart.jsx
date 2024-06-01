@@ -18,9 +18,13 @@ export default function AddCart() {
         const storedLoginStatus = localStorage.getItem('isLoggedIn');
         if (storedLoginStatus === 'true') {
             setIsLoggedIn(true);
-            fetchCartProducts();
+            // fetchCartProducts();
         }
     }, [reloadContact])
+
+    useEffect(() => {
+        fetchCartProducts();
+    })
 
     const fetchCartProducts = async () => {
         try {
